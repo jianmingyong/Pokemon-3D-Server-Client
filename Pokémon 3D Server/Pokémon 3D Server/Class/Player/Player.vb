@@ -270,9 +270,10 @@ Public Class Player
                 If FullPackage Then
                     Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, GenerateGameData(True), PlayerClient))
                 Else
-                    If Positions.Count > 0 Then
+                    Dim TempPosition As List(Of String) = Positions
+                    If TempPosition.Count > 0 Then
                         Dim PackageData As List(Of String) = GenerateGameData(False)
-                        For Each Data As String In Positions
+                        For Each Data As String In TempPosition
                             PackageData(6) = Data.GetSplit(0, ":")
                             PackageData(7) = Data.GetSplit(1, ":")
                             Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, PackageData, PlayerClient))
@@ -433,7 +434,7 @@ Public Class Player
                     Dim Package As New Package(ReturnMessage, PlayerClient)
                     Main.Main.QueueMessage("Player.vb: Receive: " & ReturnMessage, Main.LogType.Debug, PlayerClient)
                     If Package.IsValid Then
-                        Package.Handle()
+                        Threading.ThreadPool.QueueUserWorkItem(AddressOf Package.Handle)
                         PlayerLastValidPing = Date.Now
                     End If
                 Else

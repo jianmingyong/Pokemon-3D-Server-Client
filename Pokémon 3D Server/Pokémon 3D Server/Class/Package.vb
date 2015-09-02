@@ -206,7 +206,7 @@ Public Class Package
         Me.Client = Client
     End Sub
 
-    Public Sub Handle()
+    Public Sub Handle(Optional ByVal state As Object = Nothing)
         Main.PackageHandler.Handle(Me)
     End Sub
 

@@ -115,7 +115,7 @@ Public Class ServerClient
                     Dim Package As New Package(ReturnMessage, Client)
                     Main.Main.QueueMessage("ServerClient.vb: Receive: " & ReturnMessage, Main.LogType.Debug, Client)
                     If Package.IsValid Then
-                        Package.Handle()
+                        Threading.ThreadPool.QueueUserWorkItem(AddressOf Package.Handle)
                     End If
                 End If
             Loop
