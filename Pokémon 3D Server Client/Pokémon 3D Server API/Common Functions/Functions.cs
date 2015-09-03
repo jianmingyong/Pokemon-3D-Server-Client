@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace Pokémon_3D_Server_Core
 {
-    // Public Module Functions
-    static class Functions
+    /// <summary>
+    /// Public Module Functions
+    /// </summary>
+    public static class Functions
     {
         /// <summary>
         /// Represents a newline character for print and display functions.
@@ -41,16 +40,57 @@ namespace Pokémon_3D_Server_Core
             string InnerException = string.IsNullOrWhiteSpace(ex.InnerException.Message) ? "Nothing" : ex.InnerException.Message;
             string StackTrace = string.IsNullOrWhiteSpace(ex.InnerException.StackTrace) ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace;
 
-            string ErrorLog = @"[CODE]
-Pokémon 3D Server Client Crash Log v" + Environment.Version.ToString() + @"
+            string ErrorLog = string.Format(@"[CODE]
+Pokémon 3D Server Client Crash Log v {0}
 --------------------------------------------------
 
 System specifications:
 
-Operating system: " + My.Computer.Info.OSFullName + " [" + My.Computer.Info.OSVersion + @"]
-Core architecture: " + CoreArchitecture + @"
-System time: ";
+Operating system: {1} [{2}]
+Core architecture: {3}
+System time: {4}
+System language: {5}
+Physical memory: {6}
+Logical processors: {7}
 
+--------------------------------------------------
+            
+Error information:
+
+Message: {8}
+InnerException: {9}
+HelpLink: {10}
+Source: {11}
+
+--------------------------------------------------
+
+CallStack:
+
+{12}
+
+--------------------------------------------------
+
+You should report this error if it is reproduceable or you could not solve it by yourself.
+
+Go To: http://pokemon3d.net/forum/threads/8234/ to report this crash there.
+[/CODE]",
+Environment.Version.ToString(),
+My.Computer.Info.OSFullName,
+My.Computer.Info.OSVersion,
+CoreArchitecture,
+DateTime.Now.ToString(),
+System.Globalization.CultureInfo.CurrentCulture.EnglishName.ToString(),
+Environment.ProcessorCount.ToString(),
+ex.Message,
+InnerException,
+HelpLink,
+ex.Source,
+StackTrace);
+        
+            if (!Directory.Exists(Environment.CurrentDirectory + "\\CrashLogs"))
+            {
+                Directory.CreateDirectory(Environment.CurrentDirectory + "\\CrashLogs");
+            }
         }
     }
 }
