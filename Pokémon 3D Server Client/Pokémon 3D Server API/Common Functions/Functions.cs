@@ -99,11 +99,11 @@ StackTrace);
             try
             {
                 File.WriteAllText(CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
-                // Main.Main.QueueMessage(ex.Message() + vbNewLine + "Error Log saved at: " + CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Main.LogType.Warning)
+                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
             }
             catch (Exception exc)
             {
-                // Main.Main.QueueMessage(ex.Message, Main.LogType.Warning)
+                QueueMessage.Add(exc.Message, MessageEventArgs.LogType.Warning);
             }
         }
     }

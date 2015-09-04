@@ -55,6 +55,8 @@
     <Compile Include="Common Functions\Math.cs" />
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common vb.net Functions\my.cs" />
+    <Compile Include="Event Handler\MessageEventArgs.cs" />
+    <Compile Include="Event Handler\QueueMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
