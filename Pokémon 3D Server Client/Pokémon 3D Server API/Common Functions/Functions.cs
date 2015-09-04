@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
-namespace Pokémon_3D_Server_Core
+namespace Global
 {
     /// <summary>
     /// Public Module Functions
@@ -9,15 +10,14 @@ namespace Pokémon_3D_Server_Core
     public static class Functions
     {
         /// <summary>
+        /// Current Directory of the application. (Need Init before usage)
+        /// </summary>
+        public static string CurrentDirectory { get; set; }
+
+        /// <summary>
         /// Represents a newline character for print and display functions.
         /// </summary>
-        public static string vbNewLine
-        {
-            get
-            {
-                return Environment.NewLine;
-            }
-        }
+        public static readonly string vbNewLine = Environment.NewLine;
 
         /// <summary>
         /// Play the system sound for error input.
@@ -80,16 +80,30 @@ My.Computer.Info.OSVersion,
 CoreArchitecture,
 DateTime.Now.ToString(),
 System.Globalization.CultureInfo.CurrentCulture.EnglishName.ToString(),
+Math.Round(((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824), 2).ToString() + " GB / " + Math.Round(((double)My.Computer.Info.TotalPhysicalMemory / 1073741824), 2).ToString() + " GB",
 Environment.ProcessorCount.ToString(),
 ex.Message,
 InnerException,
 HelpLink,
 ex.Source,
 StackTrace);
-        
-            if (!Directory.Exists(Environment.CurrentDirectory + "\\CrashLogs"))
+
+            if (!Directory.Exists(CurrentDirectory + "\\CrashLogs"))
             {
-                Directory.CreateDirectory(Environment.CurrentDirectory + "\\CrashLogs");
+                Directory.CreateDirectory(CurrentDirectory + "\\CrashLogs");
+            }
+
+            DateTime ErrorTime = DateTime.Now;
+            int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
+
+            try
+            {
+                File.WriteAllText(CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
+                // Main.Main.QueueMessage(ex.Message() + vbNewLine + "Error Log saved at: " + CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Main.LogType.Warning)
+            }
+            catch (Exception exc)
+            {
+                // Main.Main.QueueMessage(ex.Message, Main.LogType.Warning)
             }
         }
     }
