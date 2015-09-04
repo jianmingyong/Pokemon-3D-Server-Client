@@ -97,40 +97,8 @@ namespace Global
             {
                 Logger = Message;
             }
-
-            switch (LogType)
-            {
-                case LogType.Info:
-                    OutputMessage = DateTime.Now + " [Info] " + Logger;
-                    break;
-                case LogType.Warning:
-                    OutputMessage = DateTime.Now + " [Warning] " + Logger;
-                    break;
-                case LogType.Debug:
-                    OutputMessage = DateTime.Now + " [Debug] " + Logger;
-                    break;
-                case LogType.Chat:
-                    OutputMessage = DateTime.Now + " [Chat] " + Logger;
-                    break;
-                case LogType.PM:
-                    OutputMessage = DateTime.Now + " [PM] " + Logger;
-                    break;
-                case LogType.Server:
-                    OutputMessage = DateTime.Now + " [Server] " + Logger;
-                    break;
-                case LogType.Trade:
-                    OutputMessage = DateTime.Now + " [Trade] " + Logger;
-                    break;
-                case LogType.PvP:
-                    OutputMessage = DateTime.Now + " [PvP] " + Logger;
-                    break;
-                case LogType.Command:
-                    OutputMessage = DateTime.Now + " [Command] " + Logger;
-                    break;
-                default:
-                    OutputMessage = DateTime.Now + " [Info] " + Logger;
-                    break;
-            }
+            
+            OutputMessage = string.Format("{0} [{1}] {2}", DateTime.Now, LogType, Logger);
         }
     }
 }
