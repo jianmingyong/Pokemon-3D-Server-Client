@@ -12,22 +12,7 @@ namespace Global
         /// <summary>
         /// Message to Output.
         /// </summary>
-        public string _OutputMessage;
-
-        /// <summary>
-        /// Message to Output.
-        /// </summary>
-        public string OutputMessage
-        {
-            get
-            {
-                return _OutputMessage;
-            }
-            set
-            {
-                _OutputMessage = value;
-            }
-        }
+        public string OutputMessage { get; set; }
 
         /// <summary>
         /// Message Log Type
@@ -97,7 +82,7 @@ namespace Global
             {
                 Logger = Message;
             }
-            
+
             OutputMessage = string.Format("{0} [{1}] {2}", DateTime.Now, LogType, Logger);
         }
     }

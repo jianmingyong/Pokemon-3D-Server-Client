@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net;
 
 namespace Global
 {
@@ -11,11 +11,6 @@ namespace Global
     /// </summary>
     public static class Functions
     {
-        /// <summary>
-        /// Current Directory of the application. (Need Init before usage)
-        /// </summary>
-        public static string CurrentDirectory { get; set; }
-
         /// <summary>
         /// Represents a newline character for print and display functions.
         /// </summary>
@@ -90,9 +85,9 @@ HelpLink,
 ex.Source,
 StackTrace);
 
-            if (!Directory.Exists(CurrentDirectory + "\\CrashLogs"))
+            if (!Directory.Exists(Settings.ApplicationDirectory + "\\CrashLogs"))
             {
-                Directory.CreateDirectory(CurrentDirectory + "\\CrashLogs");
+                Directory.CreateDirectory(Settings.ApplicationDirectory + "\\CrashLogs");
             }
 
             DateTime ErrorTime = DateTime.Now;
@@ -100,8 +95,8 @@ StackTrace);
 
             try
             {
-                File.WriteAllText(CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
-                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + CurrentDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
+                File.WriteAllText(Settings.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
+                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + Settings.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
             }
             catch (Exception exc)
             {

@@ -7,7 +7,7 @@
     <ProjectGuid>{332AADB0-98CE-4FD6-A63A-577FDAA7C9EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pokémon_3D_Server_Core</RootNamespace>
+    <RootNamespace>Global</RootNamespace>
     <AssemblyName>Pokémon 3D Server Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -58,6 +58,7 @@
     <Compile Include="Event Handler\MessageEventArgs.cs" />
     <Compile Include="Event Handler\QueueMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
