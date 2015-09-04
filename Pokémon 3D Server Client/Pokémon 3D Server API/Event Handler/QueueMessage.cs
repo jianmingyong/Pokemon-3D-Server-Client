@@ -3,9 +3,9 @@
 namespace Global
 {
     /// <summary>
-    /// Public Module QueueMessage
+    /// Public Class QueueMessage
     /// </summary>
-    public static class QueueMessage
+    public class QueueMessage
     {
         /// <summary>
         /// Delegate for Message Handler.

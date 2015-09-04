@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
+using System.Net;
 
 namespace Global
 {
@@ -30,7 +32,7 @@ namespace Global
         /// <summary>
         /// Catch Ex Exception and create a crash log.
         /// </summary>
-        /// <param name="ex"></param>
+        /// <param name="ex">Ex Exception.</param>
         public static void CatchError(this Exception ex)
         {
             PlaySystemSound();
@@ -105,6 +107,106 @@ StackTrace);
             {
                 QueueMessage.Add(exc.Message, MessageEventArgs.LogType.Warning);
             }
+        }
+
+        /// <summary>
+        /// Count the number of index after spliting "|" in the full string.
+        /// </summary>
+        /// <param name="fullString">The full string to count the number of index.</param>
+        /// <returns></returns>
+        public static int SplitCount(this string fullString)
+        {
+            return fullString.Contains("|") ? fullString.Split("|".ToCharArray()).Length : 1;
+        }
+
+        /// <summary>
+        /// Count the number of index after spliting the seperator in the full string.
+        /// </summary>
+        /// <param name="fullString">The full string to count the number of index.</param>
+        /// <param name="seperator">The seperator to split the string.</param>
+        public static int SplitCount(this string fullString, string seperator)
+        {
+            return fullString.Contains(seperator) ? fullString.Split(seperator.ToCharArray()).Length : 1;
+        }
+
+        /// <summary>
+        /// Get the nth index of the splited string after spliting "|" in the full string.
+        /// </summary>
+        /// <param name="fullString">The full string to be splited.</param>
+        /// <param name="valueIndex">The index to return.</param>
+        public static string GetSplit(this string fullString, int valueIndex)
+        {
+            if (fullString.SplitCount() == 1)
+            {
+                return fullString;
+            }
+            else if (fullString.SplitCount() < valueIndex)
+            {
+                return fullString.Split("|".ToCharArray())[valueIndex];
+            }
+            else
+            {
+                return fullString.Split("|".ToCharArray())[fullString.SplitCount() - 1];
+            }
+        }
+
+        /// <summary>
+        /// Get the nth index of the splited string after spliting the seperator in the full string.
+        /// </summary>
+        /// <param name="fullString">The full string to be splited.</param>
+        /// <param name="valueIndex">The index to return.</param>
+        /// <param name="seperator">The seperator.</param>
+        /// <returns></returns>
+        public static string GetSplit(this string fullString, int valueIndex, string seperator)
+        {
+            if (fullString.SplitCount(seperator) == 1)
+            {
+                return fullString;
+            }
+            else if (fullString.SplitCount(seperator) < valueIndex)
+            {
+                return fullString.Split(seperator.ToCharArray())[valueIndex];
+            }
+            else
+            {
+                return fullString.Split(seperator.ToCharArray())[fullString.SplitCount() - 1];
+            }
+        }
+
+        /// <summary>
+        /// Get the public IP of the hosting computer.
+        /// </summary>
+        public async static Task<string> GetPublicIP()
+        {
+            try
+            {
+                using (WebClient Client = new WebClient())
+                {
+                    return await Client.DownloadStringTaskAsync("https://api.ipify.org");
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Get the private IP of the hosting computer.
+        /// </summary>
+        public static string GetPrivateIP()
+        {
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+            foreach (IPAddress address in host.AddressList)
+            {
+                if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork )
+                {
+                    return address.ToString();
+                }
+            }
+            return null;
         }
     }
 }
