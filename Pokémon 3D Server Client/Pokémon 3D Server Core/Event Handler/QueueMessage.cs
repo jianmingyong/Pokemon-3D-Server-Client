@@ -3,7 +3,7 @@
 namespace Global
 {
     /// <summary>
-    /// Public Class QueueMessage
+    /// Class containing Logger Functions
     /// </summary>
     public class QueueMessage
     {

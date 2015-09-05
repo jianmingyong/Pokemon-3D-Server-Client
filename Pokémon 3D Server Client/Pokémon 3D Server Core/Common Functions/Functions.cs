@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Global
 {
     /// <summary>
-    /// Public Shared Class Functions
+    /// Class containing common functions
     /// </summary>
     public static class Functions
     {

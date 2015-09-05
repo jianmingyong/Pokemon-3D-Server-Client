@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Global
 {
     /// <summary>
-    /// Public Class Settings
+    /// Class containing Settings
     /// </summary>
     public class Settings
     {
@@ -134,6 +134,7 @@ namespace Global
             /// </summary>
             public static List<string> GameMode { get; set; }
 
+            [JsonIgnore]
             private static int _MaxPlayers;
             /// <summary>
             /// Get/Set Max Players
@@ -156,6 +157,92 @@ namespace Global
                     }
                 }
             }
+
+            /// <summary>
+            /// Get/Set Offline Mode
+            /// </summary>
+            public static bool OfflineMode { get; set; }
+        }
+
+        /// <summary>
+        /// Class containing Advanced Server Property.
+        /// </summary>
+        public class AdvancedServerProperty
+        {
+            /// <summary>
+            /// Class Containing World Property.
+            /// </summary>
+            public class World
+            {
+                [JsonIgnore]
+                private static int _Season;
+                /// <summary>
+                /// Get/Set Season
+                /// </summary>
+                public static int Season
+                {
+                    get
+                    {
+                        return _Season;
+                    }
+                    set
+                    {
+                        if (value <= -4)
+                        {
+                            _Season = -2;
+                        }
+                        else if (value > 3)
+                        {
+                            _Season = -2;
+                        }
+                        else
+                        {
+                            _Season = value;
+                        }
+                    }
+                }
+
+                [JsonIgnore]
+                private static int _Weather;
+                /// <summary>
+                /// Get/Set Weather
+                /// </summary>
+                public static int Weather
+                {
+                    get
+                    {
+                        return _Weather;
+                    }
+                    set
+                    {
+                        if (value <= -5)
+                        {
+                            _Weather = -2;
+                        }
+                        else if (value > 9)
+                        {
+                            _Weather = -2;
+                        }
+                        else
+                        {
+                            _Weather = value;
+                        }
+                    }
+                }
+
+                /// <summary>
+                /// Get/Set Do DayCycle
+                /// </summary>
+                public static bool DoDayCycle { get; set; }
+
+
+            }
+
+            /// <summary>
+            /// World Setting
+            /// </summary>
+            [JsonProperty(propertyName: "World", DefaultValueHandling = DefaultValueHandling.Include, Required = Required.AllowNull)]
+            public static World WorldSetting { get; set; }
         }
 
         /// <summary>
@@ -175,5 +262,11 @@ namespace Global
         /// </summary>
         [JsonProperty(propertyName: "Main Server Property", DefaultValueHandling = DefaultValueHandling.Include, Required = Required.AllowNull)]
         public static ServerProperty ServerClientProperty { get; set; }
+
+        /// <summary>
+        /// Advanced Server Client Setting
+        /// </summary>
+        [JsonProperty(propertyName: "Advanced Server Property", DefaultValueHandling = DefaultValueHandling.Include, Required = Required.AllowNull)]
+        public static AdvancedServerProperty AdvancedServerClientProperty { get; set; }
     }
 }

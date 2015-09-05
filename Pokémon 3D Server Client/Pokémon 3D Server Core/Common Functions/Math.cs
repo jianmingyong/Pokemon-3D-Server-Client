@@ -4,7 +4,7 @@ using System.Globalization;
 namespace Global
 {
     /// <summary>
-    /// Public Shared Class Math
+    /// Class containing Math functions
     /// </summary>
     public static class Math
     {
