@@ -223,12 +223,12 @@ namespace Global
         /// <summary>
         /// Get/Set SeasonMonth
         /// </summary>
-        public static World.SeasonMonth SeasonMonth { get; set; }
+        public static SeasonMonth SeasonMonth { get; set; }
 
         /// <summary>
         /// Get/Set WeatherSeason
         /// </summary>
-        public static World.WeatherSeason WeatherSeason { get; set; }
+        public static WeatherSeason WeatherSeason { get; set; }
         #endregion World
 
         #region FailSafe Features
