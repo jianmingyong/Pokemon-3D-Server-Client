@@ -9,3 +9,11 @@ install:
 
 script:
   - xbuild /p:Configuration=Release "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
+
+deploy:
+  provider: releases
+  api_key: "0924a9074d6d4a8d4872dfa998d73f4a1118c52f"
+  file: "Pokémon 3D Server Client"
+  skip_cleanup: true
+  on:
+    tags: true
