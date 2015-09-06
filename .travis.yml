@@ -2,10 +2,10 @@ language: csharp
 mono:
   - latest
 
-solution: "Pokémon 3D Server/Pokémon 3D Server.sln"
+solution: "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
   
 install:
-  - nuget restore "Pokémon 3D Server/Pokémon 3D Server.sln"
+  - nuget restore "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
 
 script:
-  - xbuild /p:Configuration=Release "Pokémon 3D Server/Pokémon 3D Server.sln"
+  - xbuild /p:Configuration=Release "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
