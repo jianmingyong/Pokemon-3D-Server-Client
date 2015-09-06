@@ -4,9 +4,6 @@ configuration:
 - Release
 platform: Any CPU
 
-before_build:
-- nuget restore "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
-
 build:
   project: "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
   parallel: true
