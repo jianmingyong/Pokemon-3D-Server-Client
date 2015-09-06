@@ -161,20 +161,17 @@ Public Class ServerClient
 
     Public Sub SendOperatorData(ByVal p As Package)
         Try
-            Dim Package As Package = p
-            Dim CurrentPlayer As List(Of Player) = Main.Player
-
-            For Each Player As Player In CurrentPlayer
-                If Main.Setting.OperatorPermission(Player) > Player.OperatorPermission.Player AndAlso Player.PlayerClient IsNot Package.Client Then
-                    If Player.PlayerClient.Connected Then
-                        Dim Writer As New StreamWriter(Player.PlayerClient.GetStream)
-                        Writer.WriteLine(Package.ToString)
+            For i As Integer = 0 To Main.Player.Count - 1
+                If i < Main.Player.Count AndAlso Main.Player(i) IsNot Nothing AndAlso Main.Setting.OperatorPermission(Main.Player(i)) > Player.OperatorPermission.Player AndAlso Main.Player(i).PlayerClient IsNot p.Client Then
+                    If Main.Player(i).PlayerClient.Connected Then
+                        Dim Writer As New StreamWriter(Main.Player(i).PlayerClient.GetStream)
+                        Writer.WriteLine(p.ToString)
                         Writer.Flush()
                     End If
                 End If
             Next
 
-            Main.Main.QueueMessage("ServerClient.ThreadSendOperatorData.vb: Sent: " & Package.ToString, Main.LogType.Debug)
+            Main.Main.QueueMessage("ServerClient.ThreadSendOperatorData.vb: Sent: " & p.ToString, Main.LogType.Debug)
         Catch ex As SocketException
             Main.Main.QueueMessage(ex.Message, Main.LogType.Warning)
         Catch ex As IOException
@@ -186,18 +183,17 @@ Public Class ServerClient
 
     Public Sub SendAllData(ByVal p As Package)
         Try
-            Dim Package As Package = p
-            Dim CurrentPlayer As List(Of Player) = Main.Player
-
-            For Each Player As Player In CurrentPlayer
-                If Player.PlayerClient.Connected Then
-                    Dim Writer As New StreamWriter(Player.PlayerClient.GetStream)
-                    Writer.WriteLine(Package.ToString)
-                    Writer.Flush()
+            For i As Integer = 0 To Main.Player.Count - 1
+                If i < Main.Player.Count AndAlso Main.Player(i) IsNot Nothing Then
+                    If Main.Player(i).PlayerClient.Connected Then
+                        Dim Writer As New StreamWriter(Main.Player(i).PlayerClient.GetStream)
+                        Writer.WriteLine(p.ToString)
+                        Writer.Flush()
+                    End If
                 End If
             Next
 
-            Main.Main.QueueMessage("ServerClient.ThreadSendAllData.vb: Sent: " & Package.ToString, Main.LogType.Debug)
+            Main.Main.QueueMessage("ServerClient.ThreadSendAllData.vb: Sent: " & p.ToString, Main.LogType.Debug)
         Catch ex As SocketException
             Main.Main.QueueMessage(ex.Message, Main.LogType.Warning)
         Catch ex As IOException

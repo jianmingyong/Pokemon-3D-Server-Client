@@ -21,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <LangVersion>5</LangVersion>
+    <LangVersion>6</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <RegisterForComInterop>false</RegisterForComInterop>
     <DocumentationFile>bin\Debug\Pokémon 3D Server Core.xml</DocumentationFile>
@@ -58,13 +58,28 @@
     <Compile Include="Event Handler\MessageEventArgs.cs" />
     <Compile Include="Event Handler\QueueMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="World.cs" />
+    <Compile Include="Settings\Data List\BlackList.cs" />
+    <Compile Include="Settings\Data List\CommonList.cs" />
+    <Compile Include="Settings\Data List\IPBlackList.cs" />
+    <Compile Include="Settings\Data List\MapFileList.cs" />
+    <Compile Include="Settings\Data List\MuteList.cs" />
+    <Compile Include="Settings\Data List\OnlineSetting.cs" />
+    <Compile Include="Settings\Data List\OperatorList.cs" />
+    <Compile Include="Settings\Data List\SwearInfractionList.cs" />
+    <Compile Include="Settings\Data List\WhiteList.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="World\SeasonMonth.cs" />
+    <Compile Include="World\WeatherSeason.cs" />
+    <Compile Include="World\World.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -228,7 +228,7 @@ Public Class Player
             End If
             If Not String.IsNullOrWhiteSpace(p.DataItems(6)) AndAlso p.DataItems(6).SplitCount = 3 Then
                 Position = p.DataItems(6)
-                Positions = CatchUp(List(1))
+                'Positions = CatchUp(List(1))
             End If
             If Not String.IsNullOrWhiteSpace(p.DataItems(7)) AndAlso p.DataItems(7).SplitCount = 1 Then
                 Facing = CInt(p.DataItems(7))
@@ -270,17 +270,17 @@ Public Class Player
                 If FullPackage Then
                     Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, GenerateGameData(True), PlayerClient))
                 Else
-                    Dim TempPosition As List(Of String) = Positions
-                    If TempPosition.Count > 0 Then
-                        Dim PackageData As List(Of String) = GenerateGameData(False)
-                        For Each Data As String In TempPosition
-                            PackageData(6) = Data.GetSplit(0, ":")
-                            PackageData(7) = Data.GetSplit(1, ":")
-                            Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, PackageData, PlayerClient))
-                        Next
-                    Else
-                        Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, GenerateGameData(False), PlayerClient))
-                    End If
+                    'Dim TempPosition As List(Of String) = Positions
+                    'If TempPosition.Count > 0 Then
+                    '    Dim PackageData As List(Of String) = GenerateGameData(False)
+                    '    For Each Data As String In TempPosition
+                    '        PackageData(6) = Data.GetSplit(0, ":")
+                    '        PackageData(7) = Data.GetSplit(1, ":")
+                    '        Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, PackageData, PlayerClient))
+                    '    Next
+                    'Else
+                    Main.ServerClient.SendAllData(New Package(Package.PackageTypes.GameData, PlayerID, GenerateGameData(False), PlayerClient))
+                    'End If
                 End If
             End If
         Catch ex As Exception

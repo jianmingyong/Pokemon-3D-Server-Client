@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Net;
 
 namespace Global
 {
     /// <summary>
-    /// Class containing BlackList data
+    /// Class containing Common List Property
     /// </summary>
-    public class BlackList
+    public abstract class CommonList
     {
         /// <summary>
         /// Get/Set Player Name
@@ -16,6 +17,29 @@ namespace Global
         /// Get/Set Player Gamejolt ID
         /// </summary>
         public int GameJoltID { get; set; }
+
+        private IPAddress _IPAddress;
+        /// <summary>
+        /// Get/Set Player IPAddress
+        /// </summary>
+        public string IPAddress
+        {
+            get
+            {
+                return _IPAddress.ToString();
+            }
+            set
+            {
+                try
+                {
+                    _IPAddress = System.Net.IPAddress.Parse(value);
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+            }
+        }
 
         /// <summary>
         /// Get/Set Player Ban Reason
@@ -33,7 +57,22 @@ namespace Global
         public int Duration { get; set; }
 
         /// <summary>
-        /// Get/Set Player Ban Remaining Time
+        /// Get/Set Player Operator Level
+        /// </summary>
+        public int OperatorLevel { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Infraction Points
+        /// </summary>
+        public int Points { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Muted
+        /// </summary>
+        public int Muted { get; set; }
+
+        /// <summary>
+        /// Get Player Ban Remaining Time
         /// </summary>
         public string RemainingTime
         {
@@ -108,23 +147,6 @@ namespace Global
                 }
                 return ReturnText;
             }
-        }
-
-        /// <summary>
-        /// New BlackList
-        /// </summary>
-        /// <param name="Name">Player Name</param>
-        /// <param name="GameJoltID">Player GameJolt ID</param>
-        /// <param name="Reason">Player Ban Reason</param>
-        /// <param name="StartTime">Player Ban Start Time</param>
-        /// <param name="Duration">Player Ban Duration</param>
-        public BlackList(string Name, int GameJoltID, string Reason, DateTime StartTime, int Duration)
-        {
-            this.Name = Name;
-            this.GameJoltID = GameJoltID;
-            this.Reason = Reason;
-            this.StartTime = StartTime;
-            this.Duration = Duration;
         }
     }
 }
