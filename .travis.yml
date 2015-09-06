@@ -9,6 +9,3 @@ install:
 
 script:
   - xbuild /p:Configuration=Release "Pokémon 3D Server Client/Pokémon 3D Server Client.sln"
-
-deploy:
-  - $travis setup releases
