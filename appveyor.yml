@@ -1,0 +1,13 @@
+os: Visual Studio 2015
+
+configuration:
+- Debug
+- Release
+platform: Any CPU
+
+before_build:
+- nuget restore
+
+build:
+  project: Pokémon 3D Server Client/Pokémon 3D Server Client.sln
+  verbosity: minimal
