@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/jianmingyong/Pokemon-3D-Server-Client.svg?branch=master)](https://travis-ci.org/jianmingyong/Pokemon-3D-Server-Client) | 
 
 How to Build?
+
 1. Do a nuget restore first. (That should resolve missing dependency.)
 2. Build using Visual Studio 2015 / Mono whichever you prefer.
 
