@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Net;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Global
 {
@@ -47,7 +48,10 @@ namespace Global
         #endregion Pokémon 3D Server Client Setting File
 
         #region Main Server Property
-        private static IPAddress _IPAddress;
+        /// <summary>
+        /// Get/Set IP Address
+        /// </summary>
+        public static IPAddress _IPAddress;
         /// <summary>
         /// Get/Set IP Address
         /// </summary>
@@ -307,38 +311,297 @@ namespace Global
         /// Get/Set BlackList Feature
         /// </summary>
         public static bool BlackList { get; set; } = true;
+        /// <summary>
+        /// Get/Set BlackList Data
+        /// </summary>
+        public static List<BlackList> BlackListData { get; set; } = new List<BlackList>();
 
         /// <summary>
         /// Get/Set IPBlackList Feature
         /// </summary>
         public static bool IPBlackList { get; set; } = true;
+        /// <summary>
+        /// Get/Set IPBlackList Data
+        /// </summary>
+        public static List<IPBlackList> IPBlackListData { get; set; } = new List<IPBlackList>();
 
         /// <summary>
         /// Get/Set WhiteList Feature
         /// </summary>
         public static bool WhiteList { get; set; } = false;
+        /// <summary>
+        /// Get/Set WhiteList Data
+        /// </summary>
+        public static List<WhiteList> WhiteListData { get; set; } = new List<WhiteList>();
 
         /// <summary>
         /// Get/Set OperatorList Feature
         /// </summary>
         public static bool OperatorList { get; set; } = true;
+        /// <summary>
+        /// Get/Set OperatorList Data
+        /// </summary>
+        public static List<OperatorList> OperatorListData { get; set; } = new List<OperatorList>();
 
         /// <summary>
         /// Get/Set MuteList Feature
         /// </summary>
         public static bool MuteList { get; set; } = true;
+        /// <summary>
+        /// Get/Set MuteList Data
+        /// </summary>
+        public static List<MuteList> MuteListData { get; set; } = new List<MuteList>();
 
         /// <summary>
         /// Get/Set OnlineSettingList Feature
         /// </summary>
         public static bool OnlineSettingList { get; set; } = true;
+        /// <summary>
+        /// Get/Set OnlineSettingList Data
+        /// </summary>
+        public static List<OnlineSetting> OnlineSettingListData { get; set; } = new List<OnlineSetting>();
 
         /// <summary>
         /// Get/Set SwearInfractionList Feature
         /// </summary>
         public static bool SwearInfractionList { get; set; } = false;
+        /// <summary>
+        /// Get/Set SwearInfractionList Data
+        /// </summary>
+        public static List<SwearInfractionList> SwearInfractionListData { get; set; } = new List<SwearInfractionList>();
+
+        #region Swear Infraction Feature
+        /// <summary>
+        /// Get/Set SwearInfraction Filter List
+        /// </summary>
+        public static List<SwearInfractionFilterList> SwearInfractionFilterListData { get; set; } = new List<SwearInfractionFilterList>();
+
+        private static int _SwearInfractionCap = 5;
+        /// <summary>
+        /// Get/Set SwearInfraction Cap
+        /// </summary>
+        public static int SwearInfractionCap
+        {
+            get
+            {
+                return _SwearInfractionCap;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    _SwearInfractionCap = -1;
+                }
+                else
+                {
+                    _SwearInfractionCap = value;
+                }
+            }
+        }
+
+        private static int _SwearInfractionReset = 1;
+        /// <summary>
+        /// Get/Set SwearInfraction Reset time
+        /// </summary>
+        public static int SwearInfractionReset
+        {
+            get
+            {
+                return _SwearInfractionReset;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    _SwearInfractionReset = -1;
+                }
+                else
+                {
+                    _SwearInfractionReset = value;
+                }
+            }
+        }
+        #endregion Swear Infraction Feature
+
+        #region Spam Detection
+        private static int _SpamResetDuration = 30;
+        /// <summary>
+        /// Get/Set Spam Reset Duration
+        /// </summary>
+        public static int SpamResetDuration
+        {
+            get
+            {
+                return _SpamResetDuration;
+            }
+            set
+            {
+                if (value < 1)
+                {
+                    _SpamResetDuration = -1;
+                }
+                else
+                {
+                    _SpamResetDuration = value;
+                }
+            }
+        }
+        #endregion Spam Detection
         #endregion Features
         #endregion Advanced Server Property
+
+        #region Server Client Logger
+        /// <summary>
+        /// Get/Set Logger Info Message
+        /// </summary>
+        public static bool LoggerInfo { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Warning Message
+        /// </summary>
+        public static bool LoggerWarning { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Debugger Message
+        /// </summary>
+        public static bool LoggerDebug { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set Logger Chat Message
+        /// </summary>
+        public static bool LoggerChat { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Private Message
+        /// </summary>
+        public static bool LoggerPM { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Server Message
+        /// </summary>
+        public static bool LoggerServer { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Trade Message
+        /// </summary>
+        public static bool LoggerTrade { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger PvP Message
+        /// </summary>
+        public static bool LoggerPvP { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Logger Command Message
+        /// </summary>
+        public static bool LoggerCommand { get; set; } = true;
+        #endregion Server Client Logger
+
+        #region Token
+        /// <summary>
+        /// Get/Set Token Defination
+        /// </summary>
+        public static Dictionary<string, string> TokenDefination { get; set; } = new Dictionary<string, string>();
+        #endregion Token
+
+        #region MapFile
+        /// <summary>
+        /// Get/Set Map File List Data
+        /// </summary>
+        public static List<MapFileList> MapFileListData { get; set; } = new List<MapFileList>();
+        #endregion MapFile
         #endregion Property
+
+        /// <summary>
+        /// Load Setting File
+        /// </summary>
+        public static void Load()
+        {
+            QueueMessage.Add("Setting.cs: Load Setting.", MessageEventArgs.LogType.Info);
+
+            try
+            {
+                #region application_settings.json
+
+                #endregion application_settings.json
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+
+        /// <summary>
+        /// Save Setting File
+        /// </summary>
+        public static void Save()
+        {
+            QueueMessage.Add("Setting.cs: Save Setting.", MessageEventArgs.LogType.Info);
+
+            try
+            {
+                #region application_settings.json
+
+                #endregion application_settings.json
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+
+        /// <summary>
+        /// Check for setting file.
+        /// </summary>
+        /// <param name="Files">File Name with extension.</param>
+        public static bool HaveSettingFile(string Files)
+        {
+            try
+            {
+                if (File.Exists(ApplicationDirectory + @"\" + Files))
+                {
+                    if (string.IsNullOrWhiteSpace(File.ReadAllText(ApplicationDirectory + @"\" + Files)))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Get the token string from key.
+        /// </summary>
+        /// <param name="Key">The key of the token.</param>
+        /// <param name="Variable">The Variable of the token.</param>
+        /// <returns></returns>
+        public static string Token(string Key,params string[] Variable)
+        {
+            string ReturnValue = null;
+
+            if (TokenDefination.ContainsKey(Key))
+            {
+                ReturnValue = TokenDefination[Key];
+
+                for (int i = 0; i < Variable.Count(); i++)
+                {
+                    ReturnValue = ReturnValue.Replace("{" + i + "}", Variable[i]);
+                }
+            }
+
+            return ReturnValue;
+        }
     }
 }

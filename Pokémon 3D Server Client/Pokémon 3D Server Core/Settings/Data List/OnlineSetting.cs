@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Global
 {
@@ -14,7 +12,6 @@ namespace Global
     public class OnlineSetting : CommonList
     {
         // <!-- Pokémon 3D Server Client Setting File -->
-
         /// <summary>
         /// Get Last Updated
         /// </summary>
@@ -204,6 +201,70 @@ namespace Global
             }
         }
 
+        /// <summary>
+        /// Save Player Online Setting
+        /// </summary>
+        public void Save()
+        {
+            try
+            {
+                if (!Directory.Exists(Settings.ApplicationDirectory + "\\Data\\UserSetting"))
+                {
+                    Directory.CreateDirectory(Settings.ApplicationDirectory + "\\Data\\UserSetting");
+                }
+
+                string ReturnString = null;
+                if (MuteListData.Count > 0)
+                {
+                    foreach (MuteList Data in MuteListData)
+                    {
+                        ReturnString += string.Format(@"        {
+""Name"": ""{0}"",
+""GameJoltID"": {1},
+""Reason"": ""{2}"",
+""StartTime"": ""{3}"",
+""MuteDuration"": {4}
+        },", 
+        Data.Name,
+        Data.GameJoltID.ToString(),
+        Data.Reason,
+        Data.StartTime.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffK"),
+        Data.Duration.ToString());
+                    }
+                }
+
+                File.WriteAllText(Settings.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json",string.Format(@"{
+    ""Pokémon 3D Server Client Setting File"":
+    {
+        ""Name"": ""{0}"",
+        ""GameJoltID"": {1},
+        ""LastUpdate"": ""{2}""
+    },
+
+    ""World Property"":
+    {
+        ""Season"": {3},
+        ""Weather"": {4}
+    }
+
+    ""MuteListData"":
+    [
+{5}
+    ]
+}",
+Name,
+GameJoltID.ToString(),
+LastUpdated.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffK"),
+Season.ToString(),
+Weather.ToString(),
+ReturnString),Encoding.Unicode);
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+
         private bool HaveSettingFile(int GameJoltID)
         {
             try
@@ -231,5 +292,8 @@ namespace Global
             }
             return false;
         }
+
+        #region MuteList
+        #endregion MuteList
     }
 }

@@ -3,6 +3,8 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using System.Threading;
 
 namespace Global
 {
@@ -15,6 +17,8 @@ namespace Global
         /// Represents a newline character for print and display functions.
         /// </summary>
         public static readonly string vbNewLine = Environment.NewLine;
+
+        private static bool IsPortOpen = false;
 
         /// <summary>
         /// Play the system sound for error input.
@@ -196,12 +200,37 @@ StackTrace);
 
             foreach (IPAddress address in host.AddressList)
             {
-                if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork )
+                if (address.AddressFamily == AddressFamily.InterNetwork )
                 {
                     return address.ToString();
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Check if the port is open.
+        /// </summary>
+        public static bool CheckPortOpen()
+        {
+            try
+            {
+                using (TcpClient Client = new TcpClient())
+                {
+                    if (Client.ConnectAsync(Settings._IPAddress, Settings.Port).Wait(1000))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

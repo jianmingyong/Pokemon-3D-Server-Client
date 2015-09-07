@@ -65,6 +65,7 @@
     <Compile Include="Settings\Data List\MuteList.cs" />
     <Compile Include="Settings\Data List\OnlineSetting.cs" />
     <Compile Include="Settings\Data List\OperatorList.cs" />
+    <Compile Include="Settings\Data List\SwearInfractionFilterList.cs" />
     <Compile Include="Settings\Data List\SwearInfractionList.cs" />
     <Compile Include="Settings\Data List\WhiteList.cs" />
     <Compile Include="Settings\Settings.cs" />
