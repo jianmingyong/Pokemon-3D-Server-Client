@@ -23,7 +23,7 @@ namespace Pokémon_3D_Server_Client
             // Add Handler
             QueueMessage.AddMessage += QueueMessage_AddMessage;
 
-            QueueMessage.Add("Testing Server 123", MessageEventArgs.LogType.Info);
+            QueueMessage.Add("", MessageEventArgs.LogType.Info);
 
             Console.Read();
         }
