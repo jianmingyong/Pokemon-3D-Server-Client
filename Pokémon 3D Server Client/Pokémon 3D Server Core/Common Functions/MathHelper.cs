@@ -9,28 +9,6 @@ namespace Global
     public static class MathHelper
     {
         /// <summary>
-        /// Get Current Culture Number Decimal Separator.
-        /// </summary>
-        public static readonly string CurrentCulture = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
-
-        /// <summary>
-        /// Convert Math Value to current culture.
-        /// </summary>
-        /// <param name="value">The value to convert in string.</param>
-        /// <param name="Player">The Player Culture.</param>
-        public static string ConvertStringCulture(this string value, BasePlayer Player = null)
-        {
-            if (Player == null)
-            {
-                return value.Replace(".", CurrentCulture).Replace(",", CurrentCulture);
-            }
-            else
-            {
-                return value.Replace(".", Player.DecimalSeparator).Replace(",", Player.DecimalSeparator);
-            }
-        }
-
-        /// <summary>
         /// Convert string to byte type.
         /// </summary>
         /// <param name="value">The string to convert.</param>
@@ -38,7 +16,7 @@ namespace Global
         {
             try
             {
-                return byte.Parse(value.ConvertStringCulture());
+                return byte.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -55,7 +33,7 @@ namespace Global
         {
             try
             {
-                return decimal.Parse(value.ConvertStringCulture());
+                return decimal.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -72,7 +50,7 @@ namespace Global
         {
             try
             {
-                return double.Parse(value.ConvertStringCulture());
+                return double.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -89,7 +67,7 @@ namespace Global
         {
             try
             {
-                return float.Parse(value.ConvertStringCulture());
+                return float.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -106,7 +84,7 @@ namespace Global
         {
             try
             {
-                return int.Parse(value.ConvertStringCulture());
+                return int.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -123,7 +101,7 @@ namespace Global
         {
             try
             {
-                return long.Parse(value.ConvertStringCulture());
+                return long.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -140,7 +118,7 @@ namespace Global
         {
             try
             {
-                return sbyte.Parse(value.ConvertStringCulture());
+                return sbyte.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -157,7 +135,7 @@ namespace Global
         {
             try
             {
-                return short.Parse(value.ConvertStringCulture());
+                return short.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -174,7 +152,7 @@ namespace Global
         {
             try
             {
-                return uint.Parse(value.ConvertStringCulture());
+                return uint.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -191,7 +169,7 @@ namespace Global
         {
             try
             {
-                return ulong.Parse(value.ConvertStringCulture());
+                return ulong.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -208,7 +186,7 @@ namespace Global
         {
             try
             {
-                return ushort.Parse(value.ConvertStringCulture());
+                return ushort.Parse(value, CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -218,34 +196,18 @@ namespace Global
         }
 
         /// <summary>
-        /// Convert integer to bool type.
+        /// Convert string to bool type.
         /// </summary>
-        /// <param name="value">The int value to convert.</param>
-        public static bool Tobool(this int value)
+        /// <param name="value">The string to convert.</param>
+        public static bool Tobool(this string value)
         {
-            if (value <= 0)
+            if (value.Toint() <= 0)
             {
                 return false;
             }
             else
             {
                 return true;
-            }
-        }
-
-        /// <summary>
-        /// Convert boolean to integer type.
-        /// </summary>
-        /// <param name="value">The bool value to convert.</param>
-        public static int Tobool(this bool value)
-        {
-            if (value)
-            {
-                return 1;
-            }
-            else
-            {
-                return 0;
             }
         }
 
