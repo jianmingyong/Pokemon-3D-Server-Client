@@ -67,7 +67,22 @@ namespace Global
 
         private void StartListening()
         {
+            
+        }
 
+        private void ThreadStartListening()
+        {
+            do
+            {
+                try
+                {
+                    
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+            } while (true);
         }
 
         /// <summary>

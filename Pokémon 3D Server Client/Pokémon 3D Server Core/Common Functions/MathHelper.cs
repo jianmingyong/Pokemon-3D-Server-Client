@@ -18,7 +18,7 @@ namespace Global
         /// </summary>
         /// <param name="value">The value to convert in string.</param>
         /// <param name="Player">The Player Culture.</param>
-        public static string ConvertStringCulture(this string value, BasePlayer Player = null)
+        public static string ConvertStringCulture(this string value, Player Player = null)
         {
             if (Player == null)
             {
