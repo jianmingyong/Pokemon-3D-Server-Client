@@ -1,12 +1,29 @@
+version: 0.54.7.{build}
+
 os: Visual Studio 2015
 
-configuration:
-- Release
-platform: Any CPU
+shallow_clone: true
 
 before_build:
-- nuget restore Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
+
+- ps: nuget restore Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
 
 build:
-  project: Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
+
+  project: Pokemon_3D_Server_Client/Pokemon_3D_Server_Client.sln
+
+  publish_nuget: true
+
+  parallel: true
+
   verbosity: minimal
+
+deploy:
+
+- provider: GitHub
+
+  auth_token:
+
+    secure: UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc
+
+  artifact: test
