@@ -74,7 +74,7 @@
     <Content Include="Pokémon3D_32512.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Pokemon_3D_Server_Core\Pokemon_3D_Server_Core.csproj">
+    <ProjectReference Include="..\Pokemon.3D.Server.Core\Pokemon.3D.Server.Core.csproj">
       <Project>{332aadb0-98ce-4fd6-a63a-577fdaa7c9ec}</Project>
       <Name>Pokemon_3D_Server_Core</Name>
     </ProjectReference>

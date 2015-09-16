@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
-using Newtonsoft.Json;
 using System.Reflection;
-using System.Diagnostics;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace Global
 {
@@ -515,6 +514,10 @@ namespace Global
         {
             ApplicationDirectory = Application;
             StartTime = DateTime.Now;
+
+            // Initialize Tokens
+            // TokenDefination.Add()
+
             QueueMessage.Add("Setting.cs: Setting initiated.", MessageEventArgs.LogType.Info);
         }
 
@@ -523,17 +526,79 @@ namespace Global
         /// </summary>
         public static void Load()
         {
-            QueueMessage.Add("Setting.cs: Load Setting.", MessageEventArgs.LogType.Info);
-
             try
             {
                 #region application_settings.json
+                if (File.Exists(ApplicationDirectory + "\\application_settings.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\application_settings.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
 
+                        int StartObjectDepth = -1;
+                        string ObjectPropertyName = null;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+                        List<string> SeasonMonth = new List<string>();
+                        List<string> WeatherSeason = new List<string>();
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                                if (TempPropertyName != null && TempPropertyName != ObjectPropertyName)
+                                {
+                                    ObjectPropertyName = TempPropertyName;
+                                    TempPropertyName = null;
+                                }
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "SeasonMonth", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    string TempValue = null;
+                                    foreach (string item in SeasonMonth)
+                                    {
+                                        TempValue += item + "|";
+                                    }
+                                    TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
+                                    Settings.SeasonMonth.SeasonData = TempValue;
+                                }
+                                else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    string TempValue = null;
+                                    foreach (string item in WeatherSeason)
+                                    {
+                                        TempValue += item + "|";
+                                    }
+                                    TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
+                                    Settings.WeatherSeason.WeatherData = TempValue;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+                        }
+                    }
+                }
                 #endregion application_settings.json
+
+                QueueMessage.Add("Setting.cs: Loaded Setting.", MessageEventArgs.LogType.Info);
             }
             catch (Exception ex)
             {
                 ex.CatchError();
+                QueueMessage.Add("Setting.cs: Load Setting failed.", MessageEventArgs.LogType.Info);
             }
         }
 
@@ -822,6 +887,222 @@ LoggerCommand.ToString().ToLower() // LoggerCommand
 ), Encoding.Unicode);
                 #endregion application_settings.json
 
+                #region Data\BlackList.json
+                string List = null;
+                if (BlackListData.Count > 0)
+                {
+                    for (int i = 0; i < BlackListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""GameJoltID"": {1},
+            ""Reason"": ""{2}"",
+            ""StartTime"": ""{3}"",
+            ""Duration"": {4}
+        }},
+",
+BlackListData[i].Name,
+BlackListData[i].GameJoltID.ToString(),
+BlackListData[i].Reason,
+BlackListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"),
+BlackListData[i].Duration.ToString());
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\BlackList.json", string.Format(@"{{
+    ""BlackListData"":
+    [
+{0}
+    ]
+}}",List), Encoding.Unicode);
+                #endregion Data\BlackList.json
+
+                #region Data\IPBlackList.json
+                List = null;
+                if (IPBlackListData.Count > 0)
+                {
+                    for (int i = 0; i < IPBlackListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""IPAddress"": ""{0}"",
+            ""Reason"": ""{1}"",
+            ""StartTime"": ""{2}"",
+            ""Duration"": {3}
+        }},
+",
+IPBlackListData[i].IPAddress,
+IPBlackListData[i].Reason,
+IPBlackListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"),
+IPBlackListData[i].Duration.ToString());
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\IPBlackList.json", string.Format(@"{{
+    ""IPBlackListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\IPBlackList.json
+
+                #region Data\MapFileList.json
+                #endregion Data\MapFileList.json
+
+                #region Data\MuteList.json
+                List = null;
+                if (MuteListData.Count > 0)
+                {
+                    for (int i = 0; i < MuteListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""GameJoltID"": {1},
+            ""Reason"": ""{2}"",
+            ""StartTime"": ""{3}"",
+            ""Duration"": {4}
+        }},
+",
+MuteListData[i].Name,
+MuteListData[i].GameJoltID.ToString(),
+MuteListData[i].Reason,
+MuteListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"),
+MuteListData[i].Duration.ToString());
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\MuteList.json", string.Format(@"{{
+    ""MuteListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\MuteList.json
+
+                #region Data\OperatorList.json
+                List = null;
+                if (OperatorListData.Count > 0)
+                {
+                    for (int i = 0; i < OperatorListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""GameJoltID"": {1},
+            ""Reason"": ""{2}"",
+            ""OperatorLevel"": {3}
+        }},
+",
+OperatorListData[i].Name,
+OperatorListData[i].GameJoltID.ToString(),
+OperatorListData[i].Reason,
+OperatorListData[i].OperatorLevel.ToString());
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\OperatorList.json", string.Format(@"{{
+    ""OperatorListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\OperatorList.json
+
+                #region Data\SwearInfractionFilterList.json
+                #endregion Data\SwearInfractionFilterList.json
+
+                #region Data\SwearInfractionList.json
+                List = null;
+                if (SwearInfractionListData.Count > 0)
+                {
+                    for (int i = 0; i < SwearInfractionListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""GameJoltID"": {1},
+            ""Points"": {2},
+            ""Muted"": {3},
+            ""StartTime"": ""{4}""
+        }},
+",
+SwearInfractionListData[i].Name,
+SwearInfractionListData[i].GameJoltID.ToString(),
+SwearInfractionListData[i].Points.ToString(),
+SwearInfractionListData[i].Muted.ToString(),
+SwearInfractionListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"));
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionList.json", string.Format(@"{{
+    ""SwearInfractionListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\SwearInfractionList.json
+
+                #region Data\WhiteList.json
+                List = null;
+                if (WhiteListData.Count > 0)
+                {
+                    for (int i = 0; i < WhiteListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""GameJoltID"": {1},
+            ""Reason"": ""{2}""
+        }},
+",
+WhiteListData[i].Name,
+WhiteListData[i].GameJoltID.ToString(),
+WhiteListData[i].Reason);
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\WhiteList.json", string.Format(@"{{
+    ""WhiteListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\WhiteList.json
+
+                #region Data\Token.json
+                List = null;
+                if (TokenDefination.Count > 0)
+                {
+                    foreach (KeyValuePair<string,string> Data in TokenDefination)
+                    {
+                        List += string.Format(@"        {{
+            ""Name"": ""{0}"",
+            ""Description"": ""{1}""
+        }},
+",
+Data.Key,
+Data.Value);
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\Token.json", string.Format(@"{{
+    ""Token"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
+                #endregion Data\Token.json
+
                 QueueMessage.Add("Setting.cs: Saved Setting.", MessageEventArgs.LogType.Info);
         }
             catch (Exception ex)
@@ -874,12 +1155,7 @@ LoggerCommand.ToString().ToLower() // LoggerCommand
 
             if (TokenDefination.ContainsKey(Key))
             {
-                ReturnValue = TokenDefination[Key];
-
-                for (int i = 0; i < Variable.Count(); i++)
-                {
-                    ReturnValue = ReturnValue.Replace("{" + i + "}", Variable[i]);
-                }
+                ReturnValue = string.Format(TokenDefination[Key], Variable);
             }
 
             return ReturnValue;

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon_3D_Server_Client", "Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.csproj", "{6B462F07-FB93-4ABF-A7A3-454E570AE2B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon.3D.Server.Client", "Pokemon.3D.Server.Client\Pokemon.3D.Server.Client.csproj", "{6B462F07-FB93-4ABF-A7A3-454E570AE2B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon_3D_Server_Core", "Pokemon_3D_Server_Core\Pokemon_3D_Server_Core.csproj", "{332AADB0-98CE-4FD6-A63A-577FDAA7C9EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon.3D.Server.Core", "Pokemon.3D.Server.Core\Pokemon.3D.Server.Core.csproj", "{332AADB0-98CE-4FD6-A63A-577FDAA7C9EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
