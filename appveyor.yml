@@ -5,7 +5,7 @@ configuration:
 platform: Any CPU
 
 before_build:
-- nuget restore
+- nuget restore Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
 
 build:
   project: Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
