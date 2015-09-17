@@ -4,13 +4,13 @@ configuration: Release
 platform: Any CPU
 shallow_clone: true
 before_build:
-- ps: nuget restore Pokemon_3D_Server_Client\Pokemon_3D_Server_Client.sln
+- ps: nuget restore Pokemon.3D.Server.Client\Pokemon.3D.Server.Client.sln
 build:
-  project: Pokemon_3D_Server_Client/Pokemon_3D_Server_Client.sln
+  project: Pokemon.3D.Server.Client/Pokemon.3D.Server.Client.sln
   parallel: true
   verbosity: minimal
 artifacts:
-- path: Pokemon_3D_Server_Client/Pokemon_3D_Server_Client/bin/Debug
+- path: Pokemon.3D.Server.Client/Pokemon.3D.Server.Client/bin/Debug
   name: Release
 deploy:
 - provider: GitHub
