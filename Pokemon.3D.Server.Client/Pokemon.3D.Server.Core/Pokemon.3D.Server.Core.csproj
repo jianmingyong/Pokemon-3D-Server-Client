@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Global</RootNamespace>
-    <AssemblyName>Pokemon_3D_Server_Core</AssemblyName>
+    <AssemblyName>Pokemon.3D.Server.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -24,7 +24,7 @@
     <LangVersion>6</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <RegisterForComInterop>false</RegisterForComInterop>
-    <DocumentationFile>bin\Debug\Pokemon_3D_Server_Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Pokemon.3D.Server.Core.xml</DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -55,9 +55,11 @@
     <Compile Include="Common Functions\Math.cs" />
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common vb.net Functions\my.cs" />
+    <Compile Include="Event Handler\Logger.cs" />
     <Compile Include="Event Handler\MessageEventArgs.cs" />
     <Compile Include="Event Handler\QueueMessage.cs" />
     <Compile Include="Package\Package.cs" />
+    <Compile Include="Package\PackageHandler.cs" />
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

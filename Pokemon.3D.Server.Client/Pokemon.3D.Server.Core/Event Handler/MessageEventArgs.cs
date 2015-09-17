@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using System.Net.Sockets;
 
 namespace Global
@@ -73,17 +72,8 @@ namespace Global
         /// <param name="Client">TcpClient.</param>
         public MessageEventArgs(string Message, LogType LogType, TcpClient Client = null)
         {
-            string Logger;
-            if (Client != null)
-            {
-                Logger = ((IPEndPoint)Client.Client.RemoteEndPoint).Address.ToString() + ": " + Message;
-            }
-            else
-            {
-                Logger = Message;
-            }
-
-            OutputMessage = string.Format("{0} [{1}] {2}", DateTime.Now, LogType, Logger);
+            Logger Logger = new Logger(Message, LogType, Client);
+            OutputMessage = Logger.ToString();
         }
     }
 }

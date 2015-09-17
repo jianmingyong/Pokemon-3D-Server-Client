@@ -524,7 +524,7 @@ namespace Global
         /// <summary>
         /// Load Setting File
         /// </summary>
-        public static void Load()
+        public static bool Load()
         {
             try
             {
@@ -588,17 +588,1263 @@ namespace Global
                                 PropertyName = TempPropertyName;
                                 TempPropertyName = null;
                             }
+
+                            #region Pokémon 3D Server Client Setting File
+                            if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Pokémon 3D Server Client Setting File", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "CheckForUpdate", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            CheckForUpdate = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.CheckForUpdate\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GeneratePublicIP", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GeneratePublicIP = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.GeneratePublicIP\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Pokémon 3D Server Client Setting File
+                            #region Main Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Main Server Property", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "IPAddress", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            IPAddress = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.IPAddress\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Port", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Port = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.Port\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "ServerName", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            ServerName = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.ServerName\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "ServerMessage", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            ServerMessage = Reader.Value.ToString();
+                                        }
+                                        else if (Reader.TokenType == JsonToken.Null)
+                                        {
+                                            ServerMessage = null;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.ServerMessage\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "WelcomeMessage", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            WelcomeMessage = Reader.Value.ToString();
+                                        }
+                                        else if (Reader.TokenType == JsonToken.Null)
+                                        {
+                                            WelcomeMessage = null;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.WelcomeMessage\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameMode", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            for (int i = 0; i < Reader.Value.ToString().SplitCount(); i++)
+                                            {
+                                                GameMode.Add(Reader.Value.ToString().GetSplit(i, ","));
+                                            }
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.GameMode\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "MaxPlayers", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            MaxPlayers = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.MaxPlayers\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "OfflineMode", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            OfflineMode = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Main Server Property.OfflineMode\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Main Server Property
+                            #region World
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "World", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Season", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Season = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Season\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Weather", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Weather = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Weather\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "DoDayCycle", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            DoDayCycle = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.DoDayCycle\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion World
+                            #region SeasonMonth
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "SeasonMonth", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "January", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "February", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "March", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "April", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "May", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "June", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "July", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "August", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "September", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "October", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "November", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "December", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            SeasonMonth.Add(Reader.Value.ToString());
+                                        }
+                                        else
+                                        {
+                                            SeasonMonth.Add("-2");
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.SeasonMonth\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion SeasonMonth
+                            #region WeatherSeason
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Winter", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "Spring", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "Summer", StringComparison.OrdinalIgnoreCase) || string.Equals(PropertyName, "Fall", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            WeatherSeason.Add(Reader.Value.ToString());
+                                        }
+                                        else
+                                        {
+                                            WeatherSeason.Add("-2");
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.WeatherSeason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                } 
+                            }
+                            #endregion WeatherSeason
+                            #region World
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "DefaultWorldCountry", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            DefaultWorldCountry = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.DefaultWorldCountry\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion World
+                            #region FailSafe Features
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "FailSafe Features", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "NoPingKickTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            NoPingKickTime = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.NoPingKickTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "AFKKickTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            AFKKickTime = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AFKKickTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "AutoRestartTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            AutoRestartTime = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AutoRestartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion FailSafe Features
+                            #region Features
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "Features", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "BlackList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            BlackList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.BlackList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "IPBlackList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            IPBlackList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.IPBlackList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "WhiteList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            WhiteList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.WhiteList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "OperatorList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            OperatorList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.OperatorList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "MuteList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            MuteList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.MuteList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "OnlineSettingList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            OnlineSettingList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.OnlineSettingList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SwearInfractionList", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            SwearInfractionList = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.SwearInfractionList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Features
+                            #region Swear Infraction Feature
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Swear Infraction Feature", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "SwearInfractionCap", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            SwearInfractionCap = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionCap\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SwearInfractionReset", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            SwearInfractionReset = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionReset\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Swear Infraction Feature
+                            #region Spam Feature
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Spam Feature", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "SpamResetDuration", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            SpamResetDuration = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Spam Feature.SpamResetDuration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Spam Feature
+                            #region Server Client Logger
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Server Client Logger", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "LoggerInfo", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerInfo = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerInfo\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerWarning", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerWarning = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerWarning\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerDebug", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerDebug = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerDebug\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerChat", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerChat = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerChat\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerPM", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerPM = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerPM\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerServer", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerServer = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerServer\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerTrade", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerTrade = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerTrade\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerPvP", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerPvP = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerPvP\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "LoggerCommand", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            LoggerCommand = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerCommand\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Server Client Logger
                         }
                     }
                 }
+                else
+                {
+                    return false;
+                }
                 #endregion application_settings.json
 
+                #region Data\BlackList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\BlackList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\BlackList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        int GameJoltID = -1;
+                        string Reason = null;
+                        DateTime StartTime = DateTime.Now;
+                        int Duration = -1;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    BlackListData.Add(new BlackList(Name, GameJoltID, Reason, StartTime, Duration));
+                                    Name = null;
+                                    GameJoltID = -1;
+                                    Reason = null;
+                                    StartTime = DateTime.Now;
+                                    Duration = -1;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"BlackList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            GameJoltID = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"BlackList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Reason = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"BlackList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Date)
+                                        {
+                                            StartTime = (DateTime)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"BlackList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Duration = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"BlackList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\BlackList.json
+
+                #region Data\IPBlackList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\IPBlackList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\IPBlackList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string IPAddress = null;
+                        string Reason = null;
+                        DateTime StartTime = DateTime.Now;
+                        int Duration = -1;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    IPBlackListData.Add(new IPBlackList(IPAddress, Reason, StartTime, Duration));
+                                    IPAddress = null;
+                                    Reason = null;
+                                    StartTime = DateTime.Now;
+                                    Duration = -1;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "IPAddress", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            IPAddress = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"IPBlackList.IPAddress\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Reason = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"IPBlackList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Date)
+                                        {
+                                            StartTime = (DateTime)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"IPBlackList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Duration = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"IPBlackList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\IPBlackList.json
+
+                #region Data\MapFileList.json
+                #endregion Data\MapFileList.json
+
+                #region Data\MuteList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\MuteList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\MuteList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        int GameJoltID = -1;
+                        string Reason = null;
+                        DateTime StartTime = DateTime.Now;
+                        int Duration = -1;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    MuteListData.Add(new MuteList(Name, GameJoltID, Reason, StartTime, Duration));
+                                    Name = null;
+                                    GameJoltID = -1;
+                                    Reason = null;
+                                    StartTime = DateTime.Now;
+                                    Duration = -1;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"MuteList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            GameJoltID = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"MuteList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Reason = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"MuteList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Date)
+                                        {
+                                            StartTime = (DateTime)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"MuteList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Duration = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"MuteList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\MuteList.json
+
+                #region Data\OperatorList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\OperatorList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\OperatorList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        int GameJoltID = -1;
+                        string Reason = null;
+                        int OperatorLevel = (int)Player.OperatorTypes.Player;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    OperatorListData.Add(new OperatorList(Name, GameJoltID, Reason, OperatorLevel));
+                                    Name = null;
+                                    GameJoltID = -1;
+                                    Reason = null;
+                                    OperatorLevel = (int)Player.OperatorTypes.Player;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"OperatorList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            GameJoltID = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"OperatorList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Reason = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"OperatorList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "OperatorLevel", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            OperatorLevel = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"OperatorList.OperatorLevel\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\OperatorList.json
+
+                #region Data\SwearInfractionFilterList.json
+                #endregion Data\SwearInfractionFilterList.json
+
+                #region Data\SwearInfractionList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        int GameJoltID = -1;
+                        int Points = 0;
+                        int Muted = 0;
+                        DateTime StartTime = DateTime.Now;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    SwearInfractionListData.Add(new SwearInfractionList(Name, GameJoltID, Points,Muted,StartTime));
+                                    Name = null;
+                                    GameJoltID = -1;
+                                    Points = 0;
+                                    Muted = 0;
+                                    StartTime = DateTime.Now;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            GameJoltID = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Points", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Points = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Points\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Muted", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            Muted = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Muted\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Date)
+                                        {
+                                            StartTime = (DateTime)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\SwearInfractionList.json
+
+                #region Data\WhiteList.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\WhiteList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\WhiteList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        int GameJoltID = -1;
+                        string Reason = null;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    WhiteListData.Add(new WhiteList(Name, GameJoltID, Reason));
+                                    Name = null;
+                                    GameJoltID = -1;
+                                    Reason = null;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"WhiteList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            GameJoltID = Reader.Value.ToString().Toint();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"WhiteList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Reason = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"WhiteList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\WhiteList.json
+
+                #region Data\Token.json
+                if (File.Exists(ApplicationDirectory + "\\Data\\Token.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\Token.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Name = null;
+                        string Description = null;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    if (TokenDefination.ContainsKey(Name))
+                                    {
+                                        TokenDefination[Name] = Description;
+                                    }
+                                    else
+                                    {
+                                        TokenDefination.Add(Name, Description);
+                                    }
+                                    Name = null;
+                                    Description = null;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Name", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Name = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Token.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Description", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Description = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            QueueMessage.Add("Settings.cs: \"Token.Description\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Data\Token.json
+
                 QueueMessage.Add("Setting.cs: Loaded Setting.", MessageEventArgs.LogType.Info);
+                return true;
             }
             catch (Exception ex)
             {
                 ex.CatchError();
                 QueueMessage.Add("Setting.cs: Load Setting failed.", MessageEventArgs.LogType.Info);
+                return false;
             }
         }
 
@@ -609,9 +1855,9 @@ namespace Global
         {
             try
             {
-                if (!Directory.Exists(ApplicationDirectory + @"\Data"))
+                if (!Directory.Exists(ApplicationDirectory + "\\Data"))
                 {
-                    Directory.CreateDirectory(ApplicationDirectory + @"\Data");
+                    Directory.CreateDirectory(ApplicationDirectory + "\\Data");
                 }
 
                 #region application_settings.json

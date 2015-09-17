@@ -228,6 +228,21 @@ namespace Global
         public DateTime LastChatTime { get; set; }
 
         /// <summary>
+        /// Get/Set Player Last Valid Game Data
+        /// </summary>
+        public List<string> LastValidGameData { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Last Movement Position [Direction | Position Vector]
+        /// </summary>
+        public string LastMovementPosition { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Last Pokemon Movement Position [Direction | Position Vector]
+        /// </summary>
+        public string LastPokemonMovementPosition { get; set; }
+
+        /// <summary>
         /// A Collection of Busy Type
         /// </summary>
         public enum BusyTypes
@@ -289,6 +304,464 @@ namespace Global
             Creator,
         }
 
+        /// <summary>
+        /// New Player (Update Player)
+        /// </summary>
+        /// <param name="p">Package</param>
+        /// <param name="ID">Player ID</param>
+        public Player(Package p,int ID)
+        {
+            this.ID = ID;
+            Client = new Networking(p.Client);
 
+        }
+
+        /// <summary>
+        /// Update Player Objects
+        /// </summary>
+        /// <param name="p">Package Data</param>
+        /// <param name="SentToServer">Sent data to server?</param>
+        public void Update(Package p,bool SentToServer)
+        {
+            Client.LastValidMovement = DateTime.Now;
+
+            if (p.IsFullPackageData())
+            {
+                GameMode = p.DataItems[0];
+                isGameJoltPlayer = p.DataItems[1].Toint().Tobool();
+                GameJoltID = isGameJoltPlayer ? p.DataItems[2].Toint() : -1;
+                DecimalSeparator = p.DataItems[3];
+                Name = p.DataItems[4];
+                LevelFile = p.DataItems[5];
+                Position = p.DataItems[6];
+                Facing = p.DataItems[7].Toint();
+                Moving = p.DataItems[8].Toint().Tobool();
+                Skin = p.DataItems[9];
+                BusyType = p.DataItems[10].Toint();
+                PokemonVisible = p.DataItems[11].Toint().Tobool();
+                PokemonPosition = p.DataItems[12];
+                PokemonSkin = p.DataItems[13];
+                PokemonFacing = p.DataItems[14].Toint();
+
+                LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
+            }
+            else
+            {
+                LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
+
+                if (!string.IsNullOrWhiteSpace(p.DataItems[5]) && p.DataItems[5].SplitCount() == 1)
+                {
+                    LevelFile = p.DataItems[5];
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[6]) && p.DataItems[6].SplitCount() == 3)
+                {
+                    Position = p.DataItems[6];
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[7]) && p.DataItems[7].SplitCount() == 1)
+                {
+                    Facing = p.DataItems[7].Toint();
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[8]) && p.DataItems[8].SplitCount() == 1)
+                {
+                    Moving = p.DataItems[8].Toint().Tobool();
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[9]) && p.DataItems[9].SplitCount() <= 2)
+                {
+                    Skin = p.DataItems[9];
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[10]) && p.DataItems[10].SplitCount() == 1)
+                {
+                    BusyType = p.DataItems[10].Toint();
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[11]) && p.DataItems[11].SplitCount() == 1)
+                {
+                    PokemonVisible = p.DataItems[11].Toint().Tobool();
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[12]) && p.DataItems[12].SplitCount() == 3)
+                {
+                    PokemonPosition = p.DataItems[12];
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[13]) && p.DataItems[13].SplitCount() <= 2)
+                {
+                    PokemonSkin = p.DataItems[13];
+                }
+                if (!string.IsNullOrWhiteSpace(p.DataItems[14]) && p.DataItems[14].SplitCount() == 1)
+                {
+                    PokemonFacing = p.DataItems[14].Toint();
+                }
+            }
+
+            // Sent To Server
+        }
+
+        /// <summary>
+        /// Get the current player status.
+        /// </summary>
+        public string GetPlayerBusyType()
+        {
+            switch (BusyType)
+            {
+                case (int)BusyTypes.NotBusy:
+                    return "";
+                case (int)BusyTypes.Battling:
+                    return " - Battling";
+                case (int)BusyTypes.Chatting:
+                    return " - Chatting";
+                case (int)BusyTypes.Inactive:
+                    return " - Inactive";
+                default:
+                    return "";
+            }
+        }
+
+        private List<string> GenerateGameData(bool FullPackageData)
+        {
+            List<string> ReturnList;
+
+            if (FullPackageData)
+            {
+                ReturnList = new List<string>
+                {
+                    GameMode,
+                    isGameJoltPlayer.Tobool().ToString(),
+                    isGameJoltPlayer ? GameJoltID.ToString() : "",
+                    DecimalSeparator,
+                    Name,
+                    LevelFile,
+                    Position.ConvertStringCulture(this),
+                    Facing.ToString(),
+                    Moving.Tobool().ToString(),
+                    Skin,
+                    BusyType.ToString(),
+                    PokemonVisible.Tobool().ToString(),
+                    PokemonPosition.ConvertStringCulture(this),
+                    PokemonSkin,
+                    PokemonFacing.ToString()
+                };
+            }
+            else
+            {
+                ReturnList = new List<string>
+                {
+                    "",
+                    "",
+                    "",
+                    "",
+                    Name,
+                    LastValidGameData[0] == LevelFile ? "" : LevelFile,
+                    LastValidGameData[1] == Position ? "" : Position.ConvertStringCulture(this),
+                    LastValidGameData[2] == Facing.ToString() ? "" : Facing.ToString(),
+                    LastValidGameData[3] == Moving.Tobool().ToString() ? "" : Moving.Tobool().ToString(),
+                    LastValidGameData[4] == Skin ? "" : Skin,
+                    LastValidGameData[5] == BusyType.ToString() ? "" : BusyType.ToString(),
+                    LastValidGameData[6] == PokemonVisible.Tobool().ToString() ? "" : PokemonVisible.Tobool().ToString(),
+                    LastValidGameData[7] == PokemonPosition ? "" : PokemonPosition.ConvertStringCulture(this),
+                    LastValidGameData[8] == PokemonSkin ? "" : PokemonSkin,
+                    LastValidGameData[9] == PokemonFacing.ToString() ? "" : PokemonFacing.ToString()
+                };
+            }
+
+            return ReturnList;
+        }
+
+        private List<string> CatchUp(string LastPosition,bool IsPlayerData = true)
+        {
+            double LastPositionX = LastPosition.GetSplit(0).Todouble();
+            double LastPositionY = LastPosition.GetSplit(1).Todouble();
+            double LastPositionZ = LastPosition.GetSplit(2).Todouble();
+
+            List<string> Positions = new List<string>();
+
+            if (IsPlayerData)
+            {
+                if (Position_X < LastPositionX)
+                {
+                    // Going Left
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Left" && LastMovementPosition.GetSplit(1).Todouble() == Position_X.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionX; i >= LastPositionX - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                    i.ToString().ConvertStringCulture(this),
+                                    LastPositionY.ToString(),
+                                    LastPositionZ.ToString()
+                                    ));
+                        }
+                        LastMovementPosition = "Left|" + Position_X.Floor();
+                        Position_X = LastPositionX - 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_X > LastPositionX)
+                {
+                    // Going Right
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Right" && LastMovementPosition.GetSplit(1).Todouble() == Position_X.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionX; i <= LastPositionX + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                    i.ToString().ConvertStringCulture(this),
+                                    LastPositionY.ToString(),
+                                    LastPositionZ.ToString()
+                                    ));
+                        }
+                        LastMovementPosition = "Right|" + Position_X.Floor();
+                        Position_X = LastPositionX + 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Y > LastPositionY)
+                {
+                    // Going Up
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Up" && LastMovementPosition.GetSplit(1).Todouble() == Position_Y.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionY; i <= LastPositionY + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                i.ToString().ConvertStringCulture(this),
+                                LastPositionZ.ToString()
+                                ));
+                        }
+                        LastMovementPosition = "Up|" + Position_Y.Floor();
+                        Position_Y = LastPositionY + 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Y < LastPositionY)
+                {
+                    // Going Down
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Down" && LastMovementPosition.GetSplit(1).Todouble() == Position_Y.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionY; i >= LastPositionY - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                i.ToString().ConvertStringCulture(this),
+                                LastPositionZ.ToString()
+                                ));
+                        }
+                        LastMovementPosition = "Down|" + Position_Y.Floor();
+                        Position_Y = LastPositionY - 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Z < LastPositionZ)
+                {
+                    // Going Front
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Front" && LastMovementPosition.GetSplit(1).Todouble() == Position_Z.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionZ; i >= LastPositionZ - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                LastPositionY.ToString(),
+                                i.ToString().ConvertStringCulture(this)
+                                ));
+                        }
+                        LastMovementPosition = "Front|" + Position_Z.Floor();
+                        Position_Z = LastPositionZ - 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Z > LastPositionZ)
+                {
+                    // Going Back
+                    if (LastMovementPosition != null && LastMovementPosition.GetSplit(0) == "Back" && LastMovementPosition.GetSplit(1).Todouble() == Position_Z.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionZ; i <= LastPositionZ + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                LastPositionY.ToString(),
+                                i.ToString().ConvertStringCulture(this)
+                                ));
+                        }
+                        LastMovementPosition = "Back|" + Position_Z.Floor();
+                        Position_Z = LastPositionZ + 1;
+                        return Positions;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if (PokemonPosition_X < LastPositionX)
+                {
+                    // Going Left
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Left" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_X.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionX; i >= LastPositionX - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                    i.ToString().ConvertStringCulture(this),
+                                    LastPositionY.ToString(),
+                                    LastPositionZ.ToString()
+                                    ));
+                        }
+                        LastPokemonMovementPosition = "Left|" + PokemonPosition_X.Floor();
+                        PokemonPosition_X = LastPositionX - 1;
+                        return Positions;
+                    }
+                }
+                else if (PokemonPosition_X > LastPositionX)
+                {
+                    // Going Right
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Right" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_X.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionX; i <= LastPositionX + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                    i.ToString().ConvertStringCulture(this),
+                                    LastPositionY.ToString(),
+                                    LastPositionZ.ToString()
+                                    ));
+                        }
+                        LastPokemonMovementPosition = "Right|" + PokemonPosition_X.Floor();
+                        PokemonPosition_X = LastPositionX + 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Y > LastPositionY)
+                {
+                    // Going Up
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Up" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_Y.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionY; i <= LastPositionY + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                i.ToString().ConvertStringCulture(this),
+                                LastPositionZ.ToString()
+                                ));
+                        }
+                        LastPokemonMovementPosition = "Up|" + PokemonPosition_Y.Floor();
+                        PokemonPosition_Y = LastPositionY + 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Y < LastPositionY)
+                {
+                    // Going Down
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Down" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_Y.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionY; i >= LastPositionY - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                i.ToString().ConvertStringCulture(this),
+                                LastPositionZ.ToString()
+                                ));
+                        }
+                        LastPokemonMovementPosition = "Down|" + PokemonPosition_Y.Floor();
+                        PokemonPosition_Y = LastPositionY - 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Z < LastPositionZ)
+                {
+                    // Going Front
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Front" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_Z.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionZ; i >= LastPositionZ - 1; i -= "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                LastPositionY.ToString(),
+                                i.ToString().ConvertStringCulture(this)
+                                ));
+                        }
+                        LastPokemonMovementPosition = "Front|" + PokemonPosition_Z.Floor();
+                        PokemonPosition_Z = LastPositionZ - 1;
+                        return Positions;
+                    }
+                }
+                else if (Position_Z > LastPositionZ)
+                {
+                    // Going Back
+                    if (LastPokemonMovementPosition != null && LastPokemonMovementPosition.GetSplit(0) == "Back" && LastPokemonMovementPosition.GetSplit(1).Todouble() == PokemonPosition_Z.Floor())
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        for (double i = LastPositionZ; i <= LastPositionZ + 1; i += "0.01".Todouble())
+                        {
+                            Positions.Add(
+                                string.Format(@"{0}|{1}|{2}",
+                                LastPositionX.ToString(),
+                                LastPositionY.ToString(),
+                                i.ToString().ConvertStringCulture(this)
+                                ));
+                        }
+                        LastPokemonMovementPosition = "Back|" + PokemonPosition_Z.Floor();
+                        PokemonPosition_Z = LastPositionZ + 1;
+                        return Positions;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
     }
 }

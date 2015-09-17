@@ -19,6 +19,7 @@ namespace Global
         {
             if (p.IsValid && p.IsFullPackageData())
             {
+                int ID = GetNextValidID();
 
             }
         }

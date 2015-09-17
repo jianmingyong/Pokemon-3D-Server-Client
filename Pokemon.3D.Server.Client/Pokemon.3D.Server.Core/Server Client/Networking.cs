@@ -63,6 +63,9 @@ namespace Global
             Reader = new StreamReader(Client.GetStream());
             Writer = new StreamWriter(Client.GetStream());
             this.Client = Client;
+            LastValidPing = DateTime.Now;
+            LastValidMovement = DateTime.Now;
+            LoginStartTime = DateTime.Now;
         }
 
         private void StartListening()
@@ -82,7 +85,7 @@ namespace Global
 
                     if (Package.IsValid)
                     {
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(Package.Handle));
+                        Package.Handle();
                         LastValidPing = DateTime.Now;
                     }
                 }

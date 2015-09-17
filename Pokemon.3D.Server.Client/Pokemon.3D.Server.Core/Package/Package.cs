@@ -419,10 +419,9 @@ namespace Global
         /// <summary>
         /// Handle the package
         /// </summary>
-        /// <param name="State">Always Null</param>
-        public void Handle(object State = null)
+        public void Handle()
         {
-
+            PackageHandler.PackageData.Enqueue(this);
         }
 
         /// <summary>

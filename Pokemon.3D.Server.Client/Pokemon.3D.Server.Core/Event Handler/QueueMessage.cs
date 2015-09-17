@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using System.Collections.Generic;
 
 namespace Global
 {
@@ -18,6 +19,11 @@ namespace Global
         public static event QueueMessageHandler AddMessage;
 
         /// <summary>
+        /// Get/Set Message Collection
+        /// </summary>
+        public static List<Logger> MessageCollection { get; set; } = new List<Logger>();
+
+        /// <summary>
         /// Queue New Message to be invoked.
         /// </summary>
         /// <param name="Message">Message to display.</param>
@@ -25,7 +31,13 @@ namespace Global
         /// <param name="Client">TcpClient of the player.</param>
         public static void Add(string Message, MessageEventArgs.LogType LogType, TcpClient Client = null)
         {
-            AddMessage(null, new MessageEventArgs(Message, LogType, Client));
+            Logger Logger = new Logger(Message, LogType, Client);
+            MessageCollection.Add(Logger);
+
+            if (Logger.CanDisplay())
+            {
+                AddMessage(null, new MessageEventArgs(Message, LogType, Client));
+            }
         }
     }
 }

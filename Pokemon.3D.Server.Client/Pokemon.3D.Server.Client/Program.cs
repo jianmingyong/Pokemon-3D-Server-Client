@@ -25,7 +25,18 @@ namespace Pokémon_3D_Server_Client
 
             // Setup Settings
             Settings.SetUp(Environment.CurrentDirectory);
-            Settings.Save();
+            if (Settings.Load())
+            {
+                Settings.Save();
+            }
+            else
+            {
+                Settings.Save();
+                Environment.Exit(0);
+            }
+
+            // Setup Server
+            ServerClient.Start();
 
             Console.Read();
         }
