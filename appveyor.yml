@@ -1,7 +1,9 @@
 version: 0.54.7.{build}
+branches:
+  only:
+  - master
+skip_tags: true
 os: Visual Studio 2015
-configuration: Release
-platform: Any CPU
 shallow_clone: true
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client\Pokemon.3D.Server.Client.sln
@@ -14,6 +16,7 @@ artifacts:
   name: Release
 deploy:
 - provider: GitHub
+  tag: v$(appveyor_build_version)
   release: "Pokémon 3D Server Client v$(appveyor_build_version)"
   auth_token:
     secure: UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc
