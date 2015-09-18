@@ -19,6 +19,11 @@ namespace Global
         /// </summary>
         public static readonly string vbNewLine = Environment.NewLine;
 
+        /// <summary>
+        /// Check if you are using Mono Runtime or .Net Runtime :P
+        /// </summary>
+        public static readonly bool isRunningMono = (Type.GetType("Mono.Runtime") != null);
+
         //private static bool IsPortOpen = false;
 
         /// <summary>
@@ -49,6 +54,7 @@ System time: {4}
 System language: {5}
 Physical memory: {6}
 Logical processors: {7}
+Runtime language: {13}
 
 --------------------------------------------------
             
@@ -69,7 +75,7 @@ CallStack:
 
 You should report this error if it is reproduceable or you could not solve it by yourself.
 
-Go To: http://pokemon3d.net/forum/threads/8234/ to report this crash there.
+Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.org/pokemon/forums/bug-reports.204/ to report this crash.
 [/CODE]",
 Environment.Version.ToString(),
 My.Computer.Info.OSFullName,
@@ -83,7 +89,9 @@ ex.Message,
 ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
 string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
 ex.Source,
-ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace);
+ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace,
+isRunningMono ? "Mono" : ".Net"
+);
 
             if (!Directory.Exists(Settings.ApplicationDirectory + "\\CrashLogs"))
             {
@@ -221,6 +229,44 @@ ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNew
                     {
                         return false;
                     }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if the tcpclient is still connected.
+        /// </summary>
+        /// <param name="Client">client to check.</param>
+        public static bool IsConnected(this TcpClient Client)
+        {
+            try
+            {
+                if (Client.Connected)
+                {
+                    if ((Client.Client.Poll(0, SelectMode.SelectWrite)) && (!Client.Client.Poll(0, SelectMode.SelectError)))
+                    {
+                        byte[] buffer = new byte[1];
+                        if (Client.Client.Receive(buffer, SocketFlags.Peek) == 0)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
                 }
             }
             catch (Exception)

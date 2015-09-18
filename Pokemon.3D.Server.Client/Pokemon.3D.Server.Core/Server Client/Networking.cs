@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 using System.Threading;
+using System.Collections.Concurrent;
 
 namespace Global
 {
@@ -55,13 +56,18 @@ namespace Global
         public DateTime LoginStartTime { get; set; }
 
         /// <summary>
+        /// Get/Set Player Queue for sending package.
+        /// </summary>
+        public ConcurrentQueue<Package> PackageToSend { get; set; } = new ConcurrentQueue<Package>();
+
+        /// <summary>
         /// New Networking
         /// </summary>
         /// <param name="Client">Client</param>
         public Networking(TcpClient Client)
         {
             Reader = new StreamReader(Client.GetStream());
-            Writer = new StreamWriter(Client.GetStream());
+            Writer = new StreamWriter(Client.GetStream()) { AutoFlush = true };
             this.Client = Client;
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
@@ -88,6 +94,57 @@ namespace Global
                         Package.Handle();
                         LastValidPing = DateTime.Now;
                     }
+                }
+                catch (SocketException)
+                {
+                    return;
+                }
+                catch (IOException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                    return;
+                }
+            } while (true);
+        }
+
+        private void ThreadStartPinging()
+        {
+            int LastRecallTime = 0;
+
+            do
+            {
+
+            } while (true);
+        }
+
+        private void ThreadStartSending()
+        {
+            do
+            {
+                try
+                {
+                    Package p;
+                    if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
+                    {
+                        if (Client.IsConnected())
+                        {
+                            Writer.WriteLine(p.ToString());
+                            Writer.Flush();
+                            QueueMessage.Add("Networking.cs: Sent: " + p.ToString(), MessageEventArgs.LogType.Debug, Client);
+                        }
+                    }
+                }
+                catch (SocketException)
+                {
+                    return;
+                }
+                catch (IOException)
+                {
+                    return;
                 }
                 catch (Exception ex)
                 {

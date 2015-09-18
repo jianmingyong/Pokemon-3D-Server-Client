@@ -516,7 +516,9 @@ namespace Global
             StartTime = DateTime.Now;
 
             // Initialize Tokens
-            // TokenDefination.Add()
+            TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
+            TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
+            TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
 
             QueueMessage.Add("Setting.cs: Setting initiated.", MessageEventArgs.LogType.Info);
         }

@@ -30,6 +30,11 @@ namespace Global
         /// </summary>
         public static List<Timer> TimerCollection = new List<Timer>();
 
+        /// <summary>
+        /// List of Player Collection
+        /// </summary>
+        public static PlayerCollection Player;
+
         private static IPEndPoint IPEndPoint;
         private static TcpListener Listener;
         private static TcpClient Client;
@@ -67,7 +72,7 @@ namespace Global
             ThreadCollection.Add(Thread);
 
             // Timer
-            Timer Timer = new Timer(new TimerCallback(StartListening), null, 1000, 1000);
+            Timer Timer = new Timer(new TimerCallback(StartListening), null, 0, 1000);
             TimerCollection.Add(Timer);
 
             // Timer 2

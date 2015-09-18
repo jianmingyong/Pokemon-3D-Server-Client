@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Net.Sockets;
 
 namespace Global
 {
@@ -20,8 +21,122 @@ namespace Global
             if (p.IsValid && p.IsFullPackageData())
             {
                 int ID = GetNextValidID();
-
+                Player Player = new Player(p, ID);
+                if (Player.isGameJoltPlayer)
+                {
+                    Settings.OnlineSettingListData.Add(new OnlineSetting(Player.Name, Player.GameJoltID));
+                }
+                // Update Player List - WIP
             }
+        }
+
+        /// <summary>
+        /// Remove Player by ID
+        /// </summary>
+        /// <param name="ID">Player ID</param>
+        /// <param name="Reason">Reason</param>
+        public void Remove(int ID, string Reason)
+        {
+            Player Player = GetPlayer(ID);
+            
+            if (Player.isGameJoltPlayer)
+            {
+                SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                QueueMessage.Add(Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
+
+                OnlineSetting OnlineSetting = (from OnlineSetting p in Settings.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
+                OnlineSetting.Save();
+                Settings.OnlineSettingListData.Remove(OnlineSetting);
+            }
+            else
+            {
+                SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                QueueMessage.Add(Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
+            }
+
+            SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+
+            if (Reason != Settings.Token("SERVER_PLAYERLEFT"))
+            {
+                SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
+            }
+
+            // Update Player List - WIP
+        }
+
+        /// <summary>
+        /// Check if the player is in the collection.
+        /// </summary>
+        /// <param name="ID">ID of the player.</param>
+        public bool HasPlayer(int ID)
+        {
+            if ((from Player p in this where p.ID == ID select p).Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if the player is in the collection.
+        /// </summary>
+        /// <param name="Name">Name of the player.</param>
+        public bool HasPlayer(string Name)
+        {
+            if ((from Player p in this where p.Name == Name select p).Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Check if the player is in the collection.
+        /// </summary>
+        /// <param name="Client">TcpClient of the player.</param>
+        public bool HasPlayer(TcpClient Client)
+        {
+            if ((from Player p in this where p.Client.Client == Client select p).Count() > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Get the player in the collection.
+        /// </summary>
+        /// <param name="ID">ID of the player.</param>
+        public Player GetPlayer(int ID)
+        {
+            return (from Player p in this where p.ID == ID select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get the player in the collection.
+        /// </summary>
+        /// <param name="Name">Name of the player.</param>
+        public Player GetPlayer(string Name)
+        {
+            return (from Player p in this where p.Name == Name select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Get the player in the collection.
+        /// </summary>
+        /// <param name="Client">TcpClient of the player.</param>
+        public Player GetPlayer(TcpClient Client)
+        {
+            return (from Player p in this where p.Client.Client == Client select p).FirstOrDefault();
         }
 
         /// <summary>
@@ -50,6 +165,33 @@ namespace Global
                     }
                 }
                 return ValidID;
+            }
+        }
+
+        /// <summary>
+        /// Sent Package Data to Player
+        /// </summary>
+        /// <param name="p">Package</param>
+        public void SentToPlayer(Package p)
+        {
+            if (HasPlayer(p.Client))
+            {
+                GetPlayer(p.Client).Client.PackageToSend.Enqueue(p);
+            }
+        }
+
+        /// <summary>
+        /// Sent Package Data to All Player
+        /// </summary>
+        /// <param name="p">Package</param>
+        public void SendToAllPlayer(Package p)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (p.Client == null || this[i].Client.Client != p.Client)
+                {
+                    this[i].Client.PackageToSend.Enqueue(p);
+                }
             }
         }
     }
