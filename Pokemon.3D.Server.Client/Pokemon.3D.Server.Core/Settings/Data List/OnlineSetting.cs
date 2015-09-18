@@ -11,13 +11,11 @@ namespace Global
     /// </summary>
     public class OnlineSetting : CommonList
     {
-        // <!-- Pokémon 3D Server Client Setting File -->
         /// <summary>
         /// Get Last Updated
         /// </summary>
         public DateTime LastUpdated { get; } = DateTime.Now;
 
-        // <!-- World Property -->
         /// <summary>
         /// Get/Set World Season
         /// </summary>
@@ -28,11 +26,27 @@ namespace Global
         /// </summary>
         public int Weather { get; set; } = (int)World.WeatherType.Nothing;
 
-        //<!-- Mute List Data -->
         /// <summary>
         /// Get/Set MuteList data
         /// </summary>
         public List<MuteList> MuteListData { get; set; } = new List<MuteList>();
+
+        #region Custom World
+        /// <summary>
+        /// Get/Set Current World Season
+        /// </summary>
+        public int CurrentWorldSeason { get; set; }
+
+        /// <summary>
+        /// Get/Set Current World Weather
+        /// </summary>
+        public int CurrentWorldWeather { get; set; }
+
+        /// <summary>
+        /// Get/Set Last World Update Time
+        /// </summary>
+        public DateTime LastWorldUpdate { get; set; }
+        #endregion Custom World
 
         /// <summary>
         /// New OnlineSetting

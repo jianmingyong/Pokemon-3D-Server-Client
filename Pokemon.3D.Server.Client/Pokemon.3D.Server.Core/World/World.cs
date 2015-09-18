@@ -237,7 +237,10 @@ namespace Global
             _CurrentTime = DateTime.Now;
         }
 
-
+        /// <summary>
+        /// Update World
+        /// </summary>
+        /// <param name="obj">Nothing.</param>
         public void Update(object obj = null)
         {
             _CurrentTime = DateTime.Now;
@@ -358,7 +361,58 @@ namespace Global
                 }
             }
 
-            // Send Data
+            for (int i = 0; i < ServerClient.Player.Count; i++)
+            {
+                ServerClient.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(ServerClient.Player[i]), ServerClient.Player[i].Client.Client));
+            }
+        }
+
+        /// <summary>
+        /// Generate World Data
+        /// </summary>
+        /// <param name="Player">Player to Generate.</param>
+        public List<string> GenerateWorld(Player Player)
+        {
+            List<string> ReturnList = new List<string>();
+
+            if (Settings.DoDayCycle)
+            {
+                CurrentTime = _CurrentTime.AddSeconds(TimeOffset).Hour.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Minute.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Second.ToString();
+            }
+            else
+            {
+                CurrentTime = "12,0,0";
+            }
+
+            if (Player.isGameJoltPlayer)
+            {
+                OnlineSetting OnlineSetting = (from OnlineSetting p in Settings.OnlineSettingListData where Player.GameJoltID == p.GameJoltID select p).FirstOrDefault();
+
+                if (OnlineSetting.LastWorldUpdate == null || OnlineSetting.LastWorldUpdate.AddHours(1) <= DateTime.Now)
+                {
+                    OnlineSetting.CurrentWorldSeason = GenerateSeason(OnlineSetting.Season);
+                    OnlineSetting.CurrentWorldWeather = GenerateWeather(OnlineSetting.Weather, OnlineSetting.Season);
+                    OnlineSetting.LastWorldUpdate = LastWorldUpdate;
+                }
+
+                ReturnList = new List<string>
+                {
+                    OnlineSetting.CurrentWorldSeason.ToString(),
+                    OnlineSetting.CurrentWorldWeather.ToString(),
+                    CurrentTime
+                };
+            }
+            else
+            {
+                ReturnList = new List<string>
+                {
+                    Season.ToString(),
+                    Weather.ToString(),
+                    CurrentTime
+                };
+            }
+
+            return ReturnList;
         }
 
         /// <summary>

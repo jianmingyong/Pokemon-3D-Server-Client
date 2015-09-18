@@ -40,6 +40,7 @@ namespace Global
         /// <param name="ex">Ex Exception.</param>
         public static void CatchError(this Exception ex)
         {
+
             PlaySystemSound();
 
             string ErrorLog = string.Format(@"[CODE]

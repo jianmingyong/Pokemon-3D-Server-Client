@@ -695,7 +695,10 @@ namespace Global
                                         {
                                             for (int i = 0; i < Reader.Value.ToString().SplitCount(); i++)
                                             {
-                                                GameMode.Add(Reader.Value.ToString().GetSplit(i, ","));
+                                                if (!GameMode.Contains(Reader.Value.ToString()))
+                                                {
+                                                    GameMode.Add(Reader.Value.ToString().GetSplit(i, ","));
+                                                }
                                             }
                                         }
                                         else

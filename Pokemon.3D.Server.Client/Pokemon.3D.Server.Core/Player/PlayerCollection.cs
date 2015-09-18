@@ -41,7 +41,7 @@ namespace Global
             
             if (Player.isGameJoltPlayer)
             {
-                SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
                 QueueMessage.Add(Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Settings.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
@@ -50,15 +50,15 @@ namespace Global
             }
             else
             {
-                SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
                 QueueMessage.Add(Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
             }
 
-            SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+            ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
 
             if (Reason != Settings.Token("SERVER_PLAYERLEFT"))
             {
-                SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
+                ServerClient.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
             }
 
             // Update Player List - WIP
@@ -165,33 +165,6 @@ namespace Global
                     }
                 }
                 return ValidID;
-            }
-        }
-
-        /// <summary>
-        /// Sent Package Data to Player
-        /// </summary>
-        /// <param name="p">Package</param>
-        public void SentToPlayer(Package p)
-        {
-            if (HasPlayer(p.Client))
-            {
-                GetPlayer(p.Client).Client.PackageToSend.Enqueue(p);
-            }
-        }
-
-        /// <summary>
-        /// Sent Package Data to All Player
-        /// </summary>
-        /// <param name="p">Package</param>
-        public void SendToAllPlayer(Package p)
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                if (p.Client == null || this[i].Client.Client != p.Client)
-                {
-                    this[i].Client.PackageToSend.Enqueue(p);
-                }
             }
         }
     }
