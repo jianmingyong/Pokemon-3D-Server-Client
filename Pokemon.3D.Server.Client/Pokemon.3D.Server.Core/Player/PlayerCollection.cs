@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Players
 {
     /// <summary>
-    /// Class containing Player.
+    /// Class containing a collection of players.
     /// </summary>
     public class PlayerCollection : List<Player>
     {
