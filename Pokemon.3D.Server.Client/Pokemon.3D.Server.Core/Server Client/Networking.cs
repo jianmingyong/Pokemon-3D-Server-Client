@@ -55,6 +55,8 @@ namespace Global
         /// </summary>
         public DateTime LoginStartTime { get; set; }
 
+        private int LastHourCheck = 0;
+
         /// <summary>
         /// Get/Set Player Queue for sending package.
         /// </summary>
@@ -86,13 +88,16 @@ namespace Global
                 try
                 {
                     string ReturnMessage = Reader.ReadLine();
-                    Package Package = new Package(ReturnMessage, Client);
-                    QueueMessage.Add("Networking.cs: Receive: " + ReturnMessage, MessageEventArgs.LogType.Debug, Client);
-
-                    if (Package.IsValid)
+                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
                     {
-                        Package.Handle();
-                        LastValidPing = DateTime.Now;
+                        Package Package = new Package(ReturnMessage, Client);
+                        QueueMessage.Add("Networking.cs: Receive: " + ReturnMessage, MessageEventArgs.LogType.Debug, Client);
+
+                        if (Package.IsValid)
+                        {
+                            Package.Handle();
+                            LastValidPing = DateTime.Now;
+                        }
                     }
                 }
                 catch (SocketException)
@@ -113,45 +118,37 @@ namespace Global
 
         private void ThreadStartPinging()
         {
-            int LastRecallTime = 0;
-
-            do
-            {
-
-            } while (true);
+            
         }
 
         private void ThreadStartSending()
         {
-            do
+            try
             {
-                try
+                Package p;
+                if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
                 {
-                    Package p;
-                    if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
+                    if (Client.IsConnected())
                     {
-                        if (Client.IsConnected())
-                        {
-                            Writer.WriteLine(p.ToString());
-                            Writer.Flush();
-                            QueueMessage.Add("Networking.cs: Sent: " + p.ToString(), MessageEventArgs.LogType.Debug, Client);
-                        }
+                        Writer.WriteLine(p.ToString());
+                        Writer.Flush();
+                        QueueMessage.Add("Networking.cs: Sent: " + p.ToString(), MessageEventArgs.LogType.Debug, Client);
                     }
                 }
-                catch (SocketException)
-                {
-                    return;
-                }
-                catch (IOException)
-                {
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    ex.CatchError();
-                    return;
-                }
-            } while (true);
+            }
+            catch (SocketException)
+            {
+                return;
+            }
+            catch (IOException)
+            {
+                return;
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+                return;
+            }
         }
 
         /// <summary>
@@ -159,11 +156,13 @@ namespace Global
         /// </summary>
         public void Dispose()
         {
-            if (ThreadCollection[0].IsAlive)
+            for (int i = 0; i < ThreadCollection.Count; i++)
             {
-                ThreadCollection[0].Abort();
+                if (ThreadCollection[i].IsAlive)
+                {
+                    ThreadCollection[i].Abort();
+                }
             }
-
             Reader.Dispose();
             Writer.Dispose();
             Client.Close();

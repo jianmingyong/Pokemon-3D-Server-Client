@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Global;
+using Pokemon_3D_Server_Core;
 
 namespace Pokémon_3D_Server_Client
 {
@@ -19,24 +20,24 @@ namespace Pokémon_3D_Server_Client
         public static void Main(string[] args)
         {
             // Change Console Title
-            Console.Title = @"Pokémon 3D Server Client | Player online: 0 / " + Settings.MaxPlayers;
+            Console.Title = @"Pokémon 3D Server Client | Player online: 0 / " + Core.Setting.MaxPlayers;
             // Add Handler
-            QueueMessage.AddMessage += QueueMessage_AddMessage;
+            //QueueMessage.AddMessage += QueueMessage_AddMessage;
 
             // Setup Settings
-            Settings.SetUp(Environment.CurrentDirectory);
-            if (Settings.Load())
-            {
-                Settings.Save();
-            }
-            else
-            {
-                Settings.Save();
-                Environment.Exit(0);
-            }
+            Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
+            //if (Settings.Load())
+            //{
+            //    Settings.Save();
+            //}
+            //else
+            //{
+            //    Settings.Save();
+            //    Environment.Exit(0);
+            //}
 
             // Setup Server
-            ServerClient.Start();
+            //ServerClient.Start();
 
             Console.Read();
         }

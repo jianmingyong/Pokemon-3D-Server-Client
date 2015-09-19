@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Modules
 {
     /// <summary>
-    /// Class containing Math functions
+    /// Class containing math functions.
     /// </summary>
     public static class MathHelper
     {
@@ -255,7 +255,7 @@ namespace Global
         /// <param name="minValue">The inclusive lower bound of the random number returned.</param>
         /// <param name="maxValue">The exclusive upper bound of the random number returned. maxValue must be greater than or equal to minValue.</param>
         /// <returns></returns>
-        public static int Random(this int minValue,int maxValue)
+        public static int Random(int minValue,int maxValue)
         {
             try
             {

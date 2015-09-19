@@ -7,7 +7,7 @@
     <ProjectGuid>{332AADB0-98CE-4FD6-A63A-577FDAA7C9EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Global</RootNamespace>
+    <RootNamespace>Pokemon_3D_Server_Core</RootNamespace>
     <AssemblyName>Pokemon.3D.Server.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -26,6 +26,7 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <DocumentationFile>bin\Debug\Pokemon.3D.Server.Core.xml</DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -54,10 +55,11 @@
     <Compile Include="Common Functions\Functions.cs" />
     <Compile Include="Common Functions\Math.cs" />
     <Compile Include="Common Functions\MathHelper.cs" />
-    <Compile Include="Common vb.net Functions\my.cs" />
+    <Compile Include="Common vb.net Functions\My Namespace.cs" />
     <Compile Include="Event Handler\Logger.cs" />
     <Compile Include="Event Handler\MessageEventArgs.cs" />
     <Compile Include="Event Handler\QueueMessage.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="Package\Package.cs" />
     <Compile Include="Package\PackageHandler.cs" />
     <Compile Include="Player\Player.cs" />
@@ -83,7 +85,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,16 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.Threading;
 using System.Media;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Modules
 {
     /// <summary>
-    /// Class containing common functions
+    /// Class containing commonly used functions.
     /// </summary>
     public static class Functions
     {
@@ -18,13 +16,6 @@ namespace Global
         /// Represents a newline character for print and display functions.
         /// </summary>
         public static readonly string vbNewLine = Environment.NewLine;
-
-        /// <summary>
-        /// Check if you are using Mono Runtime or .Net Runtime :P
-        /// </summary>
-        public static readonly bool isRunningMono = (Type.GetType("Mono.Runtime") != null);
-
-        //private static bool IsPortOpen = false;
 
         /// <summary>
         /// Play the system sound for error input.
@@ -40,7 +31,6 @@ namespace Global
         /// <param name="ex">Ex Exception.</param>
         public static void CatchError(this Exception ex)
         {
-
             PlaySystemSound();
 
             string ErrorLog = string.Format(@"[CODE]
@@ -78,7 +68,7 @@ You should report this error if it is reproduceable or you could not solve it by
 
 Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.org/pokemon/forums/bug-reports.204/ to report this crash.
 [/CODE]",
-Environment.Version.ToString(),
+Core.Setting.ApplicationVersion,
 My.Computer.Info.OSFullName,
 My.Computer.Info.OSVersion,
 Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
@@ -91,12 +81,12 @@ ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
 string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
 ex.Source,
 ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace,
-isRunningMono ? "Mono" : ".Net"
+Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
 );
 
-            if (!Directory.Exists(Settings.ApplicationDirectory + "\\CrashLogs"))
+            if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
             {
-                Directory.CreateDirectory(Settings.ApplicationDirectory + "\\CrashLogs");
+                Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\CrashLogs");
             }
 
             DateTime ErrorTime = DateTime.Now;
@@ -104,8 +94,8 @@ isRunningMono ? "Mono" : ".Net"
 
             try
             {
-                File.WriteAllText(Settings.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
-                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + Settings.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
+                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
+                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
             }
             catch (Exception exc)
             {
@@ -187,6 +177,7 @@ isRunningMono ? "Mono" : ".Net"
                 using (WebClient Client = new WebClient())
                 {
                     return Client.DownloadString("https://api.ipify.org");
+                    
                 }
             }
             catch (Exception ex)
@@ -222,7 +213,7 @@ isRunningMono ? "Mono" : ".Net"
             {
                 using (TcpClient Client = new TcpClient())
                 {
-                    if (Client.ConnectAsync(Settings._IPAddress, Settings.Port).Wait(1000))
+                    if (Client.ConnectAsync(Core.Setting._IPAddress, Core.Setting.Port).Wait(1000))
                     {
                         return true;
                     }
@@ -250,15 +241,7 @@ isRunningMono ? "Mono" : ".Net"
                 {
                     if ((Client.Client.Poll(0, SelectMode.SelectWrite)) && (!Client.Client.Poll(0, SelectMode.SelectError)))
                     {
-                        byte[] buffer = new byte[1];
-                        if (Client.Client.Receive(buffer, SocketFlags.Peek) == 0)
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                     else
                     {

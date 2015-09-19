@@ -3,61 +3,61 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
+using Global;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing Settings
     /// </summary>
-    public class Settings
+    public class Setting
     {
         #region Property
         #region Pokémon 3D Server Client Setting File
         /// <summary>
-        /// Get/Set Application Directory
+        /// Get/Set Application Directory.
         /// </summary>
-        public static string ApplicationDirectory { get; set; }
+        public string ApplicationDirectory { get; set; }
 
         /// <summary>
         /// Get Startup Time.
         /// </summary>
-        public static DateTime StartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// Get Application Version.
         /// </summary>
-        public static string ApplicationVersion { get { return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion; } }
+        public string ApplicationVersion { get { return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion; } }
 
         /// <summary>
         /// Get Protocol Version.
         /// </summary>
-        public static string ProtocolVersion { get { return "0.5"; } }
+        public string ProtocolVersion { get { return "0.5"; } }
 
         /// <summary>
         /// Get/Set Check For Update.
         /// </summary>
-        public static bool CheckForUpdate { get; set; } = true;
+        public bool CheckForUpdate { get; set; } = true;
 
         /// <summary>
         /// Get/Set Generate Public IP.
         /// </summary>
-        public static bool GeneratePublicIP { get; set; } = true;
+        public bool GeneratePublicIP { get; set; } = true;
         #endregion Pokémon 3D Server Client Setting File
 
         #region Main Server Property
         /// <summary>
         /// Get/Set IP Address
         /// </summary>
-        public static IPAddress _IPAddress = System.Net.IPAddress.Parse(Functions.GetPublicIP());
+        public IPAddress _IPAddress = System.Net.IPAddress.Parse(Functions.GetPublicIP());
         /// <summary>
         /// Get/Set IP Address
         /// </summary>
-        public static string IPAddress
+        public string IPAddress
         {
             get
             {
@@ -80,7 +80,7 @@ namespace Global
         /// <summary>
         /// Get/Set Port
         /// </summary>
-        public static int Port
+        public int Port
         {
             get
             {
@@ -106,28 +106,28 @@ namespace Global
         /// <summary>
         /// Get/Set Server Name
         /// </summary>
-        public static string ServerName { get; set; } = "P3D Server";
+        public string ServerName { get; set; } = "P3D Server";
 
         /// <summary>
         /// Get/Set Server Message
         /// </summary>
-        public static string ServerMessage { get; set; } = "";
+        public string ServerMessage { get; set; } = "";
 
         /// <summary>
         /// Get/Set Welcome Message
         /// </summary>
-        public static string WelcomeMessage { get; set; } = "";
+        public string WelcomeMessage { get; set; } = "";
 
         /// <summary>
         /// Get/Set GameMode
         /// </summary>
-        public static List<string> GameMode { get; set; } = new List<string> { "Pokemon 3D" };
+        public List<string> GameMode { get; set; } = new List<string> { "Pokemon 3D" };
 
-        private static int _MaxPlayers = 20;
+        private int _MaxPlayers = 20;
         /// <summary>
         /// Get/Set Max Players
         /// </summary>
-        public static int MaxPlayers
+        public int MaxPlayers
         {
             get
             {
@@ -149,16 +149,16 @@ namespace Global
         /// <summary>
         /// Get/Set Offline Mode
         /// </summary>
-        public static bool OfflineMode { get; set; } = false;
+        public bool OfflineMode { get; set; } = false;
         #endregion Main Server Property
 
         #region Advanced Server Property
         #region World
-        private static int _Season = -2;
+        private int _Season = -2;
         /// <summary>
         /// Get/Set Season
         /// </summary>
-        public static int Season
+        public int Season
         {
             get
             {
@@ -181,11 +181,11 @@ namespace Global
             }
         }
 
-        private static int _Weather = -2;
+        private int _Weather = -2;
         /// <summary>
         /// Get/Set Weather
         /// </summary>
-        public static int Weather
+        public int Weather
         {
             get
             {
@@ -211,30 +211,30 @@ namespace Global
         /// <summary>
         /// Get/Set Do DayCycle
         /// </summary>
-        public static bool DoDayCycle { get; set; } = true;
+        public bool DoDayCycle { get; set; } = true;
 
         /// <summary>
         /// Get/Set SeasonMonth
         /// </summary>
-        public static SeasonMonth SeasonMonth { get; set; } = new SeasonMonth("-2|-2|-2|-2|-2|-2|-2|-2|-2|-2|-2|-2");
+        public SeasonMonth SeasonMonth { get; set; } = new SeasonMonth("-2|-2|-2|-2|-2|-2|-2|-2|-2|-2|-2|-2");
 
         /// <summary>
         /// Get/Set WeatherSeason
         /// </summary>
-        public static WeatherSeason WeatherSeason { get; set; } = new WeatherSeason("-2|-2|-2|-2");
+        public WeatherSeason WeatherSeason { get; set; } = new WeatherSeason("-2|-2|-2|-2");
 
         /// <summary>
         /// Get/Set Default World Country
         /// </summary>
-        public static string DefaultWorldCountry { get; set; } = RegionInfo.CurrentRegion.EnglishName;
+        public string DefaultWorldCountry { get; set; } = RegionInfo.CurrentRegion.EnglishName;
         #endregion World
 
         #region FailSafe Features
-        private static int _NoPingKickTime = 60;
+        private int _NoPingKickTime = 60;
         /// <summary>
         /// Get/Set No Ping Kick Time
         /// </summary>
-        public static int NoPingKickTime
+        public int NoPingKickTime
         {
             get
             {
@@ -253,11 +253,11 @@ namespace Global
             }
         }
 
-        private static int _AFKKickTime = 300;
+        private int _AFKKickTime = 300;
         /// <summary>
         /// Get/Set AFK Kick Time
         /// </summary>
-        public static int AFKKickTime
+        public int AFKKickTime
         {
             get
             {
@@ -276,11 +276,11 @@ namespace Global
             }
         }
 
-        private static int _AutoRestartTime = -1;
+        private int _AutoRestartTime = -1;
         /// <summary>
         /// Get/Set Auto Restart Time
         /// </summary>
-        public static int AutoRestartTime
+        public int AutoRestartTime
         {
             get
             {
@@ -304,77 +304,77 @@ namespace Global
         /// <summary>
         /// Get/Set BlackList Feature
         /// </summary>
-        public static bool BlackList { get; set; } = true;
+        public bool BlackList { get; set; } = true;
         /// <summary>
         /// Get/Set BlackList Data
         /// </summary>
-        public static List<BlackList> BlackListData { get; set; } = new List<BlackList>();
+        public List<BlackList> BlackListData { get; set; } = new List<BlackList>();
 
         /// <summary>
         /// Get/Set IPBlackList Feature
         /// </summary>
-        public static bool IPBlackList { get; set; } = true;
+        public bool IPBlackList { get; set; } = true;
         /// <summary>
         /// Get/Set IPBlackList Data
         /// </summary>
-        public static List<IPBlackList> IPBlackListData { get; set; } = new List<IPBlackList>();
+        public List<IPBlackList> IPBlackListData { get; set; } = new List<IPBlackList>();
 
         /// <summary>
         /// Get/Set WhiteList Feature
         /// </summary>
-        public static bool WhiteList { get; set; } = false;
+        public bool WhiteList { get; set; } = false;
         /// <summary>
         /// Get/Set WhiteList Data
         /// </summary>
-        public static List<WhiteList> WhiteListData { get; set; } = new List<WhiteList>();
+        public List<WhiteList> WhiteListData { get; set; } = new List<WhiteList>();
 
         /// <summary>
         /// Get/Set OperatorList Feature
         /// </summary>
-        public static bool OperatorList { get; set; } = true;
+        public bool OperatorList { get; set; } = true;
         /// <summary>
         /// Get/Set OperatorList Data
         /// </summary>
-        public static List<OperatorList> OperatorListData { get; set; } = new List<OperatorList>();
+        public List<OperatorList> OperatorListData { get; set; } = new List<OperatorList>();
 
         /// <summary>
         /// Get/Set MuteList Feature
         /// </summary>
-        public static bool MuteList { get; set; } = true;
+        public bool MuteList { get; set; } = true;
         /// <summary>
         /// Get/Set MuteList Data
         /// </summary>
-        public static List<MuteList> MuteListData { get; set; } = new List<MuteList>();
+        public List<MuteList> MuteListData { get; set; } = new List<MuteList>();
 
         /// <summary>
         /// Get/Set OnlineSettingList Feature
         /// </summary>
-        public static bool OnlineSettingList { get; set; } = true;
+        public bool OnlineSettingList { get; set; } = true;
         /// <summary>
         /// Get/Set OnlineSettingList Data
         /// </summary>
-        public static List<OnlineSetting> OnlineSettingListData { get; set; } = new List<OnlineSetting>();
+        public List<OnlineSetting> OnlineSettingListData { get; set; } = new List<OnlineSetting>();
 
         /// <summary>
         /// Get/Set SwearInfractionList Feature
         /// </summary>
-        public static bool SwearInfractionList { get; set; } = false;
+        public bool SwearInfractionList { get; set; } = false;
         /// <summary>
         /// Get/Set SwearInfractionList Data
         /// </summary>
-        public static List<SwearInfractionList> SwearInfractionListData { get; set; } = new List<SwearInfractionList>();
+        public List<SwearInfractionList> SwearInfractionListData { get; set; } = new List<SwearInfractionList>();
 
         #region Swear Infraction Feature
         /// <summary>
         /// Get/Set SwearInfraction Filter List
         /// </summary>
-        public static List<SwearInfractionFilterList> SwearInfractionFilterListData { get; set; } = new List<SwearInfractionFilterList>();
+        public List<SwearInfractionFilterList> SwearInfractionFilterListData { get; set; } = new List<SwearInfractionFilterList>();
 
-        private static int _SwearInfractionCap = 5;
+        private int _SwearInfractionCap = 5;
         /// <summary>
         /// Get/Set SwearInfraction Cap
         /// </summary>
-        public static int SwearInfractionCap
+        public int SwearInfractionCap
         {
             get
             {
@@ -393,11 +393,11 @@ namespace Global
             }
         }
 
-        private static int _SwearInfractionReset = 1;
+        private int _SwearInfractionReset = 1;
         /// <summary>
         /// Get/Set SwearInfraction Reset time
         /// </summary>
-        public static int SwearInfractionReset
+        public int SwearInfractionReset
         {
             get
             {
@@ -418,11 +418,11 @@ namespace Global
         #endregion Swear Infraction Feature
 
         #region Spam Detection
-        private static int _SpamResetDuration = 30;
+        private int _SpamResetDuration = 30;
         /// <summary>
         /// Get/Set Spam Reset Duration
         /// </summary>
-        public static int SpamResetDuration
+        public int SpamResetDuration
         {
             get
             {
@@ -448,71 +448,69 @@ namespace Global
         /// <summary>
         /// Get/Set Logger Info Message
         /// </summary>
-        public static bool LoggerInfo { get; set; } = true;
+        public bool LoggerInfo { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Warning Message
         /// </summary>
-        public static bool LoggerWarning { get; set; } = true;
+        public bool LoggerWarning { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Debugger Message
         /// </summary>
-        public static bool LoggerDebug { get; set; } = false;
+        public bool LoggerDebug { get; set; } = false;
 
         /// <summary>
         /// Get/Set Logger Chat Message
         /// </summary>
-        public static bool LoggerChat { get; set; } = true;
+        public bool LoggerChat { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Private Message
         /// </summary>
-        public static bool LoggerPM { get; set; } = true;
+        public bool LoggerPM { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Server Message
         /// </summary>
-        public static bool LoggerServer { get; set; } = true;
+        public bool LoggerServer { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Trade Message
         /// </summary>
-        public static bool LoggerTrade { get; set; } = true;
+        public bool LoggerTrade { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger PvP Message
         /// </summary>
-        public static bool LoggerPvP { get; set; } = true;
+        public bool LoggerPvP { get; set; } = true;
 
         /// <summary>
         /// Get/Set Logger Command Message
         /// </summary>
-        public static bool LoggerCommand { get; set; } = true;
+        public bool LoggerCommand { get; set; } = true;
         #endregion Server Client Logger
 
         #region Token
         /// <summary>
         /// Get/Set Token Defination
         /// </summary>
-        public static Dictionary<string, string> TokenDefination { get; set; } = new Dictionary<string, string>();
+        public Dictionary<string, string> TokenDefination { get; set; } = new Dictionary<string, string>();
         #endregion Token
 
         #region MapFile
         /// <summary>
         /// Get/Set Map File List Data
         /// </summary>
-        public static List<MapFileList> MapFileListData { get; set; } = new List<MapFileList>();
+        public List<MapFileList> MapFileListData { get; set; } = new List<MapFileList>();
         #endregion MapFile
         #endregion Property
 
         /// <summary>
-        /// Setup Settings for first launch
+        /// New Setting - Setup
         /// </summary>
-        /// <param name="Application">Application Directory</param>
-        public static void SetUp(string Application)
+        public Setting()
         {
-            ApplicationDirectory = Application;
             StartTime = DateTime.Now;
 
             // Initialize Tokens
@@ -526,7 +524,7 @@ namespace Global
         /// <summary>
         /// Load Setting File
         /// </summary>
-        public static bool Load()
+        public bool Load()
         {
             try
             {
@@ -809,7 +807,7 @@ namespace Global
                                             QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.WeatherSeason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
                                         }
                                     }
-                                } 
+                                }
                             }
                             #endregion WeatherSeason
                             #region World
@@ -1586,7 +1584,7 @@ namespace Global
                             {
                                 if (StartObjectDepth == 1)
                                 {
-                                    SwearInfractionListData.Add(new SwearInfractionList(Name, GameJoltID, Points,Muted,StartTime));
+                                    SwearInfractionListData.Add(new SwearInfractionList(Name, GameJoltID, Points, Muted, StartTime));
                                     Name = null;
                                     GameJoltID = -1;
                                     Points = 0;
@@ -1856,7 +1854,7 @@ namespace Global
         /// <summary>
         /// Save Setting File
         /// </summary>
-        public static void Save()
+        public void Save()
         {
             try
             {
@@ -2167,7 +2165,7 @@ BlackListData[i].Duration.ToString());
     [
 {0}
     ]
-}}",List), Encoding.Unicode);
+}}", List), Encoding.Unicode);
                 #endregion Data\BlackList.json
 
                 #region Data\IPBlackList.json
@@ -2332,7 +2330,7 @@ WhiteListData[i].Reason);
                 List = null;
                 if (TokenDefination.Count > 0)
                 {
-                    foreach (KeyValuePair<string,string> Data in TokenDefination)
+                    foreach (KeyValuePair<string, string> Data in TokenDefination)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -2355,19 +2353,19 @@ Data.Value);
                 #endregion Data\Token.json
 
                 QueueMessage.Add("Setting.cs: Saved Setting.", MessageEventArgs.LogType.Info);
-        }
+            }
             catch (Exception ex)
             {
                 ex.CatchError();
                 QueueMessage.Add("Setting.cs: Save Setting failed.", MessageEventArgs.LogType.Info);
             }
-}
+        }
 
         /// <summary>
         /// Check for setting file.
         /// </summary>
         /// <param name="Files">File Name with extension.</param>
-        public static bool HaveSettingFile(string Files)
+        public bool HaveSettingFile(string Files)
         {
             try
             {
@@ -2400,7 +2398,7 @@ Data.Value);
         /// <param name="Key">The key of the token.</param>
         /// <param name="Variable">The Variable of the token.</param>
         /// <returns></returns>
-        public static string Token(string Key,params string[] Variable)
+        public string Token(string Key, params string[] Variable)
         {
             string ReturnValue = null;
 
@@ -2411,5 +2409,11 @@ Data.Value);
 
             return ReturnValue;
         }
+
+        #region Data List Functions
+        #region BlackList
+
+        #endregion BlackList
+        #endregion Data List Functions
     }
 }

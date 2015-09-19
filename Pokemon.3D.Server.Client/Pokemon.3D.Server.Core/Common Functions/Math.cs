@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Modules
 {
     /// <summary>
-    /// Class containing Math functions
+    /// Class containing all basic math functions.
     /// </summary>
     public static class Math
     {

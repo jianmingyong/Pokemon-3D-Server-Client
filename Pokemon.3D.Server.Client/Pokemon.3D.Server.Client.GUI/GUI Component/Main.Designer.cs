@@ -41,8 +41,8 @@
             this.Main_CurrentPlayerOnline = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.Main_Command = new System.Windows.Forms.TextBox();
             this.Main_Logger = new System.Windows.Forms.RichTextBox();
+            this.Main_Command = new System.Windows.Forms.TextBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -197,14 +197,6 @@
             this.splitContainer2.SplitterDistance = 505;
             this.splitContainer2.TabIndex = 0;
             // 
-            // Main_Command
-            // 
-            this.Main_Command.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Main_Command.Location = new System.Drawing.Point(0, 0);
-            this.Main_Command.Name = "Main_Command";
-            this.Main_Command.Size = new System.Drawing.Size(835, 22);
-            this.Main_Command.TabIndex = 0;
-            // 
             // Main_Logger
             // 
             this.Main_Logger.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -214,6 +206,14 @@
             this.Main_Logger.Size = new System.Drawing.Size(835, 505);
             this.Main_Logger.TabIndex = 0;
             this.Main_Logger.Text = "";
+            // 
+            // Main_Command
+            // 
+            this.Main_Command.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Main_Command.Location = new System.Drawing.Point(0, 0);
+            this.Main_Command.Name = "Main_Command";
+            this.Main_Command.Size = new System.Drawing.Size(835, 22);
+            this.Main_Command.TabIndex = 0;
             // 
             // Main
             // 

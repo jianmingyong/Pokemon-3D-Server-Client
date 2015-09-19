@@ -309,7 +309,7 @@ namespace Global
         /// </summary>
         /// <param name="p">Package</param>
         /// <param name="ID">Player ID</param>
-        public Player(Package p,int ID)
+        public Player(Package p, int ID)
         {
             this.ID = ID;
             Client = new Networking(p.Client);
@@ -321,7 +321,7 @@ namespace Global
         /// </summary>
         /// <param name="p">Package Data</param>
         /// <param name="SentToServer">Sent data to server?</param>
-        public void Update(Package p,bool SentToServer)
+        public void Update(Package p, bool SentToServer)
         {
             Client.LastValidMovement = DateTime.Now;
 
@@ -464,7 +464,7 @@ namespace Global
             return ReturnList;
         }
 
-        private List<string> CatchUp(string LastPosition,bool IsPlayerData = true)
+        private List<string> CatchUp(string LastPosition, bool IsPlayerData = true)
         {
             double LastPositionX = LastPosition.GetSplit(0).Todouble();
             double LastPositionY = LastPosition.GetSplit(1).Todouble();

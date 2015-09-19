@@ -20,7 +20,8 @@ namespace Global
         /// <summary>
         /// Handle PackageData
         /// </summary>
-        public static void Handle()
+        /// <param name="obj">Null</param>
+        public static void Handle(object obj = null)
         {
             try
             {
@@ -88,8 +89,8 @@ namespace Global
                             break;
 
                         case (int)Package.PackageTypes.ServerDataRequest:
+                            HandleServerDataRequest(p);
                             break;
-
                         default:
                             QueueMessage.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", MessageEventArgs.LogType.Debug, p.Client);
                             break;
@@ -102,6 +103,115 @@ namespace Global
             }
         }
 
+        private static void HandleGameData(Package p)
+        {
 
+        }
+
+        private static void HandlePrivateMessage(Package p)
+        {
+
+        }
+
+        private static void HandleChatMessage(Package p)
+        {
+
+        }
+
+        private static void HandlePing(Package p)
+        {
+
+        }
+
+        private static void HandleGamestateMessage(Package p)
+        {
+
+        }
+
+        private static void HandleTradeRequest(Package p)
+        {
+
+        }
+
+        private static void HandleTradeJoin(Package p)
+        {
+
+        }
+
+        private static void HandleTradeQuit(Package p)
+        {
+
+        }
+
+        private static void HandleTradeOffer(Package p)
+        {
+
+        }
+
+        private static void HandleTradeStart(Package p)
+        {
+
+        }
+
+        private static void HandleBattleRequest(Package p)
+        {
+
+        }
+
+        private static void HandleBattleJoin(Package p)
+        {
+
+        }
+
+        private static void HandleBattleQuit(Package p)
+        {
+
+        }
+
+        private static void HandleBattleOffer(Package p)
+        {
+
+        }
+
+        private static void HandleBattleStart(Package p)
+        {
+
+        }
+
+        private static void HandleBattleClientData(Package p)
+        {
+
+        }
+
+        private static void HandleBattleHostData(Package p)
+        {
+
+        }
+
+        private static void HandleBattlePokemonData(Package p)
+        {
+
+        }
+
+        private static void HandleServerDataRequest(Package p)
+        {
+            List<string> DataItems = new List<string>
+            {
+                ServerClient.Player.Count.ToString(),
+                Settings.MaxPlayers == -1 ? int.MaxValue.ToString() : Settings.MaxPlayers.ToString(),
+                Settings.ServerName,
+                string.IsNullOrWhiteSpace(Settings.ServerMessage) ? "" : Settings.ServerMessage
+            };
+
+            if (ServerClient.Player.Count > 0)
+            {
+                for (int i = 0; i < ServerClient.Player.Count; i++)
+                {
+                    DataItems.Add(ServerClient.Player[i].isGameJoltPlayer ? string.Format("{0} ({1})", ServerClient.Player[i].Name, ServerClient.Player[i].GameJoltID.ToString()) : ServerClient.Player[i].Name);
+                }
+            }
+
+            ServerClient.SentToPlayer(new Package(Package.PackageTypes.ServerInfoData, DataItems, p.Client));
+        }
     }
 }

@@ -44,6 +44,7 @@ namespace Global
         private static TcpListener Listener;
         private static TcpClient Client;
         private static StreamReader Reader;
+        private static StreamWriter Writer;
 
         /// <summary>
         /// A collection of Status
@@ -90,6 +91,9 @@ namespace Global
                 // Timer 2
                 Timer Timer1 = new Timer(new TimerCallback(World.Update), null, 0, 1000);
                 TimerCollection.Add(Timer1);
+
+                // Timer 3
+                Timer Timer2 = new Timer(new TimerCallback(PackageHandler.Handle), null, 0, 1);
 
                 Status = Statuses.Started;
                 QueueMessage.Add("ServerClient.cs: Server Client is initalizing.", MessageEventArgs.LogType.Info);
@@ -173,11 +177,14 @@ namespace Global
                     Client = Listener.AcceptTcpClient();
                     Reader = new StreamReader(Client.GetStream());
                     string ReturnMessage = Reader.ReadLine();
-                    Package Package = new Package(ReturnMessage, Client);
-                    QueueMessage.Add("ServerClient.cs: Receive: " + ReturnMessage, MessageEventArgs.LogType.Debug);
-                    if (Package.IsValid)
+                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
                     {
-                        Package.Handle();
+                        Package Package = new Package(ReturnMessage, Client);
+                        QueueMessage.Add("ServerClient.cs: Receive: " + ReturnMessage, MessageEventArgs.LogType.Debug);
+                        if (Package.IsValid)
+                        {
+                            Package.Handle();
+                        }
                     }
                 } while (true);
             }
@@ -208,6 +215,20 @@ namespace Global
             if (Player.HasPlayer(p.Client))
             {
                 Player.GetPlayer(p.Client).Client.PackageToSend.Enqueue(p);
+            }
+            else
+            {
+                try
+                {
+                    Writer = new StreamWriter(p.Client.GetStream()) { AutoFlush = true };
+                    Writer.WriteLine(p.ToString());
+                    Writer.Flush();
+                    QueueMessage.Add("ServerClient.cs: Sent: " + p.ToString(), MessageEventArgs.LogType.Debug, Client);
+                }
+                catch (Exception)
+                {
+                    QueueMessage.Add("ServerClient.cs: StreamWriter failed to send package data.", MessageEventArgs.LogType.Debug, Client);
+                }
             }
         }
 

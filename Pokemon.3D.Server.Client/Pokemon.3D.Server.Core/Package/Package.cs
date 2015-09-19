@@ -287,10 +287,10 @@ namespace Global
                     }
 
                     // DataItemsCount
-                    int DataItemsCount;
+                    int DataItemsCount = 0;
                     try
                     {
-                        DataItemsCount = int.Parse(bits[3]);
+                        DataItemsCount = bits[3].Toint();
                     }
                     catch (Exception)
                     {
@@ -302,11 +302,11 @@ namespace Global
                     List<int> OffsetList = new List<int>();
 
                     // Count from 4th item to second last item. Those are the offsets.
-                    for (int i = 4; i < DataItemsCount; i++)
+                    for (int i = 4; i < DataItemsCount + 4; i++)
                     {
                         try
                         {
-                            OffsetList.Add(int.Parse(bits[i]));
+                            OffsetList.Add(bits[i].Toint());
                         }
                         catch (Exception)
                         {
@@ -338,7 +338,6 @@ namespace Global
                         }
                         DataItems.Add(dataString.Substring(cOffset, length));
                     }
-
                     IsValid = true;
                 }
                 else
