@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing MapFileList data
@@ -28,7 +28,7 @@ namespace Global
         /// <param name="GameMode">GameMode for the map location</param>
         /// <param name="Path">Relative Path for the map</param>
         /// <param name="Name">Name of the map</param>
-        public MapFileList(List<string> GameMode,string Path,string Name)
+        public MapFileList(List<string> GameMode, string Path, string Name)
         {
             this.GameMode = GameMode;
             this.Path = Path;

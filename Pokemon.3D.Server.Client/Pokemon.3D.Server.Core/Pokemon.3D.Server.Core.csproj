@@ -56,7 +56,8 @@
     <Compile Include="Common Functions\Math.cs" />
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common vb.net Functions\My Namespace.cs" />
-    <Compile Include="Event Handler\Logger.cs" />
+    <Compile Include="Logger\Logger.cs" />
+    <Compile Include="Logger\LoggerCollection.cs" />
     <Compile Include="Event Handler\MessageEventArgs.cs" />
     <Compile Include="Event Handler\QueueMessage.cs" />
     <Compile Include="Core.cs" />

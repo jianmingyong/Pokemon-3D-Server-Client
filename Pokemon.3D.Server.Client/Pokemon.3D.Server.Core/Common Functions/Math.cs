@@ -258,7 +258,7 @@ namespace Pokemon_3D_Server_Core.Modules
         /// </summary>
         /// <param name="val1">The first of two 8-bit unsigned integers to compare.</param>
         /// <param name="val2">The second of two 8-bit unsigned integers to compare.</param>
-        public static byte Max(this byte val1,byte val2)
+        public static byte Max(this byte val1, byte val2)
         {
             return System.Math.Max(val1.ToString().Tobyte(), val2.ToString().Tobyte());
         }
@@ -506,7 +506,7 @@ namespace Pokemon_3D_Server_Core.Modules
         /// </summary>
         /// <param name="d">A decimal number to be rounded.</param>
         /// <param name="decimals">The number of decimal places in the return value.</param>
-        public static decimal Round(this decimal d,int decimals)
+        public static decimal Round(this decimal d, int decimals)
         {
             return System.Math.Round(d.ToString().Todecimal(), decimals.ToString().Toint());
         }
@@ -549,7 +549,7 @@ namespace Pokemon_3D_Server_Core.Modules
         /// <param name="mode">Specification for how to round d if it is midway between two other numbers.</param>
         public static decimal Round(this decimal d, int decimals, MidpointRounding mode)
         {
-            return System.Math.Round(d.ToString().Todecimal(), decimals.ToString().Toint(),mode);
+            return System.Math.Round(d.ToString().Todecimal(), decimals.ToString().Toint(), mode);
         }
 
         /// <summary>

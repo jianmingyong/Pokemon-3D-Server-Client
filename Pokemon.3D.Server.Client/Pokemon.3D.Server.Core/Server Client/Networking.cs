@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using System.IO;
-using System.Threading;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+using System.Threading;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Packages;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Network
 {
     /// <summary>
     /// Class containing Networking
@@ -78,7 +78,7 @@ namespace Global
 
         private void StartListening()
         {
-            
+
         }
 
         private void ThreadStartListening()
@@ -91,7 +91,7 @@ namespace Global
                     if (!string.IsNullOrWhiteSpace(ReturnMessage))
                     {
                         Package Package = new Package(ReturnMessage, Client);
-                        QueueMessage.Add("Networking.cs: Receive: " + ReturnMessage, MessageEventArgs.LogType.Debug, Client);
+                        Core.Logger.Add("Networking.cs: Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
 
                         if (Package.IsValid)
                         {
@@ -118,7 +118,7 @@ namespace Global
 
         private void ThreadStartPinging()
         {
-            
+
         }
 
         private void ThreadStartSending()
@@ -132,7 +132,7 @@ namespace Global
                     {
                         Writer.WriteLine(p.ToString());
                         Writer.Flush();
-                        QueueMessage.Add("Networking.cs: Sent: " + p.ToString(), MessageEventArgs.LogType.Debug, Client);
+                        Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
                     }
                 }
             }

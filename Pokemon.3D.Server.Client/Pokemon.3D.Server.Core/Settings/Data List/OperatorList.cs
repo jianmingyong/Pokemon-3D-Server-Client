@@ -1,4 +1,4 @@
-﻿namespace Global
+﻿namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing OperatorList data
@@ -12,7 +12,7 @@
         /// <param name="GameJoltID">Player GameJolt ID</param>
         /// <param name="Reason">Player Operator Reason</param>
         /// <param name="OperatorLevel">Player Operator Level</param>
-        public OperatorList(string Name,int GameJoltID,string Reason,int OperatorLevel)
+        public OperatorList(string Name, int GameJoltID, string Reason, int OperatorLevel)
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Pokemon_3D_Server_Core.Players;
 
 namespace Pokemon_3D_Server_Core.Modules
 {
@@ -255,7 +256,7 @@ namespace Pokemon_3D_Server_Core.Modules
         /// <param name="minValue">The inclusive lower bound of the random number returned.</param>
         /// <param name="maxValue">The exclusive upper bound of the random number returned. maxValue must be greater than or equal to minValue.</param>
         /// <returns></returns>
-        public static int Random(int minValue,int maxValue)
+        public static int Random(int minValue, int maxValue)
         {
             try
             {

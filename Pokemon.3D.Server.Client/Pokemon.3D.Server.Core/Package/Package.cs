@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Packages
 {
     /// <summary>
-    /// Class containing Package Data Handler
+    /// Class containing Package Data Handler.
     /// </summary>
     public class Package
     {
@@ -24,27 +24,27 @@ namespace Global
         */
 
         /// <summary>
-        /// Get Protocol Version
+        /// Get Protocol Version.
         /// </summary>
-        public string ProtocolVersion { get { return Settings.ProtocolVersion; } }
+        public string ProtocolVersion { get { return Core.Setting.ProtocolVersion; } }
 
         /// <summary>
-        /// Get/Set Package Type
+        /// Get/Set Package Type.
         /// </summary>
         public int PackageType { get; set; } = (int)PackageTypes.Unknown;
 
         /// <summary>
-        /// Get/Set Origin
+        /// Get/Set Origin.
         /// </summary>
         public int Origin { get; set; } = -1;
 
         /// <summary>
-        /// Get DataItems Count
+        /// Get DataItems Count.
         /// </summary>
         public int DataItemsCount { get { return DataItems.Count; } }
 
         /// <summary>
-        /// Get/Set DataItems
+        /// Get/Set DataItems.
         /// </summary>
         public List<string> DataItems { get; set; } = new List<string>();
 
@@ -54,12 +54,12 @@ namespace Global
         public bool IsValid { get; set; }
 
         /// <summary>
-        /// Get/Set Client
+        /// Get/Set Client.
         /// </summary>
         public TcpClient Client { get; set; }
 
         /// <summary>
-        /// A collection of Package Type
+        /// A collection of Package Type.
         /// </summary>
         public enum PackageTypes
         {
@@ -237,7 +237,7 @@ namespace Global
         /// </summary>
         /// <param name="FullData">Full Package Data</param>
         /// <param name="Client">TcpClient of the player</param>
-        public Package(string FullData,TcpClient Client)
+        public Package(string FullData, TcpClient Client)
         {
             try
             {
@@ -245,7 +245,7 @@ namespace Global
 
                 if (!FullData.Contains("|"))
                 {
-                    QueueMessage.Add("Package.cs: Package is incomplete.", MessageEventArgs.LogType.Debug);
+                    Core.Logger.Add("Package.cs: Package is incomplete.", Logger.LogTypes.Debug, Client);
                     IsValid = false;
                     return;
                 }
@@ -255,9 +255,9 @@ namespace Global
                 if (bits.Count >= 5)
                 {
                     // Protocol Version
-                    if (!string.Equals(Settings.ProtocolVersion, bits[0], StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(Core.Setting.ProtocolVersion, bits[0], StringComparison.OrdinalIgnoreCase))
                     {
-                        QueueMessage.Add("Package.cs: Package does not contains valid Protocol Version.", MessageEventArgs.LogType.Debug);
+                        Core.Logger.Add("Package.cs: Package does not contains valid Protocol Version.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -269,7 +269,7 @@ namespace Global
                     }
                     catch (Exception)
                     {
-                        QueueMessage.Add("Package.cs: Package does not contains valid Package Type.", MessageEventArgs.LogType.Debug);
+                        Core.Logger.Add("Package.cs: Package does not contains valid Package Type.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -281,7 +281,7 @@ namespace Global
                     }
                     catch (Exception)
                     {
-                        QueueMessage.Add("Package.cs: Package does not contains valid Origin.", MessageEventArgs.LogType.Debug);
+                        Core.Logger.Add("Package.cs: Package does not contains valid Origin.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -294,7 +294,7 @@ namespace Global
                     }
                     catch (Exception)
                     {
-                        QueueMessage.Add("Package.cs: Package does not contains valid DataItemsCount.", MessageEventArgs.LogType.Debug);
+                        Core.Logger.Add("Package.cs: Package does not contains valid DataItemsCount.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -310,7 +310,7 @@ namespace Global
                         }
                         catch (Exception)
                         {
-                            QueueMessage.Add("Package.cs: Package does not contains valid Offset.", MessageEventArgs.LogType.Debug);
+                            Core.Logger.Add("Package.cs: Package does not contains valid Offset.", Logger.LogTypes.Debug, Client);
                             IsValid = false;
                             return;
                         }
@@ -342,14 +342,14 @@ namespace Global
                 }
                 else
                 {
-                    QueueMessage.Add("Package.cs: Package is incomplete.", MessageEventArgs.LogType.Debug);
+                    Core.Logger.Add("Package.cs: Package is incomplete.", Logger.LogTypes.Debug, Client);
                     IsValid = false;
                     return;
                 }
             }
             catch (Exception ex)
             {
-                QueueMessage.Add("Package.cs: " + ex.Message, MessageEventArgs.LogType.Debug);
+                Core.Logger.Add("Package.cs: " + ex.Message, Logger.LogTypes.Debug, Client);
                 IsValid = false;
                 return;
             }
@@ -362,7 +362,7 @@ namespace Global
         /// <param name="Origin">Origin</param>
         /// <param name="DataItems">DataItems</param>
         /// <param name="Client">Client</param>
-        public Package(PackageTypes PackageType, int Origin, List<string> DataItems,TcpClient Client)
+        public Package(PackageTypes PackageType, int Origin, List<string> DataItems, TcpClient Client)
         {
             this.PackageType = (int)PackageType;
             this.Origin = Origin;
@@ -418,9 +418,10 @@ namespace Global
         /// <summary>
         /// Handle the package
         /// </summary>
-        public void Handle()
+        /// <param name="obj">Null</param>
+        public void Handle(object obj = null)
         {
-            PackageHandler.PackageData.Enqueue(this);
+            Core.Package.PackageData.Enqueue(this);
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Network;
+using Pokemon_3D_Server_Core.Packages;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Players
 {
     /// <summary>
     /// Class containing Player infomation

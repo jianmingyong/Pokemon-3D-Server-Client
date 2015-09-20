@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Packages
 {
     /// <summary>
     /// Class containing Package Handler
@@ -15,13 +14,13 @@ namespace Global
         /// <summary>
         /// A collection of Package Data to process.
         /// </summary>
-        public static ConcurrentQueue<Package> PackageData { get; set; } = new ConcurrentQueue<Package>();
+        public ConcurrentQueue<Package> PackageData { get; set; } = new ConcurrentQueue<Package>();
 
         /// <summary>
         /// Handle PackageData
         /// </summary>
         /// <param name="obj">Null</param>
-        public static void Handle(object obj = null)
+        public void Handle(object obj = null)
         {
             try
             {
@@ -31,7 +30,7 @@ namespace Global
                     switch (p.PackageType)
                     {
                         case (int)Package.PackageTypes.Unknown:
-                            QueueMessage.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", MessageEventArgs.LogType.Debug, p.Client);
+                            Core.Logger.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                             break;
 
                         case (int)Package.PackageTypes.GameData:
@@ -92,7 +91,7 @@ namespace Global
                             HandleServerDataRequest(p);
                             break;
                         default:
-                            QueueMessage.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", MessageEventArgs.LogType.Debug, p.Client);
+                            Core.Logger.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                             break;
                     }
                 }
@@ -197,21 +196,21 @@ namespace Global
         {
             List<string> DataItems = new List<string>
             {
-                ServerClient.Player.Count.ToString(),
-                Settings.MaxPlayers == -1 ? int.MaxValue.ToString() : Settings.MaxPlayers.ToString(),
-                Settings.ServerName,
-                string.IsNullOrWhiteSpace(Settings.ServerMessage) ? "" : Settings.ServerMessage
+                Core.Player.Count.ToString(),
+                Core.Setting.MaxPlayers == -1 ? int.MaxValue.ToString() : Core.Setting.MaxPlayers.ToString(),
+                Core.Setting.ServerName,
+                string.IsNullOrWhiteSpace(Core.Setting.ServerMessage) ? "" : Core.Setting.ServerMessage
             };
 
-            if (ServerClient.Player.Count > 0)
+            if (Core.Player.Count > 0)
             {
-                for (int i = 0; i < ServerClient.Player.Count; i++)
+                for (int i = 0; i < Core.Player.Count; i++)
                 {
-                    DataItems.Add(ServerClient.Player[i].isGameJoltPlayer ? string.Format("{0} ({1})", ServerClient.Player[i].Name, ServerClient.Player[i].GameJoltID.ToString()) : ServerClient.Player[i].Name);
+                    DataItems.Add(Core.Player[i].isGameJoltPlayer ? string.Format("{0} ({1})", Core.Player[i].Name, Core.Player[i].GameJoltID.ToString()) : Core.Player[i].Name);
                 }
             }
 
-            ServerClient.SentToPlayer(new Package(Package.PackageTypes.ServerInfoData, DataItems, p.Client));
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ServerInfoData, DataItems, p.Client));
         }
     }
 }

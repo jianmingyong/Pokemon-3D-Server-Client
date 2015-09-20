@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing SwearInfractionList data
@@ -15,7 +15,7 @@ namespace Global
         /// <param name="Points">Player Infraction Points</param>
         /// <param name="Muted">Player Mute Points</param>
         /// <param name="StartTime">Player Infraction StartTime</param>
-        public SwearInfractionList(string Name,int GameJoltID,int Points,int Muted,DateTime StartTime)
+        public SwearInfractionList(string Name, int GameJoltID, int Points, int Muted, DateTime StartTime)
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;

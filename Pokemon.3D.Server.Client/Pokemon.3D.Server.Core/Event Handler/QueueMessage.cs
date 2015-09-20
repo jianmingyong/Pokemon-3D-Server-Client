@@ -1,10 +1,7 @@
-﻿using System.Net.Sockets;
-using System.Collections.Generic;
-
-namespace Global
+﻿namespace Pokemon_3D_Server_Core.Loggers
 {
     /// <summary>
-    /// Class containing Logger Functions
+    /// Class containing Logger Functions.
     /// </summary>
     public class QueueMessage
     {
@@ -19,24 +16,14 @@ namespace Global
         public static event QueueMessageHandler AddMessage;
 
         /// <summary>
-        /// Get/Set Message Collection
-        /// </summary>
-        public static List<Logger> MessageCollection { get; set; } = new List<Logger>();
-
-        /// <summary>
         /// Queue New Message to be invoked.
         /// </summary>
-        /// <param name="Message">Message to display.</param>
-        /// <param name="LogType">Log Type.</param>
-        /// <param name="Client">TcpClient of the player.</param>
-        public static void Add(string Message, MessageEventArgs.LogType LogType, TcpClient Client = null)
+        /// <param name="Logger">Logger.</param>
+        public static void Add(Logger Logger)
         {
-            Logger Logger = new Logger(Message, LogType, Client);
-            MessageCollection.Add(Logger);
-
             if (Logger.CanDisplay())
             {
-                AddMessage(null, new MessageEventArgs(Message, LogType, Client));
+                AddMessage(null, new MessageEventArgs(Logger));
             }
         }
     }

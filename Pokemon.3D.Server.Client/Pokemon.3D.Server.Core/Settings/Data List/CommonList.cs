@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Net;
+using Pokemon_3D_Server_Core.Modules;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing Common List Property

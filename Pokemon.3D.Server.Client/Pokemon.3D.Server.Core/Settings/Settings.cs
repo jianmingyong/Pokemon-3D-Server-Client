@@ -7,7 +7,10 @@ using System.Net;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
-using Global;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Worlds;
 
 namespace Pokemon_3D_Server_Core.Settings
 {
@@ -26,7 +29,7 @@ namespace Pokemon_3D_Server_Core.Settings
         /// <summary>
         /// Get Startup Time.
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime StartTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Get Application Version.
@@ -230,7 +233,7 @@ namespace Pokemon_3D_Server_Core.Settings
         #endregion World
 
         #region FailSafe Features
-        private int _NoPingKickTime = 60;
+        private int _NoPingKickTime = 20;
         /// <summary>
         /// Get/Set No Ping Kick Time
         /// </summary>
@@ -509,16 +512,13 @@ namespace Pokemon_3D_Server_Core.Settings
         /// <summary>
         /// New Setting - Setup
         /// </summary>
-        public Setting()
+        public void Setup()
         {
-            StartTime = DateTime.Now;
-
             // Initialize Tokens
             TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
             TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
             TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
-
-            QueueMessage.Add("Setting.cs: Setting initiated.", MessageEventArgs.LogType.Info);
+            Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 
         /// <summary>
@@ -564,7 +564,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         TempValue += item + "|";
                                     }
                                     TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
-                                    Settings.SeasonMonth.SeasonData = TempValue;
+                                    this.SeasonMonth.SeasonData = TempValue;
                                 }
                                 else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -574,7 +574,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         TempValue += item + "|";
                                     }
                                     TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
-                                    Settings.WeatherSeason.WeatherData = TempValue;
+                                    this.WeatherSeason.WeatherData = TempValue;
                                 }
                                 StartObjectDepth--;
                             }
@@ -602,7 +602,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.CheckForUpdate\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.CheckForUpdate\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GeneratePublicIP", StringComparison.OrdinalIgnoreCase))
@@ -613,7 +613,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.GeneratePublicIP\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Pokémon 3D Server Client Setting File.GeneratePublicIP\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -632,7 +632,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.IPAddress\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.IPAddress\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Port", StringComparison.OrdinalIgnoreCase))
@@ -643,7 +643,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.Port\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.Port\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "ServerName", StringComparison.OrdinalIgnoreCase))
@@ -654,7 +654,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.ServerName\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.ServerName\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "ServerMessage", StringComparison.OrdinalIgnoreCase))
@@ -669,7 +669,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.ServerMessage\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.ServerMessage\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "WelcomeMessage", StringComparison.OrdinalIgnoreCase))
@@ -684,7 +684,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.WelcomeMessage\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.WelcomeMessage\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameMode", StringComparison.OrdinalIgnoreCase))
@@ -701,7 +701,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.GameMode\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.GameMode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "MaxPlayers", StringComparison.OrdinalIgnoreCase))
@@ -712,7 +712,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.MaxPlayers\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.MaxPlayers\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "OfflineMode", StringComparison.OrdinalIgnoreCase))
@@ -723,7 +723,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Main Server Property.OfflineMode\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.OfflineMode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -742,7 +742,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Season\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.Season\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Weather", StringComparison.OrdinalIgnoreCase))
@@ -753,7 +753,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Weather\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.Weather\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "DoDayCycle", StringComparison.OrdinalIgnoreCase))
@@ -764,7 +764,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.DoDayCycle\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.DoDayCycle\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -784,7 +784,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         else
                                         {
                                             SeasonMonth.Add("-2");
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.SeasonMonth\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.SeasonMonth\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -804,7 +804,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         else
                                         {
                                             WeatherSeason.Add("-2");
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.WeatherSeason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.WeatherSeason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -823,7 +823,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.DefaultWorldCountry\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.DefaultWorldCountry\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -842,7 +842,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.NoPingKickTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.NoPingKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "AFKKickTime", StringComparison.OrdinalIgnoreCase))
@@ -853,7 +853,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AFKKickTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AFKKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "AutoRestartTime", StringComparison.OrdinalIgnoreCase))
@@ -864,7 +864,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AutoRestartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.FailSafe Features.AutoRestartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -883,7 +883,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.BlackList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.BlackList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "IPBlackList", StringComparison.OrdinalIgnoreCase))
@@ -894,7 +894,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.IPBlackList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.IPBlackList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "WhiteList", StringComparison.OrdinalIgnoreCase))
@@ -905,7 +905,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.WhiteList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.WhiteList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "OperatorList", StringComparison.OrdinalIgnoreCase))
@@ -916,7 +916,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.OperatorList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.OperatorList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "MuteList", StringComparison.OrdinalIgnoreCase))
@@ -927,7 +927,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.MuteList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.MuteList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "OnlineSettingList", StringComparison.OrdinalIgnoreCase))
@@ -938,7 +938,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.OnlineSettingList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.OnlineSettingList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "SwearInfractionList", StringComparison.OrdinalIgnoreCase))
@@ -949,7 +949,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.Features.SwearInfractionList\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.Features.SwearInfractionList\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -968,7 +968,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionCap\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionCap\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "SwearInfractionReset", StringComparison.OrdinalIgnoreCase))
@@ -979,7 +979,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionReset\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.Swear Infraction Feature.SwearInfractionReset\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -998,7 +998,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Advanced Server Property.World.Spam Feature.SpamResetDuration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Advanced Server Property.World.Spam Feature.SpamResetDuration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1017,7 +1017,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerInfo\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerInfo\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerWarning", StringComparison.OrdinalIgnoreCase))
@@ -1028,7 +1028,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerWarning\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerWarning\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerDebug", StringComparison.OrdinalIgnoreCase))
@@ -1039,7 +1039,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerDebug\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerDebug\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerChat", StringComparison.OrdinalIgnoreCase))
@@ -1050,7 +1050,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerChat\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerChat\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerPM", StringComparison.OrdinalIgnoreCase))
@@ -1061,7 +1061,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerPM\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerPM\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerServer", StringComparison.OrdinalIgnoreCase))
@@ -1072,7 +1072,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerServer\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerServer\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerTrade", StringComparison.OrdinalIgnoreCase))
@@ -1083,7 +1083,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerTrade\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerTrade\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerPvP", StringComparison.OrdinalIgnoreCase))
@@ -1094,7 +1094,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerPvP\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerPvP\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "LoggerCommand", StringComparison.OrdinalIgnoreCase))
@@ -1105,7 +1105,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Server Client Logger.LoggerCommand\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Server Client Logger.LoggerCommand\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1180,7 +1180,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"BlackList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"BlackList.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -1191,7 +1191,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"BlackList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"BlackList.GameJoltID\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -1202,7 +1202,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"BlackList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"BlackList.Reason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
@@ -1213,7 +1213,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"BlackList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"BlackList.StartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
@@ -1224,7 +1224,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"BlackList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"BlackList.Duration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1292,7 +1292,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"IPBlackList.IPAddress\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"IPBlackList.IPAddress\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -1303,7 +1303,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"IPBlackList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"IPBlackList.Reason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
@@ -1314,7 +1314,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"IPBlackList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"IPBlackList.StartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
@@ -1325,7 +1325,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"IPBlackList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"IPBlackList.Duration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1398,7 +1398,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"MuteList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"MuteList.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -1409,7 +1409,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"MuteList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"MuteList.GameJoltID\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -1420,7 +1420,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"MuteList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"MuteList.Reason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
@@ -1431,7 +1431,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"MuteList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"MuteList.StartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
@@ -1442,7 +1442,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"MuteList.Duration\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"MuteList.Duration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1510,7 +1510,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"OperatorList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"OperatorList.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -1521,7 +1521,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"OperatorList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"OperatorList.GameJoltID\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -1532,7 +1532,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"OperatorList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"OperatorList.Reason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "OperatorLevel", StringComparison.OrdinalIgnoreCase))
@@ -1543,7 +1543,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"OperatorList.OperatorLevel\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"OperatorList.OperatorLevel\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1616,7 +1616,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"SwearInfractionList.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -1627,7 +1627,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"SwearInfractionList.GameJoltID\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Points", StringComparison.OrdinalIgnoreCase))
@@ -1638,7 +1638,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Points\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"SwearInfractionList.Points\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Muted", StringComparison.OrdinalIgnoreCase))
@@ -1649,7 +1649,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.Muted\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"SwearInfractionList.Muted\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
@@ -1660,7 +1660,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"SwearInfractionList.StartTime\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"SwearInfractionList.StartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1726,7 +1726,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"WhiteList.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"WhiteList.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -1737,7 +1737,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"WhiteList.GameJoltID\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"WhiteList.GameJoltID\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -1748,7 +1748,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"WhiteList.Reason\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"WhiteList.Reason\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1819,7 +1819,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Token.Name\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Token.Name\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Description", StringComparison.OrdinalIgnoreCase))
@@ -1830,7 +1830,7 @@ namespace Pokemon_3D_Server_Core.Settings
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("Settings.cs: \"Token.Description\" does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("Settings.cs: \"Token.Description\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1840,13 +1840,13 @@ namespace Pokemon_3D_Server_Core.Settings
                 }
                 #endregion Data\Token.json
 
-                QueueMessage.Add("Setting.cs: Loaded Setting.", MessageEventArgs.LogType.Info);
+                Core.Logger.Add("Setting.cs: Loaded Setting.", Logger.LogTypes.Info);
                 return true;
             }
             catch (Exception ex)
             {
                 ex.CatchError();
-                QueueMessage.Add("Setting.cs: Load Setting failed.", MessageEventArgs.LogType.Info);
+                Core.Logger.Add("Setting.cs: Load Setting failed.", Logger.LogTypes.Info);
                 return false;
             }
         }
@@ -2352,12 +2352,12 @@ Data.Value);
 }}", List), Encoding.Unicode);
                 #endregion Data\Token.json
 
-                QueueMessage.Add("Setting.cs: Saved Setting.", MessageEventArgs.LogType.Info);
+                Core.Logger.Add("Setting.cs: Saved Setting.", Logger.LogTypes.Info);
             }
             catch (Exception ex)
             {
                 ex.CatchError();
-                QueueMessage.Add("Setting.cs: Save Setting failed.", MessageEventArgs.LogType.Info);
+                Core.Logger.Add("Setting.cs: Save Setting failed.", Logger.LogTypes.Info);
             }
         }
 

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pokemon_3D_Server_Core.Modules;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Worlds
 {
     /// <summary>
     /// Class containing Advanced Season

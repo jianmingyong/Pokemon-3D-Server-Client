@@ -1,4 +1,4 @@
-﻿namespace Global
+﻿namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing WhiteList data
@@ -11,7 +11,7 @@
         /// <param name="Name">Player Name</param>
         /// <param name="GameJoltID">Player GameJolt ID</param>
         /// <param name="Reason">Player WhiteList Reason</param>
-        public WhiteList(string Name,int GameJoltID,string Reason)
+        public WhiteList(string Name, int GameJoltID, string Reason)
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;

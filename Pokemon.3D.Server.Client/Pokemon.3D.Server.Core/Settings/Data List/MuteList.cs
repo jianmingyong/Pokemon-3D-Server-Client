@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing MuteList data
@@ -15,7 +15,7 @@ namespace Global
         /// <param name="Reason">Player Mute Reason</param>
         /// <param name="StartTime">Player Mute StartTime</param>
         /// <param name="Duration">Player Mute Duration</param>
-        public MuteList(string Name,int GameJoltID,string Reason,DateTime StartTime,int Duration)
+        public MuteList(string Name, int GameJoltID, string Reason, DateTime StartTime, int Duration)
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;

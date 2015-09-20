@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Worlds;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing OnlineSetting data
@@ -53,7 +56,7 @@ namespace Global
         /// </summary>
         /// <param name="Name">Player Name</param>
         /// <param name="GameJoltID">Player GameJolt ID</param>
-        public OnlineSetting(string Name,int GameJoltID)
+        public OnlineSetting(string Name, int GameJoltID)
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;
@@ -65,7 +68,7 @@ namespace Global
             {
                 try
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(Settings.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))))
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
@@ -128,7 +131,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": World Property.Season does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": World Property.Season does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Weather", StringComparison.OrdinalIgnoreCase))
@@ -139,7 +142,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": World Property.Weather does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": World Property.Weather does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -156,7 +159,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Name does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Name does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GameJoltID", StringComparison.OrdinalIgnoreCase))
@@ -167,7 +170,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.GameJoltID does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.GameJoltID does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Reason", StringComparison.OrdinalIgnoreCase))
@@ -178,7 +181,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Reason does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Reason does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "StartTime", StringComparison.OrdinalIgnoreCase))
@@ -189,7 +192,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.StartTime does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.StartTime does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "Duration", StringComparison.OrdinalIgnoreCase))
@@ -200,7 +203,7 @@ namespace Global
                                         }
                                         else
                                         {
-                                            QueueMessage.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Duration does not match the require type. Default value will be used.", MessageEventArgs.LogType.Warning);
+                                            Core.Logger.Add("OnlineSetting.cs: Player " + this.GameJoltID.ToString() + ": MuteListData.Duration does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -222,9 +225,9 @@ namespace Global
         {
             try
             {
-                if (!Directory.Exists(Settings.ApplicationDirectory + "\\Data\\UserSetting"))
+                if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Data\\UserSetting"))
                 {
-                    Directory.CreateDirectory(Settings.ApplicationDirectory + "\\Data\\UserSetting");
+                    Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Data\\UserSetting");
                 }
 
                 string ReturnString = null;
@@ -238,7 +241,7 @@ namespace Global
 ""Reason"": ""{2}"",
 ""StartTime"": ""{3}"",
 ""MuteDuration"": {4}
-        },", 
+        },",
         Data.Name,
         Data.GameJoltID.ToString(),
         Data.Reason,
@@ -247,7 +250,7 @@ namespace Global
                     }
                 }
 
-                File.WriteAllText(Settings.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json",string.Format(@"{
+                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json", string.Format(@"{
     ""Pokémon 3D Server Client Setting File"":
     {
         ""Name"": ""{0}"",
@@ -271,7 +274,7 @@ GameJoltID.ToString(),
 LastUpdated.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffK"),
 Season.ToString(),
 Weather.ToString(),
-ReturnString),Encoding.Unicode);
+ReturnString), Encoding.Unicode);
             }
             catch (Exception ex)
             {
@@ -283,9 +286,9 @@ ReturnString),Encoding.Unicode);
         {
             try
             {
-                if (File.Exists(Settings.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))
+                if (File.Exists(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))
                 {
-                    string FileContent = File.ReadAllText(Settings.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json");
+                    string FileContent = File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json");
                     if (string.IsNullOrWhiteSpace(FileContent))
                     {
                         return false;

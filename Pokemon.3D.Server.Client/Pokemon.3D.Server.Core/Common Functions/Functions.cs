@@ -4,6 +4,7 @@ using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Pokemon_3D_Server_Core.Loggers;
 
 namespace Pokemon_3D_Server_Core.Modules
 {
@@ -95,11 +96,11 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             try
             {
                 File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
-                QueueMessage.Add(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", MessageEventArgs.LogType.Warning);
+                Core.Logger.Add(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
             }
             catch (Exception exc)
             {
-                QueueMessage.Add(exc.Message, MessageEventArgs.LogType.Warning);
+                Core.Logger.Add(exc.Message, Logger.LogTypes.Warning);
             }
         }
 
@@ -177,7 +178,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
                 using (WebClient Client = new WebClient())
                 {
                     return Client.DownloadString("https://api.ipify.org");
-                    
+
                 }
             }
             catch (Exception ex)
@@ -196,7 +197,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
 
             foreach (IPAddress address in host.AddressList)
             {
-                if (address.AddressFamily == AddressFamily.InterNetwork )
+                if (address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     return address.ToString();
                 }

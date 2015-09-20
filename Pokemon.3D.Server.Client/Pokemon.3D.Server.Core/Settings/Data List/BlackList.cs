@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Settings
 {
     /// <summary>
     /// Class containing BlackList data
     /// </summary>
-    public class BlackList : CommonList 
+    public class BlackList : CommonList
     {
         /// <summary>
         /// New BlackList

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Global;
 using Pokemon_3D_Server_Core;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Settings;
 
 namespace Pokémon_3D_Server_Client
 {
@@ -19,25 +16,30 @@ namespace Pokémon_3D_Server_Client
         /// <param name="args">Program Start Argument.</param>
         public static void Main(string[] args)
         {
+            // Add Handler
+            QueueMessage.AddMessage += QueueMessage_AddMessage;
+
+            // Setup Settings.
+            Core.Setting.Setup();
+
             // Change Console Title
             Console.Title = @"Pokémon 3D Server Client | Player online: 0 / " + Core.Setting.MaxPlayers;
-            // Add Handler
-            //QueueMessage.AddMessage += QueueMessage_AddMessage;
+            
 
             // Setup Settings
             Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
-            //if (Settings.Load())
-            //{
-            //    Settings.Save();
-            //}
-            //else
-            //{
-            //    Settings.Save();
-            //    Environment.Exit(0);
-            //}
+            if (Core.Setting.Load())
+            {
+                Core.Setting.Save();
+            }
+            else
+            {
+                Core.Setting.Save();
+                Environment.Exit(0);
+            }
 
             // Setup Server
-            //ServerClient.Start();
+            Core.Server.Start();
 
             Console.Read();
         }

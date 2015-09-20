@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pokemon_3D_Server_Core.Modules;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Worlds
 {
     /// <summary>
     /// Class containing Advanced Weather
@@ -35,39 +36,39 @@ namespace Global
             if (Data.SplitCount() >= 4)
             {
                 WeatherData = Data;
-                //WeatherList = GetWeather();
+                WeatherList = GetWeather();
             }
         }
 
-        //private List<int> GetWeather()
-        //{
-        //    var ReturnList = new List<int>();
-        //    if (WeatherData.GetSplit().SplitCount(",") == 1)
-        //    {
-        //        try
-        //        {
-        //            ReturnList.Add(WeatherData.GetSplit(DateTime.Now.Month - 1).Toint());
-        //        }
-        //        catch (Exception)
-        //        {
-        //            ReturnList.Add(-2);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            foreach (string Season in SeasonData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
-        //            {
-        //                ReturnList.Add(Season.Toint());
-        //            }
-        //        }
-        //        catch (Exception)
-        //        {
-        //            ReturnList.Add(-2);
-        //        }
-        //    }
-        //    return ReturnList;
-        //}
+        private List<int> GetWeather()
+        {
+            var ReturnList = new List<int>();
+            if (WeatherData.SplitCount(",") == 1)
+            {
+                try
+                {
+                    ReturnList.Add(WeatherData.GetSplit(DateTime.Now.Month - 1).Toint());
+                }
+                catch (Exception)
+                {
+                    ReturnList.Add(-2);
+                }
+            }
+            else
+            {
+                try
+                {
+                    foreach (string Weather in WeatherData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
+                    {
+                        ReturnList.Add(Weather.Toint());
+                    }
+                }
+                catch (Exception)
+                {
+                    ReturnList.Add(-2);
+                }
+            }
+            return ReturnList;
+        }
     }
 }

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Settings;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Worlds
 {
     /// <summary>
     /// Class containing World Property
@@ -249,7 +252,7 @@ namespace Global
             {
                 if (LastWorldUpdate == null || LastWorldUpdate.AddHours(1) <= DateTime.Now)
                 {
-                    switch (Settings.Season)
+                    switch (Core.Setting.Season)
                     {
                         case (int)SeasonType.DefaultSeason:
                             switch (WeekOfYear % 4)
@@ -278,11 +281,11 @@ namespace Global
                             Season = GetCustomSeason();
                             break;
                         default:
-                            Season = Settings.Season;
+                            Season = Core.Setting.Season;
                             break;
                     }
 
-                    switch (Settings.Weather)
+                    switch (Core.Setting.Weather)
                     {
                         case (int)WeatherType.DefaultWeather:
                             int Random = MathHelper.Random(1, 100);
@@ -352,18 +355,18 @@ namespace Global
                             Weather = GetCustomWeather();
                             break;
                         default:
-                            Weather = Settings.Weather;
+                            Weather = Core.Setting.Weather;
                             break;
                     }
 
                     LastWorldUpdate = DateTime.Now;
-                    QueueMessage.Add(string.Format(@"World.cs: Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), MessageEventArgs.LogType.Info);
+                    Core.Logger.Add(string.Format(@"World.cs: Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
                 }
             }
 
-            for (int i = 0; i < ServerClient.Player.Count; i++)
+            for (int i = 0; i < Core.Player.Count; i++)
             {
-                ServerClient.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(ServerClient.Player[i]), ServerClient.Player[i].Client.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Client.Client));
             }
         }
 
@@ -375,7 +378,7 @@ namespace Global
         {
             List<string> ReturnList = new List<string>();
 
-            if (Settings.DoDayCycle)
+            if (Core.Setting.DoDayCycle)
             {
                 CurrentTime = _CurrentTime.AddSeconds(TimeOffset).Hour.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Minute.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Second.ToString();
             }
@@ -386,7 +389,7 @@ namespace Global
 
             if (Player.isGameJoltPlayer)
             {
-                OnlineSetting OnlineSetting = (from OnlineSetting p in Settings.OnlineSettingListData where Player.GameJoltID == p.GameJoltID select p).FirstOrDefault();
+                OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where Player.GameJoltID == p.GameJoltID select p).FirstOrDefault();
 
                 if (OnlineSetting.LastWorldUpdate == null || OnlineSetting.LastWorldUpdate.AddHours(1) <= DateTime.Now)
                 {
@@ -453,7 +456,7 @@ namespace Global
         /// </summary>
         /// <param name="Weather">Proposed Weather ID</param>
         /// <param name="Season">Proposed Season ID</param>
-        public int GenerateWeather(int Weather,int Season)
+        public int GenerateWeather(int Weather, int Season)
         {
             switch (Weather)
             {
@@ -527,7 +530,7 @@ namespace Global
         {
             try
             {
-                return Settings.SeasonMonth.SeasonList[MathHelper.Random(0, Settings.SeasonMonth.SeasonList.Count - 1)];
+                return Core.Setting.SeasonMonth.SeasonList[MathHelper.Random(0, Core.Setting.SeasonMonth.SeasonList.Count - 1)];
             }
             catch (Exception)
             {
@@ -539,7 +542,7 @@ namespace Global
         {
             try
             {
-                return Settings.WeatherSeason.WeatherList[MathHelper.Random(0, Settings.WeatherSeason.WeatherList.Count - 1)];
+                return Core.Setting.WeatherSeason.WeatherList[MathHelper.Random(0, Core.Setting.WeatherSeason.WeatherList.Count - 1)];
             }
             catch (Exception)
             {

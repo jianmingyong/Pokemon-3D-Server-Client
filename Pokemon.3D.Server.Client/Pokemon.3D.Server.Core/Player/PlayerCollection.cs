@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Settings;
 
-namespace Global
+namespace Pokemon_3D_Server_Core.Players
 {
     /// <summary>
     /// Class containing Player.
@@ -24,7 +24,7 @@ namespace Global
                 Player Player = new Player(p, ID);
                 if (Player.isGameJoltPlayer)
                 {
-                    Settings.OnlineSettingListData.Add(new OnlineSetting(Player.Name, Player.GameJoltID));
+                    Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Player.Name, Player.GameJoltID));
                 }
                 // Update Player List - WIP
             }
@@ -38,27 +38,27 @@ namespace Global
         public void Remove(int ID, string Reason)
         {
             Player Player = GetPlayer(ID);
-            
+
             if (Player.isGameJoltPlayer)
             {
-                ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
-                QueueMessage.Add(Settings.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
+                Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                Core.Logger.Add(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
-                OnlineSetting OnlineSetting = (from OnlineSetting p in Settings.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
+                OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
                 OnlineSetting.Save();
-                Settings.OnlineSettingListData.Remove(OnlineSetting);
+                Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
             {
-                ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
-                QueueMessage.Add(Settings.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), MessageEventArgs.LogType.Info);
+                Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                Core.Logger.Add(Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
             }
 
-            ServerClient.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
 
-            if (Reason != Settings.Token("SERVER_PLAYERLEFT"))
+            if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                ServerClient.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
             }
 
             // Update Player List - WIP
