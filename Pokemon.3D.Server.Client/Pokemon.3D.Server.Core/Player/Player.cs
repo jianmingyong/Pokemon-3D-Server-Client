@@ -217,7 +217,7 @@ namespace Pokemon_3D_Server_Core.Players
         /// <summary>
         /// Get/Set Player Client
         /// </summary>
-        public Networking Client { get; set; }
+        public Networking Network { get; set; }
 
         /// <summary>
         /// Get/Set Player Last Chat Message
@@ -307,6 +307,15 @@ namespace Pokemon_3D_Server_Core.Players
         }
 
         /// <summary>
+        /// Ner Player (Update Player - Not send to server)
+        /// </summary>
+        /// <param name="p">Package</param>
+        public Player(Package p)
+        {
+            Update(p, false);
+        }
+
+        /// <summary>
         /// New Player (Update Player)
         /// </summary>
         /// <param name="p">Package</param>
@@ -314,7 +323,7 @@ namespace Pokemon_3D_Server_Core.Players
         public Player(Package p, int ID)
         {
             this.ID = ID;
-            Client = new Networking(p.Client);
+            Network = new Networking(p.Client);
 
         }
 
@@ -325,7 +334,7 @@ namespace Pokemon_3D_Server_Core.Players
         /// <param name="SentToServer">Sent data to server?</param>
         public void Update(Package p, bool SentToServer)
         {
-            Client.LastValidMovement = DateTime.Now;
+            Network.LastValidMovement = DateTime.Now;
 
             if (p.IsFullPackageData())
             {

@@ -366,7 +366,7 @@ namespace Pokemon_3D_Server_Core.Worlds
 
             for (int i = 0; i < Core.Player.Count; i++)
             {
-                Core.Server.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Client.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Network.Client));
             }
         }
 

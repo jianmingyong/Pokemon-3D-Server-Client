@@ -12,7 +12,7 @@ namespace Pokemon_3D_Server_Core
     /// <summary>
     /// Class containing all important features.
     /// </summary>
-    public static class Core
+    public class Core
     {
         /// <summary>
         /// Get/Set Logger.

@@ -25,7 +25,6 @@ namespace Pokémon_3D_Server_Client
             // Change Console Title
             Console.Title = @"Pokémon 3D Server Client | Player online: 0 / " + Core.Setting.MaxPlayers;
             
-
             // Setup Settings
             Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
             if (Core.Setting.Load())

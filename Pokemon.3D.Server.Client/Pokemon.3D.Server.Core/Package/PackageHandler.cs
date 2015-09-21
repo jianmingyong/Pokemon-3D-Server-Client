@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Players;
 
 namespace Pokemon_3D_Server_Core.Packages
 {
@@ -34,6 +35,7 @@ namespace Pokemon_3D_Server_Core.Packages
                             break;
 
                         case (int)Package.PackageTypes.GameData:
+                            HandleGameData(p);
                             break;
 
                         case (int)Package.PackageTypes.PrivateMessage:
@@ -104,7 +106,59 @@ namespace Pokemon_3D_Server_Core.Packages
 
         private static void HandleGameData(Package p)
         {
+            if (Core.Player.HasPlayer(p.Client))
+            {
+                Core.Player.GetPlayer(p.Client).Update(p, true);
+            }
+            else
+            {
+                // New Player - Pending to join.
+                Player Player = new Player(p);
 
+                // Server Space Limit
+                if (Core.Player.Count >= Core.Setting.MaxPlayers)
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_FULL"), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_FULL")) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_FULL")), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
+                // GameMode
+                bool IsGameModeMatched = false;
+                for (int i = 0; i < Core.Setting.GameMode.Count; i++)
+                {
+                    if (string.Equals(Core.Setting.GameMode[i].Trim(), Player.GameMode, StringComparison.OrdinalIgnoreCase))
+                    {
+                        IsGameModeMatched = true;
+                        break;
+                    }
+                    else
+                    {
+                        IsGameModeMatched = false;
+                    }
+                }
+
+                if (!IsGameModeMatched)
+                {
+                    string GameModeAllowed = null;
+                    for (int i = 0; i < Core.Setting.GameMode.Count; i++)
+                    {
+                        GameModeAllowed += Core.Setting.GameMode[i].Trim() + ", ";
+                    }
+                    GameModeAllowed = GameModeAllowed.Remove(GameModeAllowed.LastIndexOf(","));
+
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
+                // BlackList
+
+            }
         }
 
         private static void HandlePrivateMessage(Package p)

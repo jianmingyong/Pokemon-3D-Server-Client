@@ -58,7 +58,7 @@ namespace Pokemon_3D_Server_Core.Players
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Client.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
             // Update Player List - WIP
@@ -102,7 +102,7 @@ namespace Pokemon_3D_Server_Core.Players
         /// <param name="Client">TcpClient of the player.</param>
         public bool HasPlayer(TcpClient Client)
         {
-            if ((from Player p in this where p.Client.Client == Client select p).Count() > 0)
+            if ((from Player p in this where p.Network.Client == Client select p).Count() > 0)
             {
                 return true;
             }
@@ -136,7 +136,7 @@ namespace Pokemon_3D_Server_Core.Players
         /// <param name="Client">TcpClient of the player.</param>
         public Player GetPlayer(TcpClient Client)
         {
-            return (from Player p in this where p.Client.Client == Client select p).FirstOrDefault();
+            return (from Player p in this where p.Network.Client == Client select p).FirstOrDefault();
         }
 
         /// <summary>

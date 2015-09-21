@@ -49,7 +49,7 @@ Logical processors: {7}
 Runtime language: {13}
 
 --------------------------------------------------
-            
+
 Error information:
 
 Message: {8}
@@ -75,7 +75,7 @@ My.Computer.Info.OSVersion,
 Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
 DateTime.Now.ToString(),
 System.Globalization.CultureInfo.CurrentCulture.EnglishName.ToString(),
-Math.Round((double)(My.Computer.Info.AvailablePhysicalMemory / 1073741824), 2).ToString() + " GB / " + Math.Round((double)(My.Computer.Info.TotalPhysicalMemory / 1073741824), 2).ToString() + " GB",
+Math.Round((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824, 2).ToString() + " GB / " + Math.Round((double)My.Computer.Info.TotalPhysicalMemory / 1073741824, 2).ToString() + " GB",
 Environment.ProcessorCount.ToString(),
 ex.Message,
 ex.InnerException == null ? "Nothing" : ex.InnerException.Message,

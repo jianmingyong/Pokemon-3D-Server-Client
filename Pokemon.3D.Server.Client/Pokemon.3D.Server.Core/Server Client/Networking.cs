@@ -55,7 +55,7 @@ namespace Pokemon_3D_Server_Core.Network
         /// </summary>
         public DateTime LoginStartTime { get; set; }
 
-        private int LastHourCheck = 0;
+        // private int LastHourCheck = 0;
 
         /// <summary>
         /// Get/Set Player Queue for sending package.

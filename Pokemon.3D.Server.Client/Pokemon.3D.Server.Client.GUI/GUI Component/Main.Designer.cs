@@ -200,6 +200,7 @@
             // Main_Logger
             // 
             this.Main_Logger.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Main_Logger.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Main_Logger.Location = new System.Drawing.Point(0, 0);
             this.Main_Logger.Name = "Main_Logger";
             this.Main_Logger.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
@@ -225,6 +226,7 @@
             this.MinimumSize = new System.Drawing.Size(1141, 629);
             this.Name = "Main";
             this.Text = "Pokémon 3D Server Client";
+            this.Load += new System.EventHandler(this.Main_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

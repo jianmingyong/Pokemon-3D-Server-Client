@@ -114,7 +114,7 @@ namespace Pokemon_3D_Server_Core.Network
         {
             if (Core.Player.HasPlayer(p.Client))
             {
-                Core.Player.GetPlayer(p.Client).Client.PackageToSend.Enqueue(p);
+                Core.Player.GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
             }
             else
             {
@@ -140,9 +140,9 @@ namespace Pokemon_3D_Server_Core.Network
         {
             for (int i = 0; i < Core.Player.Count; i++)
             {
-                if (p.Client == null || Core.Player[i].Client.Client != p.Client)
+                if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    Core.Player[i].Client.PackageToSend.Enqueue(p);
+                    Core.Player[i].Network.PackageToSend.Enqueue(p);
                 }
             }
         }

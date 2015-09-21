@@ -515,6 +515,9 @@ namespace Pokemon_3D_Server_Core.Settings
         public void Setup()
         {
             // Initialize Tokens
+            TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
+            TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
+
             TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
             TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
             TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
