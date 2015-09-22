@@ -286,5 +286,328 @@ namespace Pokemon_3D_Server_Core.Modules
             }
         }
         #endregion MapFile
+
+        #region MuteList
+        /// <summary>
+        /// Get MuteList Data.
+        /// </summary>
+        /// <param name="Player">Player.</param>
+        /// <param name="PlayerList">Player List.</param>
+        public static MuteList GetMuteList(this Player Player, Player PlayerList = null)
+        {
+            if (Player.isGameJoltPlayer)
+            {
+                if (PlayerList == null)
+                {
+                    return (from MuteList p in Core.Setting.MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
+                }
+                else
+                {
+                    return (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
+                }
+            }
+            else
+            {
+                return (from MuteList p in Core.Setting.MuteListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Return if the player is muted.
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        /// <param name="PlayerList">Player List to check. Null == Global.</param>
+        public static bool IsMuteListed(this Player Player, Player PlayerList = null)
+        {
+            if (Core.Setting.MuteList)
+            {
+                if (PlayerList != null && Core.Setting.OnlineSettingList)
+                {
+                    MuteList MuteList = Player.GetMuteList(PlayerList);
+
+                    if (MuteList != null)
+                    {
+                        if (MuteList.Duration == -1 || DateTime.Now < MuteList.StartTime.AddSeconds(MuteList.Duration))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            OnlineSetting OnlineSetting = PlayerList.GetOnlineSetting();
+                            OnlineSetting.MuteListData.Remove(MuteList);
+                            OnlineSetting.Save();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else if (PlayerList == null)
+                {
+                    MuteList MuteList = Player.GetMuteList();
+
+                    if (MuteList != null)
+                    {
+                        if (MuteList.Duration == -1 || DateTime.Now < MuteList.StartTime.AddSeconds(MuteList.Duration))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            Core.Setting.MuteListData.Remove(MuteList);
+                            Core.Setting.Save();
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Add the following Player to the MuteList.
+        /// </summary>
+        /// <param name="Player">Player to mute.</param>
+        /// <param name="Duration">How long?</param>
+        /// <param name="Reason">Reason.</param>
+        /// <param name="PlayerList">Player in which is trying to mute. Null == Global.</param>
+        public static void AddMuteList(this Player Player,int Duration,string Reason, Player PlayerList = null)
+        {
+            if (PlayerList == null)
+            {
+                if (Player.IsMuteListed())
+                {
+                    MuteList MuteList = Player.GetMuteList();
+                    MuteList.Name = Player.Name;
+                    MuteList.StartTime = DateTime.Now;
+                    MuteList.Duration = Duration;
+                    MuteList.Reason = Reason;
+                    Core.Setting.Save();
+                }
+                else
+                {
+                    Core.Setting.MuteListData.Add(new MuteList(Player.Name, Player.GameJoltID, Reason, DateTime.Now, Duration));
+                    Core.Setting.Save();
+                }
+            }
+            else
+            {
+                if (Player.IsMuteListed(PlayerList))
+                {
+                    MuteList MuteList = Player.GetMuteList(PlayerList);
+                    MuteList.Name = Player.Name;
+                    MuteList.StartTime = DateTime.Now;
+                    MuteList.Duration = Duration;
+                    MuteList.Reason = Reason;
+                    PlayerList.GetOnlineSetting().Save();
+                }
+                else
+                {
+                    PlayerList.GetOnlineSetting().MuteListData.Add(new MuteList(Player.Name, Player.GameJoltID, Reason, DateTime.Now, Duration));
+                    PlayerList.GetOnlineSetting().Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove the following Player in the MuteList.
+        /// </summary>
+        /// <param name="Player">Player to unmute.</param>
+        /// <param name="PlayerList">Player in which muted the client. Null == Global.</param>
+        public static void RemoveMuteList(this Player Player, Player PlayerList = null)
+        {
+            if (PlayerList == null)
+            {
+                if (Player.IsMuteListed())
+                {
+                    Core.Setting.MuteListData.Remove(Player.GetMuteList());
+                    Core.Setting.Save();
+                }
+            }
+            else
+            {
+                if (Player.IsMuteListed(PlayerList))
+                {
+                    PlayerList.GetOnlineSetting().MuteListData.Remove(Player.GetMuteList(PlayerList));
+                    PlayerList.GetOnlineSetting().Save();
+                }
+            }
+        }
+        #endregion MuteList
+
+        #region OnlineSetting
+        /// <summary>
+        /// Get OnlineSetting Data.
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static OnlineSetting GetOnlineSetting(this Player Player)
+        {
+            return Player.isGameJoltPlayer ?
+                (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() : null;
+        }
+        #endregion OnlineSetting
+
+        #region OperatorList
+        /// <summary>
+        /// Get OperatorList Data
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static OperatorList GetOperatorList(this Player Player)
+        {
+            return Player.isGameJoltPlayer ?
+                (from OperatorList p in Core.Setting.OperatorListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() :
+                (from OperatorList p in Core.Setting.OperatorListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Return if the Player is an operator.
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static bool IsOperator(this Player Player)
+        {
+            if (Core.Setting.OperatorList)
+            {
+                if (Player.GetOperatorList() != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Add the following Player to the Operator List.
+        /// </summary>
+        /// <param name="Player">Player to op.</param>
+        /// <param name="Reason">Reason.</param>
+        /// <param name="OperatorLevel">OperatorLevel</param>
+        public static void AddOperator(this Player Player, string Reason, int OperatorLevel)
+        {
+            if (Player.IsOperator())
+            {
+                OperatorList OperatorList = Player.GetOperatorList();
+                OperatorList.Name = Player.Name;
+                OperatorList.Reason = Reason;
+                OperatorList.OperatorLevel = OperatorLevel;
+                Core.Setting.Save();
+            }
+            else
+            {
+                Core.Setting.OperatorListData.Add(new OperatorList(Player.Name, Player.GameJoltID, Reason, OperatorLevel));
+                Core.Setting.Save();
+            }
+        }
+
+        /// <summary>
+        /// Remove the following Player in the Operator List.
+        /// </summary>
+        /// <param name="Player">Player to deop.</param>
+        public static void RemoveOperator(this Player Player)
+        {
+            if (Player.IsOperator())
+            {
+                Core.Setting.OperatorListData.Remove(Player.GetOperatorList());
+                Core.Setting.Save();
+            }
+        }
+        #endregion OperatorList
+
+        #region SwearInfractionFilterList
+
+        #endregion SwearInfractionFilterList
+
+        #region SwearInfractionList
+
+        #endregion SwearInfractionList
+
+        #region WhiteList
+        /// <summary>
+        /// Get WhiteList Data
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static WhiteList GetWhiteList(this Player Player)
+        {
+            return Player.isGameJoltPlayer ?
+                (from WhiteList p in Core.Setting.WhiteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() :
+                (from WhiteList p in Core.Setting.WhiteListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Return if you are WhiteListed on the server.
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static bool IsWhiteListed(this Player Player)
+        {
+            if (Core.Setting.WhiteList)
+            {
+                if (Player.GetWhiteList() != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Add the following Player to the WhiteList.
+        /// </summary>
+        /// <param name="Player">Player to whitelist.</param>
+        /// <param name="Reason">Reason.</param>
+        public static void AddWhiteList(this Player Player, string Reason)
+        {
+            if (Player.IsWhiteListed())
+            {
+                WhiteList WhiteList = Player.GetWhiteList();
+                WhiteList.Name = Player.Name;
+                WhiteList.Reason = Reason;
+                Core.Setting.Save();
+            }
+            else
+            {
+                Core.Setting.WhiteListData.Add(new WhiteList(Player.Name, Player.GameJoltID, Reason));
+                Core.Setting.Save();
+            }
+        }
+
+        /// <summary>
+        /// Remove the following Player in the WhiteList.
+        /// </summary>
+        /// <param name="Player">Player to remove.</param>
+        public static void RemoveWhiteList(this Player Player)
+        {
+            if (Player.IsWhiteListed())
+            {
+                Core.Setting.WhiteListData.Remove(Player.GetWhiteList());
+                Core.Setting.Save();
+            }
+        }
+        #endregion WhiteList
     }
 }
