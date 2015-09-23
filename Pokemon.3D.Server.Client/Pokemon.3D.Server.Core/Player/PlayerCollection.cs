@@ -26,7 +26,6 @@ namespace Pokemon_3D_Server_Core.Players
                 {
                     Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Player.Name, Player.GameJoltID));
                 }
-                // Update Player List - WIP
             }
         }
 
@@ -60,8 +59,6 @@ namespace Pokemon_3D_Server_Core.Players
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
-
-            // Update Player List - WIP
         }
 
         /// <summary>

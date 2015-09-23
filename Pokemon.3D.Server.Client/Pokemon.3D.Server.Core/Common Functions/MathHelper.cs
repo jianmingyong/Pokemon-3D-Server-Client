@@ -268,5 +268,27 @@ namespace Pokemon_3D_Server_Core.Modules
             }
             return 0;
         }
+
+        /// <summary>
+        /// Clamp the value between the minValue and the maxValue.
+        /// </summary>
+        /// <param name="Value">The value to clamp.</param>
+        /// <param name="minValue">The minimum value.</param>
+        /// <param name="maxValue">The maximum value.</param>
+        public static int Clamp(this int Value, int minValue, int maxValue)
+        {
+            if (Value < minValue)
+            {
+                return minValue;
+            }
+            else if (Value > maxValue)
+            {
+                return maxValue;
+            }
+            else
+            {
+                return Value;
+            }
+        }
     }
 }

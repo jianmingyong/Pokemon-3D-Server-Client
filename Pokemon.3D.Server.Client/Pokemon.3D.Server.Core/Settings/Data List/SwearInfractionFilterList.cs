@@ -29,7 +29,7 @@
         {
             this.Word = Word;
             this.CaseSensitive = CaseSensitive;
-            Regex = @"\b" + System.Text.RegularExpressions.Regex.Escape(Word) + @"\b";
+            Regex = @"\b(" + System.Text.RegularExpressions.Regex.Escape(Word) + @")\b";
         }
     }
 }

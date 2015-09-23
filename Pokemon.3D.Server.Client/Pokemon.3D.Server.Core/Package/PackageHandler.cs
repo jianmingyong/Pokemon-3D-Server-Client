@@ -120,8 +120,8 @@ namespace Pokemon_3D_Server_Core.Packages
                 {
                     Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_FULL"), p.Client));
                     Core.Logger.Add(Player.isGameJoltPlayer ?
-                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_FULL")) :
-                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_FULL")), Logger.LogTypes.Info, p.Client);
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_FULL")) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_FULL")), Logger.LogTypes.Info, p.Client);
                     return;
                 }
 
@@ -151,39 +151,236 @@ namespace Pokemon_3D_Server_Core.Packages
 
                     Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed), p.Client));
                     Core.Logger.Add(Player.isGameJoltPlayer ?
-                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)) :
-                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server due to the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)), Logger.LogTypes.Info, p.Client);
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_WRONGGAMEMODE", GameModeAllowed)), Logger.LogTypes.Info, p.Client);
                     return;
                 }
 
                 // BlackList
+                if (Player.IsBlackListed())
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_BLACKLISTED", Player.GetBlackList().Reason, Player.GetBlackList().RemainingTime), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_BLACKLISTED", Player.GetBlackList().Reason, Player.GetBlackList().RemainingTime)) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_BLACKLISTED", Player.GetBlackList().Reason, Player.GetBlackList().RemainingTime)), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
+                // IP BlackList
+                if (Player.IsIPBlackListed())
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_IPBLACKLISTED", Player.GetIPBlackList().Reason, Player.GetIPBlackList().RemainingTime), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_IPBLACKLISTED", Player.GetIPBlackList().Reason, Player.GetIPBlackList().RemainingTime)) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_IPBLACKLISTED", Player.GetIPBlackList().Reason, Player.GetIPBlackList().RemainingTime)), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
+                // WhiteList
+                if (Core.Setting.WhiteList && !Player.IsWhiteListed())
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_DISALLOW"), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_DISALLOW")) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_DISALLOW")), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
+                // A Clone GHOST - kidding
+                for (int i = 0; i < Core.Player.Count; i++)
+                {
+                    if (Player.isGameJoltPlayer)
+                    {
+                        if (Player.GameJoltID == Core.Player[i].GameJoltID)
+                        {
+                            Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_CLONE"), p.Client));
+                            Core.Logger.Add(Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_CLONE")) :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_CLONE")), Logger.LogTypes.Info, p.Client);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (string.Equals(Player.Name, Core.Player[i].Name, StringComparison.Ordinal) && Core.Player[i].GameJoltID == -1)
+                        {
+                            Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_CLONE"), p.Client));
+                            Core.Logger.Add(Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_CLONE")) :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_CLONE")), Logger.LogTypes.Info, p.Client);
+                            return;
+                        }
+                    }
+                }
+
+                // Else Let it roll :)
 
             }
         }
 
         private static void HandlePrivateMessage(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PMPlayer = Core.Player.GetPlayer(p.DataItems[0]);
 
+            // Check if external player exist.
+            if (!Core.Player.HasPlayer(p.DataItems[0]))
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, PMPlayer.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", PMPlayer.Name, PMPlayer.GameJoltID.ToString(), "does not exist.") :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", PMPlayer.Name, "does not exist."), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_GAMEJOLT", PMPlayer.Name, PMPlayer.GameJoltID.ToString(), "does not exist.")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_NOGAMEJOLT", PMPlayer.Name, "does not exist.")), Logger.LogTypes.PM, p.Client);
+                return;
+            }
+
+            // Check if you are muted Globally
+            if (Player.IsMuteListed())
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)), Logger.LogTypes.PM, p.Client);
+                return;
+            }
+
+            // Check if you are muted by the player.
+            if (Player.IsMuteListed(PMPlayer))
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PMPlayer).Reason, Player.GetMuteList(PMPlayer).RemainingTime), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PMPlayer).Reason, Player.GetMuteList(PMPlayer).RemainingTime)) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to PM with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PMPlayer).Reason, Player.GetMuteList(PMPlayer).RemainingTime)), Logger.LogTypes.PM, p.Client);
+                return;
+            }
+
+            // Else Let send :)
+            // Before send, check if you swear.
+            if (p.DataItems[1].HaveSweared())
+            {
+                Player.AddInfractionCount(1);
+                Player.AddMuteList(3600, "You have swear too much today.");
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.SwearInfractionCap < 1 ?
+                    Core.Setting.Token("SERVER_SWEAR", p.DataItems[1].SwearWord()) :
+                    Core.Setting.Token("SERVER_SWEARWARNING", p.DataItems[1].SwearWord(), Player.GetSwearInfractionList().Points.ToString(), Core.Setting.SwearInfractionCap.ToString()), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[1].SwearWord())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[1].SwearWord())), Logger.LogTypes.PM, p.Client);
+            }
+
+            // Here we go!
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.PrivateMessage, Player.ID, p.DataItems[1], PMPlayer.Network.Client));
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.PrivateMessage, Player.ID, p.DataItems, p.Client));
+
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have sent a private message to " + p.DataItems[0]) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a private message to " + p.DataItems[0]), Logger.LogTypes.PM, p.Client);
         }
 
         private static void HandleChatMessage(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
 
+            // Check if you are muted Globally
+            if (Player.IsMuteListed())
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)), Logger.LogTypes.Chat, p.Client);
+                return;
+            }
+
+            // Spam?
+            if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
+                return;
+            }
+
+            // Command?
+            if (p.DataItems[0].StartsWith("/"))
+            {
+                // Resevered.
+                return;
+            }
+
+            // Before send, check if you swear.
+            if (p.DataItems[0].HaveSweared())
+            {
+                Player.AddInfractionCount(1);
+                Player.AddMuteList(3600, "You have swear too much today.");
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.SwearInfractionCap < 1 ?
+                    Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord()) :
+                    Core.Setting.Token("SERVER_SWEARWARNING", p.DataItems[0].SwearWord(), Player.GetSwearInfractionList().Points.ToString(), Core.Setting.SwearInfractionCap.ToString()), p.Client));
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())), Logger.LogTypes.Chat, p.Client);
+            }
+
+            // Let's do this.
+            for (int i = 0; i < Core.Player.Count; i++)
+            {
+                if (!Player.IsMuteListed(Core.Player[i]))
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.ID, p.DataItems[0], Core.Player[i].Network.Client));
+                }
+            }
+
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_CHATGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
+                    Core.Setting.Token("SERVER_CHATNOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Chat, p.Client);
+
+            Player.LastChatMessage = p.DataItems[0];
+            Player.LastChatTime = DateTime.Now;
         }
 
         private static void HandlePing(Package p)
         {
-
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player.Network.LastValidPing = DateTime.Now;
         }
 
         private static void HandleGamestateMessage(Package p)
         {
-
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                "The player " + Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
+                "The player " + Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, p.DataItems[0]), null));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                "The player " + Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
+                "The player " + Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Server, p.Client);
         }
 
         private static void HandleTradeRequest(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
+
+            // Not Implemented - Server Restart Timer.
+
+            // Check if you are blocked.
+            if (Player.IsMuteListed(TradePlayer))
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(TradePlayer).Reason, Player.GetMuteList(TradePlayer).RemainingTime), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(TradePlayer).Reason, Player.GetMuteList(TradePlayer).RemainingTime)) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(TradePlayer).Reason, Player.GetMuteList(TradePlayer).RemainingTime)), Logger.LogTypes.Trade, p.Client);
+                return;
+            }
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeRequest, Player.ID, "", TradePlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have sent a trade request to " + TradePlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a trade request to " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
         private static void HandleTradeJoin(Package p)

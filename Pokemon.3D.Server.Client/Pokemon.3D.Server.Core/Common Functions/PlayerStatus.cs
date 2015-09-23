@@ -7,6 +7,7 @@ using Pokemon_3D_Server_Core.Players;
 using Pokemon_3D_Server_Core.Settings;
 using System.Net.Sockets;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Core.Modules
 {
@@ -384,7 +385,7 @@ namespace Pokemon_3D_Server_Core.Modules
         /// <param name="Duration">How long?</param>
         /// <param name="Reason">Reason.</param>
         /// <param name="PlayerList">Player in which is trying to mute. Null == Global.</param>
-        public static void AddMuteList(this Player Player,int Duration,string Reason, Player PlayerList = null)
+        public static void AddMuteList(this Player Player, int Duration, string Reason, Player PlayerList = null)
         {
             if (PlayerList == null)
             {
@@ -533,11 +534,159 @@ namespace Pokemon_3D_Server_Core.Modules
         #endregion OperatorList
 
         #region SwearInfractionFilterList
+        /// <summary>
+        /// Have you sweared?
+        /// </summary>
+        /// <param name="Message">The dirty message.</param>
+        public static bool HaveSweared(this string Message)
+        {
+            if (Core.Setting.SwearInfractionList)
+            {
+                for (int i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
+                {
+                    if (Regex.IsMatch(Message, Core.Setting.SwearInfractionFilterListData[i].Regex))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// Swear Word.
+        /// </summary>
+        /// <param name="Message">The dirty message.</param>
+        public static string SwearWord(this string Message)
+        {
+            for (int i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
+            {
+                if (Regex.IsMatch(Message, Core.Setting.SwearInfractionFilterListData[i].Regex))
+                {
+                    return Regex.Match(Message, Core.Setting.SwearInfractionFilterListData[i].Regex).Groups[1].Value;
+                }
+            }
+            return null;
+        }
         #endregion SwearInfractionFilterList
 
         #region SwearInfractionList
+        /// <summary>
+        /// Get SwearInfractionList Data
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static SwearInfractionList GetSwearInfractionList(this Player Player)
+        {
+            return Player.isGameJoltPlayer ?
+                (from SwearInfractionList p in Core.Setting.SwearInfractionListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() :
+                (from SwearInfractionList p in Core.Setting.SwearInfractionListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
+        }
 
+        /// <summary>
+        /// Return if the Player have been infracted before. No Calculation done here.
+        /// </summary>
+        /// <param name="Player">Player to check.</param>
+        public static bool IsSwearInfracted(this Player Player)
+        {
+            if (Core.Setting.SwearInfractionList)
+            {
+                if (Player.GetSwearInfractionList() != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Infract the Player with the amount of points.
+        /// </summary>
+        /// <param name="Player">Player to infract.</param>
+        /// <param name="Points">Amount of points to infract.</param>
+        public static void AddInfractionCount(this Player Player, int Points)
+        {
+            if (Player.IsSwearInfracted())
+            {
+                SwearInfractionList SwearInfractionList = Player.GetSwearInfractionList();
+                SwearInfractionList.Name = Player.Name;
+                if ((DateTime.Now - SwearInfractionList.StartTime).TotalDays >= Core.Setting.SwearInfractionReset)
+                {
+                    SwearInfractionList.Points = Points;
+                }
+                else
+                {
+                    if (SwearInfractionList.Points >= Core.Setting.SwearInfractionCap)
+                    {
+                        SwearInfractionList.Points = 0;
+                    }
+                    SwearInfractionList.Points += Points;
+                }
+                SwearInfractionList.StartTime = DateTime.Now;
+
+                if (SwearInfractionList.Points >= Core.Setting.SwearInfractionCap)
+                {
+                    SwearInfractionList.Points = Core.Setting.SwearInfractionCap;
+                    SwearInfractionList.Muted += 1;
+                }
+
+                Core.Setting.Save();
+            }
+            else
+            {
+                Core.Setting.SwearInfractionListData.Add(new SwearInfractionList(Player.Name, Player.GameJoltID, Points, 0, DateTime.Now));
+                Core.Setting.Save();
+            }
+        }
+
+        /// <summary>
+        /// Defract the Player with the amount of points.
+        /// </summary>
+        /// <param name="Player">Player to defract.</param>
+        /// <param name="Points">Amount of points to defract.</param>
+        public static void RemoveInfractionCount(this Player Player, int Points)
+        {
+            if (Player.IsSwearInfracted())
+            {
+                SwearInfractionList SwearInfractionList = Player.GetSwearInfractionList();
+                SwearInfractionList.Name = Player.Name;
+                if ((DateTime.Now - SwearInfractionList.StartTime).TotalDays >= Core.Setting.SwearInfractionReset)
+                {
+                    SwearInfractionList.Points = 0;
+                }
+                else
+                {
+                    SwearInfractionList.Points -= Points;
+                    SwearInfractionList.Points = SwearInfractionList.Points.Clamp(0, int.MaxValue);
+                }
+                SwearInfractionList.StartTime = DateTime.Now;
+
+                Core.Setting.Save();
+            }
+        }
+
+        /// <summary>
+        /// Reset the Player infraction.
+        /// </summary>
+        /// <param name="Player">Player to reset.</param>
+        public static void ResetInfractionCount(this Player Player)
+        {
+            if (Player.IsSwearInfracted())
+            {
+                Core.Setting.SwearInfractionListData.Remove(Player.GetSwearInfractionList());
+                Core.Setting.Save();
+            }
+        }
         #endregion SwearInfractionList
 
         #region WhiteList

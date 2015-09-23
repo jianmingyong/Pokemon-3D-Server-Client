@@ -517,10 +517,20 @@ namespace Pokemon_3D_Server_Core.Settings
             // Initialize Tokens
             TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
             TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
-
+            TokenDefination.Add("SERVER_BLACKLISTED", "You have been banned from server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
             TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
             TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
+            TokenDefination.Add("SERVER_CHATGAMEJOLT", "<{0} ({1})>: {2}");
+            TokenDefination.Add("SERVER_CHATNOGAMEJOLT", "<{0}>: {1}");
             TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
+            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
+            TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
+            TokenDefination.Add("SERVER_MUTED", "You have been muted in the server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_MUTEDTEMP", "You have been muted by that player. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_SWEARWARNING", "Please avoid swearing where necessary. Triggered word: {0} | You have {1} infraction point. {2} infraction point will get a timeout.");
+            TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
+            TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 
