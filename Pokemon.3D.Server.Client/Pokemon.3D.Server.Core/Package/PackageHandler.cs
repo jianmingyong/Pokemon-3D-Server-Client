@@ -39,54 +39,71 @@ namespace Pokemon_3D_Server_Core.Packages
                             break;
 
                         case (int)Package.PackageTypes.PrivateMessage:
+                            HandlePrivateMessage(p);
                             break;
 
                         case (int)Package.PackageTypes.ChatMessage:
+                            HandleChatMessage(p);
                             break;
 
                         case (int)Package.PackageTypes.Ping:
+                            HandlePing(p);
                             break;
 
                         case (int)Package.PackageTypes.GamestateMessage:
+                            HandleGamestateMessage(p);
                             break;
 
                         case (int)Package.PackageTypes.TradeRequest:
+                            HandleTradeRequest(p);
                             break;
 
                         case (int)Package.PackageTypes.TradeJoin:
+                            HandleTradeJoin(p);
                             break;
 
                         case (int)Package.PackageTypes.TradeQuit:
+                            HandleTradeQuit(p);
                             break;
 
                         case (int)Package.PackageTypes.TradeOffer:
+                            HandleTradeOffer(p);
                             break;
 
                         case (int)Package.PackageTypes.TradeStart:
+                            HandleTradeStart(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleRequest:
+                            HandleBattleRequest(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleJoin:
+                            HandleBattleJoin(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleQuit:
+                            HandleBattleQuit(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleOffer:
+                            HandleBattleOffer(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleStart:
+                            HandleBattleStart(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleClientData:
+                            HandleBattleClientData(p);
                             break;
 
                         case (int)Package.PackageTypes.BattleHostData:
+                            HandleBattleHostData(p);
                             break;
 
                         case (int)Package.PackageTypes.BattlePokemonData:
+                            HandleBattlePokemonData(p);
                             break;
 
                         case (int)Package.PackageTypes.ServerDataRequest:
@@ -108,7 +125,7 @@ namespace Pokemon_3D_Server_Core.Packages
         {
             if (Core.Player.HasPlayer(p.Client))
             {
-                Core.Player.GetPlayer(p.Client).Update(p, true);
+                Core.Player.GetPlayer(p.Client).UpdatePlayer.Enqueue(p);
             }
             else
             {
@@ -214,7 +231,7 @@ namespace Pokemon_3D_Server_Core.Packages
                 }
 
                 // Else Let it roll :)
-
+                Core.Player.Add(p);
             }
         }
 
@@ -293,13 +310,16 @@ namespace Pokemon_3D_Server_Core.Packages
             }
 
             // Spam?
-            if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
+            if (Player.LastChatMessage != null && Player.LastChatMessage == p.DataItems[0])
             {
-                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
-                Core.Logger.Add(Player.isGameJoltPlayer ?
-                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
-                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
-                return;
+                if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
+                    return;
+                }
             }
 
             // Command?

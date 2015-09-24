@@ -230,7 +230,7 @@ namespace Pokemon_3D_Server_Core.Settings
                     Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Data\\UserSetting");
                 }
 
-                string ReturnString = null;
+                string ReturnString = "";
                 if (MuteListData.Count > 0)
                 {
                     foreach (MuteList Data in MuteListData)

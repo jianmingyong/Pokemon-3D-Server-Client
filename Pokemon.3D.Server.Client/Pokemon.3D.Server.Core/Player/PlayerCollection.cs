@@ -22,10 +22,6 @@ namespace Pokemon_3D_Server_Core.Players
             {
                 int ID = GetNextValidID();
                 Player Player = new Player(p, ID);
-                if (Player.isGameJoltPlayer)
-                {
-                    Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Player.Name, Player.GameJoltID));
-                }
             }
         }
 
@@ -59,6 +55,10 @@ namespace Pokemon_3D_Server_Core.Players
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
+
+            Player.TimerCollection[0].Dispose();
+            Player.Network.Dispose();
+            Remove(Player);
         }
 
         /// <summary>

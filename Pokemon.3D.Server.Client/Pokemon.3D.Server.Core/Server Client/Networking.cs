@@ -33,12 +33,12 @@ namespace Pokemon_3D_Server_Core.Network
         /// <summary>
         /// Get/Set ThreadCollection
         /// </summary>
-        public List<Thread> ThreadCollection { get; set; }
+        public List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
         /// <summary>
         /// Get/Set TimerCollection
         /// </summary>
-        public List<Timer> TimerCollection { get; set; }
+        public List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
         /// <summary>
         /// Get/Set Player Last Valid Ping
@@ -74,11 +74,18 @@ namespace Pokemon_3D_Server_Core.Network
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
             LoginStartTime = DateTime.Now;
-        }
 
-        private void StartListening()
-        {
+            // Timer
+            Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, 0, 1);
+            TimerCollection.Add(Timer);
 
+            // Timer
+            Timer Timer1 = new Timer(new TimerCallback(ThreadStartPinging), null, 0, 1000);
+            TimerCollection.Add(Timer1);
+
+            Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { Name = "ThreadStartListening", IsBackground = true };
+            Thread.Start();
+            ThreadCollection.Add(Thread);
         }
 
         private void ThreadStartListening()
@@ -99,6 +106,10 @@ namespace Pokemon_3D_Server_Core.Network
                             LastValidPing = DateTime.Now;
                         }
                     }
+                    else
+                    {
+                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, "You have left the game.");
+                    }
                 }
                 catch (SocketException)
                 {
@@ -108,24 +119,30 @@ namespace Pokemon_3D_Server_Core.Network
                 {
                     return;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    ex.CatchError();
                     return;
                 }
             } while (true);
         }
 
-        private void ThreadStartPinging()
-        {
-
-        }
-
-        private void ThreadStartSending()
+        private void ThreadStartPinging(object obj = null)
         {
             try
             {
-                Package p;
+
+            }
+            catch (Exception ex)
+            {
+                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
+            }
+        }
+
+        private void ThreadStartSending(object obj = null)
+        {
+            try
+            {
+                Package p = null;
                 if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
                 {
                     if (Client.IsConnected())
@@ -136,16 +153,19 @@ namespace Pokemon_3D_Server_Core.Network
                     }
                 }
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
+                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
                 return;
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
                 return;
             }
             catch (Exception ex)
             {
+                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
                 ex.CatchError();
                 return;
             }

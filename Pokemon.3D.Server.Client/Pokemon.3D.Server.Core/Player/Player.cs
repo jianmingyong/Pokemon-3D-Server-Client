@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
+using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Network;
 using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Settings;
 
 namespace Pokemon_3D_Server_Core.Players
 {
@@ -227,12 +231,12 @@ namespace Pokemon_3D_Server_Core.Players
         /// <summary>
         /// Get/Set Player Last Chat Time
         /// </summary>
-        public DateTime LastChatTime { get; set; }
+        public DateTime LastChatTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// Get/Set Player Last Valid Game Data
         /// </summary>
-        public List<string> LastValidGameData { get; set; }
+        public List<string> LastValidGameData { get; set; } = new List<string>();
 
         /// <summary>
         /// Get/Set Player Last Movement Position [Direction | Position Vector]
@@ -243,6 +247,16 @@ namespace Pokemon_3D_Server_Core.Players
         /// Get/Set Player Last Pokemon Movement Position [Direction | Position Vector]
         /// </summary>
         public string LastPokemonMovementPosition { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Update Queue.
+        /// </summary>
+        public ConcurrentQueue<Package> UpdatePlayer { get; set; } = new ConcurrentQueue<Package>();
+
+        /// <summary>
+        /// Get/Set Timer.
+        /// </summary>
+        public List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
         /// <summary>
         /// A Collection of Busy Type
@@ -324,7 +338,63 @@ namespace Pokemon_3D_Server_Core.Players
         {
             this.ID = ID;
             Network = new Networking(p.Client);
+            Update(p, false);
 
+            if (isGameJoltPlayer)
+            {
+                Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Name, GameJoltID));
+            }
+            Core.Player.Add(this);
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
+
+            for (int i = 0; i < Core.Player.Count; i++)
+            {
+                if (Core.Player[i].ID != ID)
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.CreatePlayer, Core.Player[i].ID.ToString(), p.Client));
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.GameData, Core.Player[i].ID, Core.Player[i].GenerateGameData(true), p.Client));
+                }
+            }
+
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.CreatePlayer, ID.ToString(), null));
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+
+            if (Core.Setting.WelcomeMessage != null)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.WelcomeMessage, p.Client));
+            }
+
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
+                Core.Setting.Token("SERVER_GAMEJOLT",Name,GameJoltID.ToString(),"join the game!") :
+                Core.Setting.Token("SERVER_NOGAMEJOLT",Name,"join the game!"), null));
+            Core.Logger.Add(isGameJoltPlayer ?
+                Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
+                Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), Logger.LogTypes.Info, p.Client);
+
+            if (Core.Setting.TimeLeft() != null)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Setting.TimeLeft()), p.Client));
+            }
+
+            Timer Timer = new Timer(new TimerCallback(UpdateTrigger), null, 0, 1);
+            TimerCollection.Add(Timer);
+        }
+
+        private void UpdateTrigger(object obj = null)
+        {
+            try
+            {
+                Package p = null;
+                if (UpdatePlayer.TryDequeue(out p))
+                {
+                    Update(p, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
         }
 
         /// <summary>
@@ -334,7 +404,10 @@ namespace Pokemon_3D_Server_Core.Players
         /// <param name="SentToServer">Sent data to server?</param>
         public void Update(Package p, bool SentToServer)
         {
-            Network.LastValidMovement = DateTime.Now;
+            if (Network != null)
+            {
+                Network.LastValidMovement = DateTime.Now;
+            }
 
             if (p.IsFullPackageData())
             {
@@ -403,6 +476,84 @@ namespace Pokemon_3D_Server_Core.Players
             }
 
             // Sent To Server
+            if (SentToServer)
+            {
+                if (p.IsFullPackageData())
+                {
+                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+                }
+                else
+                {
+                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+
+                    //if (LastValidGameData[0] == LevelFile)
+                    //{
+                    //    List<string> Player = CatchUp(LastValidGameData[1], true);
+                    //    List<string> Pokemon = CatchUp(LastValidGameData[7], false);
+                    //    int ListCount = 0;
+
+                    //    if (Player != null)
+                    //    {
+                    //        ListCount = Player.Count;
+                    //        for (int i = 0; i < ListCount; i++)
+                    //        {
+                    //            List<string> NewDataItems = GenerateGameData(false);
+
+                    //            // Apply Fix
+                    //            NewDataItems[6] = Player[i];
+
+                    //            if (LastMovementPosition.GetSplit(0) == "Left")
+                    //            {
+                    //                NewDataItems[7] = "1";
+                    //            }
+                    //            else if (LastMovementPosition.GetSplit(0) == "Right")
+                    //            {
+                    //                NewDataItems[7] = "3";
+                    //            }
+                    //            else if (LastMovementPosition.GetSplit(0) == "Front")
+                    //            {
+                    //                NewDataItems[7] = "0";
+                    //            }
+                    //            else if (LastMovementPosition.GetSplit(0) == "Back")
+                    //            {
+                    //                NewDataItems[7] = "2";
+                    //            }
+
+                    //            NewDataItems[8] = (i == Player.Count - 1) ? "0" : "1";
+
+                    //            NewDataItems[12] = Pokemon[i];
+                    //            if (LastPokemonMovementPosition.GetSplit(0) == "Left")
+                    //            {
+                    //                NewDataItems[14] = "1";
+                    //            }
+                    //            else if (LastPokemonMovementPosition.GetSplit(0) == "Right")
+                    //            {
+                    //                NewDataItems[14] = "3";
+                    //            }
+                    //            else if (LastPokemonMovementPosition.GetSplit(0) == "Front")
+                    //            {
+                    //                NewDataItems[14] = "0";
+                    //            }
+                    //            else if (LastPokemonMovementPosition.GetSplit(0) == "Back")
+                    //            {
+                    //                NewDataItems[14] = "2";
+                    //            }
+
+                    //            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, NewDataItems, null));
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        ListCount = 0;
+                    //        Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    //}
+                }
+            }
         }
 
         /// <summary>
@@ -498,7 +649,7 @@ namespace Pokemon_3D_Server_Core.Players
                         {
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
-                                    i.ToString().ConvertStringCulture(this),
+                                    i.Round(2).ToString().ConvertStringCulture(this),
                                     LastPositionY.ToString(),
                                     LastPositionZ.ToString()
                                     ));
@@ -521,7 +672,7 @@ namespace Pokemon_3D_Server_Core.Players
                         {
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
-                                    i.ToString().ConvertStringCulture(this),
+                                    i.Round(2).ToString().ConvertStringCulture(this),
                                     LastPositionY.ToString(),
                                     LastPositionZ.ToString()
                                     ));
@@ -545,7 +696,7 @@ namespace Pokemon_3D_Server_Core.Players
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
-                                i.ToString().ConvertStringCulture(this),
+                                i.Round(2).ToString().ConvertStringCulture(this),
                                 LastPositionZ.ToString()
                                 ));
                         }
@@ -568,7 +719,7 @@ namespace Pokemon_3D_Server_Core.Players
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
-                                i.ToString().ConvertStringCulture(this),
+                                i.Round(2).ToString().ConvertStringCulture(this),
                                 LastPositionZ.ToString()
                                 ));
                         }
@@ -592,7 +743,7 @@ namespace Pokemon_3D_Server_Core.Players
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
                                 LastPositionY.ToString(),
-                                i.ToString().ConvertStringCulture(this)
+                                i.Round(2).ToString().ConvertStringCulture(this)
                                 ));
                         }
                         LastMovementPosition = "Front|" + Position_Z.Floor();
@@ -615,7 +766,7 @@ namespace Pokemon_3D_Server_Core.Players
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
                                 LastPositionY.ToString(),
-                                i.ToString().ConvertStringCulture(this)
+                                i.Round(2).ToString().ConvertStringCulture(this)
                                 ));
                         }
                         LastMovementPosition = "Back|" + Position_Z.Floor();
@@ -643,7 +794,7 @@ namespace Pokemon_3D_Server_Core.Players
                         {
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
-                                    i.ToString().ConvertStringCulture(this),
+                                    i.Round(2).ToString().ConvertStringCulture(this),
                                     LastPositionY.ToString(),
                                     LastPositionZ.ToString()
                                     ));
@@ -666,7 +817,7 @@ namespace Pokemon_3D_Server_Core.Players
                         {
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
-                                    i.ToString().ConvertStringCulture(this),
+                                    i.Round(2).ToString().ConvertStringCulture(this),
                                     LastPositionY.ToString(),
                                     LastPositionZ.ToString()
                                     ));
@@ -690,7 +841,7 @@ namespace Pokemon_3D_Server_Core.Players
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
-                                i.ToString().ConvertStringCulture(this),
+                                i.Round(2).ToString().ConvertStringCulture(this),
                                 LastPositionZ.ToString()
                                 ));
                         }
@@ -713,7 +864,7 @@ namespace Pokemon_3D_Server_Core.Players
                             Positions.Add(
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
-                                i.ToString().ConvertStringCulture(this),
+                                i.Round(2).ToString().ConvertStringCulture(this),
                                 LastPositionZ.ToString()
                                 ));
                         }
@@ -737,7 +888,7 @@ namespace Pokemon_3D_Server_Core.Players
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
                                 LastPositionY.ToString(),
-                                i.ToString().ConvertStringCulture(this)
+                                i.Round(2).ToString().ConvertStringCulture(this)
                                 ));
                         }
                         LastPokemonMovementPosition = "Front|" + PokemonPosition_Z.Floor();
@@ -760,7 +911,7 @@ namespace Pokemon_3D_Server_Core.Players
                                 string.Format(@"{0}|{1}|{2}",
                                 LastPositionX.ToString(),
                                 LastPositionY.ToString(),
-                                i.ToString().ConvertStringCulture(this)
+                                i.Round(2).ToString().ConvertStringCulture(this)
                                 ));
                         }
                         LastPokemonMovementPosition = "Back|" + PokemonPosition_Z.Floor();

@@ -376,46 +376,53 @@ namespace Pokemon_3D_Server_Core.Worlds
         /// <param name="Player">Player to Generate.</param>
         public List<string> GenerateWorld(Player Player)
         {
-            List<string> ReturnList = new List<string>();
-
-            if (Core.Setting.DoDayCycle)
+            try
             {
-                CurrentTime = _CurrentTime.AddSeconds(TimeOffset).Hour.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Minute.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Second.ToString();
-            }
-            else
-            {
-                CurrentTime = "12,0,0";
-            }
+                List<string> ReturnList = new List<string>();
 
-            if (Player.isGameJoltPlayer)
-            {
-                OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where Player.GameJoltID == p.GameJoltID select p).FirstOrDefault();
-
-                if (OnlineSetting.LastWorldUpdate == null || OnlineSetting.LastWorldUpdate.AddHours(1) <= DateTime.Now)
+                if (Core.Setting.DoDayCycle)
                 {
-                    OnlineSetting.CurrentWorldSeason = GenerateSeason(OnlineSetting.Season);
-                    OnlineSetting.CurrentWorldWeather = GenerateWeather(OnlineSetting.Weather, OnlineSetting.Season);
-                    OnlineSetting.LastWorldUpdate = LastWorldUpdate;
+                    CurrentTime = _CurrentTime.AddSeconds(TimeOffset).Hour.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Minute.ToString() + "," + _CurrentTime.AddSeconds(TimeOffset).Second.ToString();
+                }
+                else
+                {
+                    CurrentTime = "12,0,0";
                 }
 
-                ReturnList = new List<string>
+                if (Player.isGameJoltPlayer)
                 {
-                    OnlineSetting.CurrentWorldSeason.ToString(),
-                    OnlineSetting.CurrentWorldWeather.ToString(),
-                    CurrentTime
-                };
-            }
-            else
-            {
-                ReturnList = new List<string>
-                {
-                    Season.ToString(),
-                    Weather.ToString(),
-                    CurrentTime
-                };
-            }
+                    OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where Player.GameJoltID == p.GameJoltID select p).FirstOrDefault();
 
-            return ReturnList;
+                    if (OnlineSetting.LastWorldUpdate == null || OnlineSetting.LastWorldUpdate.AddHours(1) <= DateTime.Now)
+                    {
+                        OnlineSetting.CurrentWorldSeason = GenerateSeason(OnlineSetting.Season);
+                        OnlineSetting.CurrentWorldWeather = GenerateWeather(OnlineSetting.Weather, OnlineSetting.Season);
+                        OnlineSetting.LastWorldUpdate = LastWorldUpdate;
+                    }
+
+                    ReturnList = new List<string>
+                    {
+                        OnlineSetting.CurrentWorldSeason.ToString(),
+                        OnlineSetting.CurrentWorldWeather.ToString(),
+                        CurrentTime
+                    };
+                }
+                else
+                {
+                    ReturnList = new List<string>
+                    {
+                        Season.ToString(),
+                        Weather.ToString(),
+                        CurrentTime
+                    };
+                }
+
+                return ReturnList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

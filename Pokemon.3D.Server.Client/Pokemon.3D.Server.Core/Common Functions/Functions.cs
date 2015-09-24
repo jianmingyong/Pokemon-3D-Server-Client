@@ -135,7 +135,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             {
                 return fullString;
             }
-            else if (fullString.SplitCount() < valueIndex)
+            else if (valueIndex < fullString.SplitCount())
             {
                 return fullString.Split("|".ToCharArray())[valueIndex];
             }
@@ -158,7 +158,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             {
                 return fullString;
             }
-            else if (fullString.SplitCount(seperator) < valueIndex)
+            else if (valueIndex < fullString.SplitCount(seperator))
             {
                 return fullString.Split(seperator.ToCharArray())[valueIndex];
             }

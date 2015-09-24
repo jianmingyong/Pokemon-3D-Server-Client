@@ -532,6 +532,7 @@ namespace Pokemon_3D_Server_Core.Settings
             TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
             TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
             TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
+            TokenDefination.Add("SERVER_RESTARTWARNING", "The server is scheduled to restart in {0}. Please enjoy your stay.");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 

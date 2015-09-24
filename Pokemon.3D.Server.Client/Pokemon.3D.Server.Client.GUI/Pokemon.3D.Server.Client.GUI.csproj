@@ -27,6 +27,7 @@
     <DocumentationFile>bin\Debug\Pokemon.3D.Server.Client.GUI.XML</DocumentationFile>
     <LangVersion>6</LangVersion>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
