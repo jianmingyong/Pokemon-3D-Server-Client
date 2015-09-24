@@ -235,13 +235,13 @@ namespace Pokemon_3D_Server_Core.Settings
                 {
                     foreach (MuteList Data in MuteListData)
                     {
-                        ReturnString += string.Format(@"        {
+                        ReturnString += string.Format(@"        {{
 ""Name"": ""{0}"",
 ""GameJoltID"": {1},
 ""Reason"": ""{2}"",
 ""StartTime"": ""{3}"",
 ""MuteDuration"": {4}
-        },",
+        }},",
         Data.Name,
         Data.GameJoltID.ToString(),
         Data.Reason,
@@ -250,25 +250,25 @@ namespace Pokemon_3D_Server_Core.Settings
                     }
                 }
 
-                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json", string.Format(@"{
+                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\Data\\UserSetting\\" + GameJoltID.ToString() + ".json", string.Format(@"{{
     ""Pokémon 3D Server Client Setting File"":
-    {
+    {{
         ""Name"": ""{0}"",
         ""GameJoltID"": {1},
         ""LastUpdate"": ""{2}""
-    },
+    }},
 
     ""World Property"":
-    {
+    {{
         ""Season"": {3},
         ""Weather"": {4}
-    }
+    }}
 
     ""MuteListData"":
     [
 {5}
     ]
-}",
+}}",
 Name,
 GameJoltID.ToString(),
 LastUpdated.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffK"),

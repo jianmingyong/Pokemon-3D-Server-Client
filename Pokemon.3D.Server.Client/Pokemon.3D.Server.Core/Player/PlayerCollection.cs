@@ -40,8 +40,8 @@ namespace Pokemon_3D_Server_Core.Players
                 Core.Logger.Add(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                OnlineSetting.Save();
-                Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
+                    OnlineSetting.Save();
+                    Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
             {

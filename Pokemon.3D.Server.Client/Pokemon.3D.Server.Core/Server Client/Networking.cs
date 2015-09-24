@@ -111,14 +111,6 @@ namespace Pokemon_3D_Server_Core.Network
                         Core.Player.Remove(Core.Player.GetPlayer(Client).ID, "You have left the game.");
                     }
                 }
-                catch (SocketException)
-                {
-                    return;
-                }
-                catch (IOException)
-                {
-                    return;
-                }
                 catch (Exception)
                 {
                     return;
@@ -153,20 +145,8 @@ namespace Pokemon_3D_Server_Core.Network
                     }
                 }
             }
-            catch (SocketException ex)
+            catch (Exception)
             {
-                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
-                return;
-            }
-            catch (IOException ex)
-            {
-                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
-                return;
-            }
-            catch (Exception ex)
-            {
-                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
-                ex.CatchError();
                 return;
             }
         }
