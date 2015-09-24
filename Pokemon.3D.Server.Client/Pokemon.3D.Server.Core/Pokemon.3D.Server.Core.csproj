@@ -57,6 +57,7 @@
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common Functions\PlayerStatus.cs" />
     <Compile Include="Common vb.net Functions\My Namespace.cs" />
+    <Compile Include="Event Handler\RestartTrigger.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggerCollection.cs" />
     <Compile Include="Event Handler\MessageEventArgs.cs" />

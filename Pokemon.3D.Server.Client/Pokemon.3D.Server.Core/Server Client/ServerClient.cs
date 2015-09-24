@@ -51,6 +51,14 @@ namespace Pokemon_3D_Server_Core.Network
                 Timer Timer2 = new Timer(new TimerCallback(Core.Package.Handle), null, 0, 1);
                 Core.TimerCollection.Add(Timer2);
 
+                // Timer 3
+                if (Core.Setting.AutoRestartTime >= 10)
+                {
+                    Core.Logger.Add(string.Format(@"ServerClient.cs: The server will restart every {0} seconds.", Core.Setting.AutoRestartTime), Logger.LogTypes.Info);
+                    Timer Timer3 = new Timer(new TimerCallback(ThreadAutoRestart), null, 0, 1000);
+                    Core.TimerCollection.Add(Timer3);
+                }
+
                 Core.Logger.Add("ServerClient.cs: Server Client is initalizing.", Logger.LogTypes.Info);
                 if (Core.Setting.OfflineMode)
                 {
@@ -77,6 +85,7 @@ namespace Pokemon_3D_Server_Core.Network
             catch (Exception ex)
             {
                 ex.CatchError();
+                Core.Logger.Add("ServerClient.cs: Server failed to start. Please relaunch again.", Logger.LogTypes.Warning);
             }
         }
 
@@ -104,6 +113,21 @@ namespace Pokemon_3D_Server_Core.Network
                     Core.Logger.Add("ServerClient.cs: StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
                 }
             } while (true);
+        }
+
+        private void ThreadAutoRestart(object obj = null)
+        {
+            TimeSpan TimeLeft = DateTime.Now - Core.Setting.StartTime;
+
+            if (TimeLeft.TotalSeconds == 600 || TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
+            {
+                SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), null));
+            }
+            else if (TimeLeft.TotalSeconds < 1)
+            {
+                // Toggle Restart.
+                RestartTrigger.Restart();
+            }
         }
 
         /// <summary>

@@ -531,6 +531,7 @@ namespace Pokemon_3D_Server_Core.Settings
             TokenDefination.Add("SERVER_SWEARWARNING", "Please avoid swearing where necessary. Triggered word: {0} | You have {1} infraction point. {2} infraction point will get a timeout.");
             TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
             TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
+            TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 
@@ -2423,10 +2424,68 @@ Data.Value);
             return ReturnValue;
         }
 
-        #region Data List Functions
-        #region BlackList
+        /// <summary>
+        /// Server Time Left
+        /// </summary>
+        public string TimeLeft()
+        {
+            if (Core.Setting.AutoRestartTime >= 10)
+            {
+                TimeSpan TimeLeft = DateTime.Now - Core.Setting.StartTime;
+                string ReturnString = null;
 
-        #endregion BlackList
-        #endregion Data List Functions
+                if (TimeLeft.Days > 1)
+                {
+                    ReturnString += TimeLeft.Days.ToString() + " days ";
+                }
+                else if (TimeLeft.Days == 1)
+                {
+                    ReturnString += "1 day ";
+                }
+                else
+                {
+                    if (TimeLeft.Hours > 1)
+                    {
+                        ReturnString += TimeLeft.Hours.ToString() + " hours ";
+                    }
+                    else if (TimeLeft.Hours == 1)
+                    {
+                        ReturnString += "1 hour ";
+                    }
+
+                    if (TimeLeft.Minutes > 1)
+                    {
+                        ReturnString += TimeLeft.Minutes.ToString() + " minutes ";
+                    }
+                    else if (TimeLeft.Minutes == 1)
+                    {
+                        ReturnString += "1 minute ";
+                    }
+                    else if (TimeLeft.Minutes == 0 && TimeLeft.TotalSeconds > 60)
+                    {
+                        ReturnString += "0 minute ";
+                    }
+
+                    if (TimeLeft.Seconds > 1)
+                    {
+                        ReturnString += TimeLeft.Seconds.ToString() + " seconds";
+                    }
+                    else if (TimeLeft.Seconds == 1)
+                    {
+                        ReturnString += "1 second";
+                    }
+                    else if (TimeLeft.Seconds == 0)
+                    {
+                        ReturnString += "0 second";
+                    }
+                }
+
+                return ReturnString;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

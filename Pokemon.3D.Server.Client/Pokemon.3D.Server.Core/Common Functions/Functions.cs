@@ -214,7 +214,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             {
                 using (TcpClient Client = new TcpClient())
                 {
-                    if (Client.ConnectAsync(Core.Setting._IPAddress, Core.Setting.Port).Wait(1000))
+                    if (Client.ConnectAsync(GetPublicIP(), Core.Setting.Port).Wait(1000))
                     {
                         return true;
                     }

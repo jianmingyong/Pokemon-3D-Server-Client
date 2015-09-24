@@ -363,7 +363,17 @@ namespace Pokemon_3D_Server_Core.Packages
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
-            // Not Implemented - Server Restart Timer.
+            // Server Restart Timer.
+            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())), Logger.LogTypes.Trade, p.Client);
+                return;
+            }
 
             // Check if you are blocked.
             if (Player.IsMuteListed(TradePlayer))
@@ -385,62 +395,181 @@ namespace Pokemon_3D_Server_Core.Packages
 
         private static void HandleTradeJoin(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
+
+            // Server Restart Timer.
+            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())), Logger.LogTypes.Trade, p.Client);
+                return;
+            }
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeJoin, Player.ID, "", TradePlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the trade request from " + TradePlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have joined the trade request from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
         private static void HandleTradeQuit(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", TradePlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have rejected the trade request from " + TradePlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the trade request from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
         private static void HandleTradeOffer(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeOffer, Player.ID, p.DataItems[1], TradePlayer.Network.Client));
         }
 
         private static void HandleTradeStart(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeStart, Player.ID, "", TradePlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the trade from " + TradePlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the trade from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
         private static void HandleBattleRequest(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
+
+            // Server Restart Timer.
+            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())), Logger.LogTypes.PvP, p.Client);
+                return;
+            }
+
+            // Check if you are blocked.
+            if (Player.IsMuteListed(PvPPlayer))
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PvPPlayer).Reason, Player.GetMuteList(PvPPlayer).RemainingTime), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PvPPlayer).Reason, Player.GetMuteList(PvPPlayer).RemainingTime)) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_MUTEDTEMP", Player.GetMuteList(PvPPlayer).Reason, Player.GetMuteList(PvPPlayer).RemainingTime)), Logger.LogTypes.PvP, p.Client);
+                return;
+            }
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleRequest, Player.ID, "", PvPPlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have sent a battle request to " + PVPPlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a battle request to " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
         private static void HandleBattleJoin(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
+
+            // Server Restart Timer.
+            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft())), Logger.LogTypes.PvP, p.Client);
+                return;
+            }
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleJoin, Player.ID, "", PvPPlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the battle request from " + PVPPlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have joined the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
         private static void HandleBattleQuit(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string PVPPlayerName = PVPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PVPPlayer.Name, PVPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PVPPlayer.Name, "");
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", PVPPlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have rejected the battle request from " + PVPPlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
         private static void HandleBattleOffer(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
         private static void HandleBattleStart(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            string PVPPlayerName = PVPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PVPPlayer.Name, PVPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PVPPlayer.Name, "");
+
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleStart, Player.ID, "", PVPPlayer.Network.Client));
+            Core.Logger.Add(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the battle from " + PVPPlayerName) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
         private static void HandleBattleClientData(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleClientData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
         private static void HandleBattleHostData(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleHostData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
         private static void HandleBattlePokemonData(Package p)
         {
+            Player Player = Core.Player.GetPlayer(p.Client);
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
 
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattlePokemonData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
         private static void HandleServerDataRequest(Package p)

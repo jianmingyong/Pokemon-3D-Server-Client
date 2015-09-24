@@ -79,25 +79,21 @@ namespace Pokemon_3D_Server_Core.Settings
         {
             get
             {
-                TimeSpan RemainingTime;
                 string ReturnText = null;
 
                 if (Duration > 0)
                 {
                     if (StartTime.AddSeconds(Duration) > DateTime.Now)
                     {
-                        RemainingTime = StartTime.AddSeconds(Duration) - DateTime.Now;
+                        TimeSpan RemainingTime = StartTime.AddSeconds(Duration) - DateTime.Now;
 
-                        if (RemainingTime.Days > 0)
+                        if (RemainingTime.Days > 1)
                         {
-                            if (RemainingTime.Days == 1)
-                            {
-                                ReturnText = "1 Day";
-                            }
-                            else
-                            {
-                                ReturnText = RemainingTime.Days.ToString() + " Day";
-                            }
+                            ReturnText = RemainingTime.Days.ToString() + " Days";
+                        }
+                        else if (RemainingTime.Days == 1)
+                        {
+                            ReturnText = "1 Day";
                         }
                         else
                         {
@@ -131,7 +127,7 @@ namespace Pokemon_3D_Server_Core.Settings
                             {
                                 ReturnText += RemainingTime.Seconds.ToString() + " Seconds";
                             }
-                            else if (RemainingTime.Seconds == 0 && RemainingTime.TotalSeconds > 0)
+                            else if (RemainingTime.Seconds == 0)
                             {
                                 ReturnText += "0 Second";
                             }
