@@ -384,7 +384,7 @@ namespace Pokemon_3D_Server_Core.Packages
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
             // Server Restart Timer.
-            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
@@ -421,7 +421,7 @@ namespace Pokemon_3D_Server_Core.Packages
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
             // Server Restart Timer.
-            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
@@ -480,7 +480,7 @@ namespace Pokemon_3D_Server_Core.Packages
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
             // Server Restart Timer.
-            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
@@ -517,7 +517,7 @@ namespace Pokemon_3D_Server_Core.Packages
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
             // Server Restart Timer.
-            if ((DateTime.Now - Core.Setting.StartTime).TotalSeconds <= 300)
+            if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), p.Client));
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));

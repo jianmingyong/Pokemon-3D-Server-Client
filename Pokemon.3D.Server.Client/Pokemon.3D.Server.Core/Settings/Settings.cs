@@ -233,7 +233,7 @@ namespace Pokemon_3D_Server_Core.Settings
         #endregion World
 
         #region FailSafe Features
-        private int _NoPingKickTime = 20;
+        private int _NoPingKickTime = 15;
         /// <summary>
         /// Get/Set No Ping Kick Time
         /// </summary>
@@ -533,6 +533,11 @@ namespace Pokemon_3D_Server_Core.Settings
             TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
             TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
             TokenDefination.Add("SERVER_RESTARTWARNING", "The server is scheduled to restart in {0}. Please enjoy your stay.");
+            TokenDefination.Add("SERVER_NOPING", "You have a slow connection or you have disconnected from internet for too long.");
+            TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
+            TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_RESTART", "This server is restarting. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0}. We encourage your stay but also encourage to take a small break :)");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 
@@ -1050,7 +1055,11 @@ namespace Pokemon_3D_Server_Core.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Boolean)
                                         {
+#if DEBUG
+                                            LoggerDebug = true;
+#else
                                             LoggerDebug = (bool)Reader.Value;
+#endif
                                         }
                                         else
                                         {
@@ -2432,7 +2441,7 @@ Data.Value);
         {
             if (Core.Setting.AutoRestartTime >= 10)
             {
-                TimeSpan TimeLeft = DateTime.Now - Core.Setting.StartTime;
+                TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
                 string ReturnString = null;
 
                 if (TimeLeft.Days > 1)

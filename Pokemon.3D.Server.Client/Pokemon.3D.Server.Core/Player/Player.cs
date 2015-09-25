@@ -566,11 +566,11 @@ namespace Pokemon_3D_Server_Core.Players
                 case (int)BusyTypes.NotBusy:
                     return "";
                 case (int)BusyTypes.Battling:
-                    return " - Battling";
+                    return "- Battling";
                 case (int)BusyTypes.Chatting:
-                    return " - Chatting";
+                    return "- Chatting";
                 case (int)BusyTypes.Inactive:
-                    return " - Inactive";
+                    return "- Inactive";
                 default:
                     return "";
             }
@@ -924,6 +924,14 @@ namespace Pokemon_3D_Server_Core.Players
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Get Player Status. GUI use only.
+        /// </summary>
+        public override string ToString()
+        {
+            return isGameJoltPlayer ? string.Format("ID: {3} {0} ({1}) {2}", Name, GameJoltID.ToString(), GetPlayerBusyType(),ID.ToString()) : string.Format("ID: {2} {0} {1}", Name, GetPlayerBusyType(),ID.ToString());
         }
 
         /// <summary>

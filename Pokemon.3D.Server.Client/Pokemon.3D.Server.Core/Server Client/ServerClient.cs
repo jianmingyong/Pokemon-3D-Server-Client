@@ -117,7 +117,7 @@ namespace Pokemon_3D_Server_Core.Network
 
         private void ThreadAutoRestart(object obj = null)
         {
-            TimeSpan TimeLeft = DateTime.Now - Core.Setting.StartTime;
+            TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
 
             if (TimeLeft.TotalSeconds == 600 || TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
             {
@@ -138,7 +138,14 @@ namespace Pokemon_3D_Server_Core.Network
         {
             if (Core.Player.HasPlayer(p.Client))
             {
-                Core.Player.GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
+                if (Core.Player.GetPlayer(p.Client).Network.IsActive)
+                {
+                    Core.Player.GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
+                }
+                else
+                {
+                    Core.Player.GetPlayer(p.Client).Network.StartSending(p);
+                }
             }
             else
             {
@@ -166,7 +173,14 @@ namespace Pokemon_3D_Server_Core.Network
             {
                 if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    if (Core.Player[i].Network.IsActive)
+                    {
+                        Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    }
+                    else
+                    {
+                        Core.Player[i].Network.StartSending(p);
+                    }
                 }
             }
         }

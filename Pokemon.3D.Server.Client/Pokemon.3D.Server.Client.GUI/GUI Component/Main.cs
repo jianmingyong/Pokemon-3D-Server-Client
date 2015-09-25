@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Loggers;
-using Pokemon_3D_Server_Core.Settings;
 using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Network;
+using Pokemon_3D_Server_Core.Packages;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -19,10 +13,8 @@ namespace Pokemon_3D_Server_Client_GUI
     /// </summary>
     public partial class Main : Form
     {
-        /// <summary>
-        /// Delegate Event for Queue Message.
-        /// </summary>
-        public delegate void QueueMessage_AddMessage_Safe(object myObject, MessageEventArgs myArgs);
+        private delegate void QueueMessage_AddMessage_Safe(object myObject, MessageEventArgs myArgs);
+        private bool ApplicationRestart = false;
 
         /// <summary>
         /// GUI Component Start Point
@@ -36,6 +28,7 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             // Add Handler
             QueueMessage.AddMessage += QueueMessage_AddMessage;
+            RestartTrigger.RestartSwitch += Restart;
 
             // Setup Settings.
             Core.Setting.Setup();
@@ -56,6 +49,19 @@ namespace Pokemon_3D_Server_Client_GUI
             Core.Server.Start();
         }
 
+        private void Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), null));
+            Core.Setting.Save();
+            Core.Logger.Add("Main.cs: Application closed successfully!", Logger.LogTypes.Info);
+
+            if (ApplicationRestart)
+            {
+                Application.Restart();
+                Application.ExitThread();
+            }
+        }
+
         private void QueueMessage_AddMessage(object myObject, MessageEventArgs myArgs)
         {
             try
@@ -73,6 +79,12 @@ namespace Pokemon_3D_Server_Client_GUI
             {
                 ex.CatchError();
             }
+        }
+
+        private void Restart(object myObject, EventArgs myArgs)
+        {
+            ApplicationRestart = true;
+            Application.Exit();
         }
     }
 }

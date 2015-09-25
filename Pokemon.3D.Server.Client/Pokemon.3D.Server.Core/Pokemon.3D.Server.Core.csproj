@@ -61,8 +61,8 @@
     <Compile Include="Event Handler\RestartTrigger.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggerCollection.cs" />
-    <Compile Include="Event Handler\MessageEventArgs.cs" />
-    <Compile Include="Event Handler\QueueMessage.cs" />
+    <Compile Include="Event Handler\QueueMessage\MessageEventArgs.cs" />
+    <Compile Include="Event Handler\QueueMessage\QueueMessage.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Package\Package.cs" />
     <Compile Include="Package\PackageHandler.cs" />

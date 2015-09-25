@@ -60,7 +60,7 @@ namespace Pokemon_3D_Server_Core.Network
         /// </summary>
         public bool IsActive { get; set; }
 
-        // private int LastHourCheck = 0;
+        private int LastHourCheck = 0;
 
         /// <summary>
         /// Get/Set Player Queue for sending package.
@@ -109,26 +109,68 @@ namespace Pokemon_3D_Server_Core.Network
 
                         if (Package.IsValid)
                         {
-                            Package.Handle();
                             LastValidPing = DateTime.Now;
+                            Package.Handle();
                         }
                     }
                     else
                     {
                         Core.Player.Remove(Core.Player.GetPlayer(Client).ID, "You have left the game.");
-                        break;
+                        return;
                     }
                 }
                 catch (Exception)
                 {
-                    break;
+                    return;
                 }
             } while (true);
         }
 
         private void ThreadStartPinging(object obj = null)
         {
+            if (IsActive)
+            {
+                if (Core.Setting.NoPingKickTime >= 10)
+                {
+                    if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
+                    {
+                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, Core.Setting.Token("SERVER_NOPING"));
+                        return;
+                    }
+                }
 
+                if (Core.Setting.AFKKickTime >= 10)
+                {
+                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime)
+                    {
+                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, Core.Setting.Token("SERVER_AFK"));
+                        return;
+                    }
+                }
+
+                if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME"), Client));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Non-Threaded Sending - Only used on disposing method.
+        /// </summary>
+        /// <param name="p"></param>
+        public void StartSending(Package p)
+        {
+            try
+            {
+                Writer.WriteLine(p.ToString());
+                Writer.Flush();
+                Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         private void ThreadStartSending(object obj = null)
@@ -138,12 +180,9 @@ namespace Pokemon_3D_Server_Core.Network
                 Package p = null;
                 if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
                 {
-                    if (Client.IsConnected())
-                    {
-                        Writer.WriteLine(p.ToString());
-                        Writer.Flush();
-                        Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
-                    }
+                    Writer.WriteLine(p.ToString());
+                    Writer.Flush();
+                    Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
                 }
             }
             catch (Exception)

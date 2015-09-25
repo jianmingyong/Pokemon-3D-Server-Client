@@ -226,6 +226,7 @@
             this.MinimumSize = new System.Drawing.Size(1141, 629);
             this.Name = "Main";
             this.Text = "Pokémon 3D Server Client";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
