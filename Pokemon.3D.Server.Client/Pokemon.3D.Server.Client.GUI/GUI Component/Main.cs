@@ -12,7 +12,7 @@ using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Settings;
 using Pokemon_3D_Server_Core.Modules;
 
-namespace Pokemon._3D.Server.Client.GUI
+namespace Pokemon_3D_Server_Client_GUI
 {
     /// <summary>
     /// Class containing Main GUI Element

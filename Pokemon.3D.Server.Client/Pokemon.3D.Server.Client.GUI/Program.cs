@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Pokemon._3D.Server.Client.GUI
+namespace Pokemon_3D_Server_Client_GUI
 {
     static class Program
     {

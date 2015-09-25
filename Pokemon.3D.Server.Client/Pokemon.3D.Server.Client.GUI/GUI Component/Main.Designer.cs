@@ -1,4 +1,4 @@
-﻿namespace Pokemon._3D.Server.Client.GUI
+﻿namespace Pokemon_3D_Server_Client_GUI
 {
     partial class Main
     {

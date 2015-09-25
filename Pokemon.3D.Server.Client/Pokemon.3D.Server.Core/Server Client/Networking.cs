@@ -55,6 +55,11 @@ namespace Pokemon_3D_Server_Core.Network
         /// </summary>
         public DateTime LoginStartTime { get; set; }
 
+        /// <summary>
+        /// Get/Set Network IsActive.
+        /// </summary>
+        public bool IsActive { get; set; }
+
         // private int LastHourCheck = 0;
 
         /// <summary>
@@ -74,6 +79,8 @@ namespace Pokemon_3D_Server_Core.Network
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
             LoginStartTime = DateTime.Now;
+
+            IsActive = true;
 
             // Timer
             Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, 0, 1);
@@ -109,25 +116,19 @@ namespace Pokemon_3D_Server_Core.Network
                     else
                     {
                         Core.Player.Remove(Core.Player.GetPlayer(Client).ID, "You have left the game.");
+                        break;
                     }
                 }
                 catch (Exception)
                 {
-                    return;
+                    break;
                 }
             } while (true);
         }
 
         private void ThreadStartPinging(object obj = null)
         {
-            try
-            {
 
-            }
-            catch (Exception ex)
-            {
-                Core.Player.Remove(Core.Player.GetPlayer(Client).ID, ex.Message);
-            }
         }
 
         private void ThreadStartSending(object obj = null)
@@ -156,16 +157,15 @@ namespace Pokemon_3D_Server_Core.Network
         /// </summary>
         public void Dispose()
         {
-            for (int i = 0; i < ThreadCollection.Count; i++)
+            IsActive = false;
+
+            for (int i = 0; i < TimerCollection.Count; i++)
             {
-                if (ThreadCollection[i].IsAlive)
-                {
-                    ThreadCollection[i].Abort();
-                }
+                TimerCollection[i].Dispose();
             }
+            Client.Close();
             Reader.Dispose();
             Writer.Dispose();
-            Client.Close();
         }
     }
 }

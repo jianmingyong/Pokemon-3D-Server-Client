@@ -13,7 +13,7 @@ namespace Pokemon_3D_Server_Core.Players
     /// <summary>
     /// Class containing Player infomation
     /// </summary>
-    public class Player
+    public class Player : IDisposable
     {
         /// <summary>
         /// Get/Set Player DataItem[0]
@@ -366,8 +366,8 @@ namespace Pokemon_3D_Server_Core.Players
             }
 
             Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
-                Core.Setting.Token("SERVER_GAMEJOLT",Name,GameJoltID.ToString(),"join the game!") :
-                Core.Setting.Token("SERVER_NOGAMEJOLT",Name,"join the game!"), null));
+                Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
+                Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), null));
             Core.Logger.Add(isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), Logger.LogTypes.Info, p.Client);
@@ -924,6 +924,18 @@ namespace Pokemon_3D_Server_Core.Players
                     return null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Dispose the player.
+        /// </summary>
+        public void Dispose()
+        {
+            for (int i = 0; i < TimerCollection.Count; i++)
+            {
+                TimerCollection[i].Dispose();
+            }
+            Network.Dispose();
         }
     }
 }

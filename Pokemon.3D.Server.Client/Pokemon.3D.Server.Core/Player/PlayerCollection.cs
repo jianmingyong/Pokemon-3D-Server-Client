@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Settings;
 
@@ -33,6 +35,7 @@ namespace Pokemon_3D_Server_Core.Players
         public void Remove(int ID, string Reason)
         {
             Player Player = GetPlayer(ID);
+            Player.Network.IsActive = false;
 
             if (Player.isGameJoltPlayer)
             {
@@ -40,8 +43,8 @@ namespace Pokemon_3D_Server_Core.Players
                 Core.Logger.Add(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                    OnlineSetting.Save();
-                    Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
+                OnlineSetting.Save();
+                Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
             {
@@ -56,9 +59,8 @@ namespace Pokemon_3D_Server_Core.Players
                 Core.Server.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Player.TimerCollection[0].Dispose();
-            Player.Network.Dispose();
-            Remove(Player);
+            Player.Dispose();
+            Core.Player.Remove(Player);
         }
 
         /// <summary>

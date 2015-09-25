@@ -60,6 +60,7 @@ namespace Pokemon_3D_Server_Core.Settings
         {
             this.Name = Name;
             this.GameJoltID = GameJoltID;
+            Load();
         }
 
         private void Load()
@@ -309,8 +310,5 @@ ReturnString), Encoding.Unicode);
             }
             return false;
         }
-
-        #region MuteList
-        #endregion MuteList
     }
 }
