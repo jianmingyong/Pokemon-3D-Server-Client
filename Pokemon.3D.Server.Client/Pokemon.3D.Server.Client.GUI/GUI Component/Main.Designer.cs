@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -216,6 +215,7 @@
             this.Main_Command.Name = "Main_Command";
             this.Main_Command.Size = new System.Drawing.Size(835, 22);
             this.Main_Command.TabIndex = 0;
+            this.Main_Command.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_Command_KeyDown);
             // 
             // Main
             // 
@@ -224,7 +224,6 @@
             this.ClientSize = new System.Drawing.Size(1123, 582);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(1141, 629);
             this.Name = "Main";
             this.Text = "Pokémon 3D Server Client";

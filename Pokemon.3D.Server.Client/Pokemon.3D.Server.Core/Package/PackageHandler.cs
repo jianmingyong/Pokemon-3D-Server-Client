@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Players;
+using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Core.Packages
 {
@@ -16,6 +17,14 @@ namespace Pokemon_3D_Server_Core.Packages
         /// A collection of Package Data to process.
         /// </summary>
         public ConcurrentQueue<Package> PackageData { get; set; } = new ConcurrentQueue<Package>();
+
+        private enum CommandParamType
+        {
+            String,
+            Integer,
+            Any,
+            Nothing
+        }
 
         /// <summary>
         /// Handle PackageData
@@ -325,7 +334,7 @@ namespace Pokemon_3D_Server_Core.Packages
             // Command?
             if (p.DataItems[0].StartsWith("/"))
             {
-                // Resevered.
+                HandleChatCommand(p);
                 return;
             }
 
@@ -611,6 +620,295 @@ namespace Pokemon_3D_Server_Core.Packages
             }
 
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.ServerInfoData, DataItems, p.Client));
+        }
+
+        public static void HandleChatCommand(Package p)
+        {
+            Player Player = Core.Player.GetPlayer(p.Client);
+
+            #region BlackList
+            /* BlackList
+                Global.BlackList <Boolean>
+                Global.BlackList.add <PlayerName>
+                Global.BlackList.add <PlayerName> [Duration]
+                Global.BlackList.add <PlayerName> [Duration] [Reason]
+            */
+
+            #region BlackList
+            if (Command(p, Player.OperatorTypes.ServerModerator, "BlackList", CommandParamType.String))
+            {
+                List<string> Group = RegexMatch(p, "BlackList", CommandParamType.String);
+
+                if (p.Client != null)
+                {
+                    if (string.Equals(Group[0], "true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!Core.Setting.BlackList)
+                        {
+                            Core.Setting.BlackList = true;
+
+                            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "The blacklist feature is enabled.", p.Client));
+                            Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have enabled the blacklist feature.") :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have enabled the blacklist feature."), p.Client));
+                            Core.Logger.Add(Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have enabled the blacklist feature.") :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have enabled the blacklist feature."), Logger.LogTypes.Command, p.Client);
+                        }
+                    }
+                    else
+                    {
+                        if (Core.Setting.BlackList)
+                        {
+                            Core.Setting.BlackList = false;
+
+                            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "The blacklist feature is disabled.", p.Client));
+                            Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have disabled the blacklist feature.") :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have disabled the blacklist feature."), p.Client));
+                            Core.Logger.Add(Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have disabled the blacklist feature.") :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have disabled the blacklist feature."), Logger.LogTypes.Command, p.Client);
+                        }
+                    }
+                }
+                else
+                {
+                    if (string.Equals(Group[0], "true", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (!Core.Setting.BlackList)
+                        {
+                            Core.Setting.BlackList = true;
+
+                            Core.Logger.Add("The blacklist feature is enabled.", Logger.LogTypes.Command);
+                        }
+                    }
+                    else
+                    {
+                        if (Core.Setting.BlackList)
+                        {
+                            Core.Setting.BlackList = false;
+
+                            Core.Logger.Add("The blacklist feature is disabled.", Logger.LogTypes.Command);
+                        }
+                    }
+                }
+            }
+            #endregion Global.BlackList
+
+            #region BlackList.add <PlayerName> [Duration] [Reason]
+            if (Command(p, Player.OperatorTypes.ServerModerator, "BlackList.add", CommandParamType.Any, CommandParamType.Integer, CommandParamType.Any))
+            {
+                List<string> Group = RegexMatch(p, "BlackList.add", CommandParamType.Any, CommandParamType.Integer, CommandParamType.Any);
+
+                if (Core.Player.HasPlayer(Group[0]))
+                {
+
+                }
+                else
+                {
+
+                }
+            }
+            #endregion Global.BlackList.add <PlayerName> [Duration] [Reason]
+            #endregion BlackList
+
+            #region Weather
+            // Global.Weather <ID>
+            if (Command(p, Player.OperatorTypes.ServerModerator, "Global.Weather", CommandParamType.Integer))
+            {
+                List<string> Group = RegexMatch(p, "Global.Weather", CommandParamType.Integer);
+
+                if (p.Client != null)
+                {
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), p.Client));
+                    Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have changed the weather.") :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have changed the weather."), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have changed the weather.") :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have changed the weather."), Logger.LogTypes.Command, p.Client);
+                }
+                else
+                {
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
+                }
+            }
+            #endregion Weather
+
+            #region Season
+            // Global.Season <ID>
+            if (Command(p, Player.OperatorTypes.ServerModerator, "Global.Season", CommandParamType.Integer))
+            {
+                List<string> Group = RegexMatch(p, "Global.Season", CommandParamType.Integer);
+
+                if (p.Client != null)
+                {
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), p.Client));
+                    Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have changed the season.") :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have changed the season."), p.Client));
+                    Core.Logger.Add(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have changed the season.") :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have changed the season."), Logger.LogTypes.Command, p.Client);
+                }
+                else
+                {
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
+                }
+            }
+            #endregion Season
+
+            #region World
+            // Global.World
+            if (Command(p, Player.OperatorTypes.Player, "Global.World", CommandParamType.Nothing))
+            {
+                if (p.Client != null)
+                {
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), p.Client));
+                }
+                else
+                {
+                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
+                }
+            }
+            #endregion World
+
+            #region Say
+            if (Command(p, Player.OperatorTypes.ChatModerator, "Say", CommandParamType.Any))
+            {
+                List<string> Group = RegexMatch(p, "Say", CommandParamType.Any);
+
+                if (p.Client != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(Group[0]))
+                    {
+                        Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                        Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have used the global chat.") :
+                            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have used the global chat."), p.Client));
+                        Core.Logger.Add(Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have used the global chat.") :
+                            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have used the global chat."), Logger.LogTypes.Command, p.Client);
+                    }
+                }
+                else
+                {
+                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.Logger.Add(Group[0], Logger.LogTypes.Server);
+                }
+
+            }
+            #endregion
+        }
+
+        private static bool Command(Package p, Player.OperatorTypes RequiredPermission, string Name, params CommandParamType[] ParamType)
+        {
+            string RegexFilter = @"\/" + Regex.Escape(Name);
+
+            for (int i = 0; i < ParamType.Length; i++)
+            {
+                if (ParamType[i] == CommandParamType.Any)
+                {
+                    RegexFilter += @"\s+(.+)";
+                }
+                else if (ParamType[i] == CommandParamType.String)
+                {
+                    RegexFilter += @"\s+(\w+)";
+                }
+                else if (ParamType[i] == CommandParamType.Integer)
+                {
+                    RegexFilter += @"\s+(\d+)";
+                }
+            }
+
+            RegexFilter += @"\s*";
+
+            if (p.Client == null)
+            {
+                if (p.DataItems[0].StartsWith("/" + Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (Regex.IsMatch(p.DataItems[0], RegexFilter, RegexOptions.IgnoreCase))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                Player Player = Core.Player.GetPlayer(p.Client);
+
+                if (p.DataItems[0].StartsWith("/" + Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    if (RequiredPermission == Player.OperatorTypes.Player || Player.GameJoltID == 116016 || Player.GameJoltID == 222452 || (Player.GetOperatorList() != null && Player.GetOperatorList().OperatorLevel >= (int)RequiredPermission))
+                    {
+                        if (Regex.IsMatch(p.DataItems[0], RegexFilter, RegexOptions.IgnoreCase))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_COMMANDPERMISSION"), p.Client));
+                        Core.Logger.Add(Player.isGameJoltPlayer ?
+                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to use /" + Name + " due to insufficient permission.") :
+                                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to use /" + Name + " due to insufficient permission."), Logger.LogTypes.Command, p.Client);
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        private static List<string> RegexMatch(Package p, string Name, params CommandParamType[] ParamType)
+        {
+            string RegexFilter = @"\/" + Regex.Escape(Name);
+            List<string> ReturnString = new List<string>();
+
+            for (int i = 0; i < ParamType.Length; i++)
+            {
+                if (ParamType[i] == CommandParamType.Any)
+                {
+                    RegexFilter += @"\s+(.+)";
+                }
+                else if (ParamType[i] == CommandParamType.String)
+                {
+                    RegexFilter += @"\s+(\w+)";
+                }
+                else if (ParamType[i] == CommandParamType.Integer)
+                {
+                    RegexFilter += @"\s+(\d+)";
+                }
+            }
+
+            RegexFilter += @"\s*";
+
+            for (int i = 0; i < ParamType.Length; i++)
+            {
+                ReturnString.Add(Regex.Match(p.DataItems[0], RegexFilter, RegexOptions.IgnoreCase).Groups[i + 1].Value);
+            }
+            return ReturnString;
         }
     }
 }

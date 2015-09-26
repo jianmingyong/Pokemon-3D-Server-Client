@@ -457,7 +457,14 @@ namespace Pokemon_3D_Server_Core.Worlds
                 case (int)SeasonType.Nothing:
                     return this.Season;
                 default:
-                    return Season;
+                    if (Season < 0 && Season > 3)
+                    {
+                        return (int)SeasonType.Winter;
+                    }
+                    else
+                    {
+                        return Season;
+                    }
             }
         }
 
@@ -532,7 +539,14 @@ namespace Pokemon_3D_Server_Core.Worlds
                 case (int)WeatherType.Nothing:
                     return this.Weather;
                 default:
-                    return Weather;
+                    if (Weather < 0 && Weather > 9)
+                    {
+                        return (int)WeatherType.Clear;
+                    }
+                    else
+                    {
+                        return Weather;
+                    }
             }
         }
 
@@ -612,6 +626,14 @@ namespace Pokemon_3D_Server_Core.Worlds
                 default:
                     return "Clear";
             }
+        }
+
+        /// <summary>
+        /// Get current World
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString());
         }
     }
 }

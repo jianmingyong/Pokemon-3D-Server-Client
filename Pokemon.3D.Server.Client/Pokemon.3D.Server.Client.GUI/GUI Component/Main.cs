@@ -5,6 +5,8 @@ using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Network;
 using Pokemon_3D_Server_Core.Packages;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -14,7 +16,11 @@ namespace Pokemon_3D_Server_Client_GUI
     public partial class Main : Form
     {
         private delegate void QueueMessage_AddMessage_Safe(object myObject, MessageEventArgs myArgs);
+        private delegate void UpdateGUI_Safe(object myObject);
+
         private bool ApplicationRestart = false;
+
+        private List<System.Threading.Timer> TimerCollection = new List<System.Threading.Timer>();
 
         /// <summary>
         /// GUI Component Start Point
@@ -47,6 +53,10 @@ namespace Pokemon_3D_Server_Client_GUI
 
             // Setup Server
             Core.Server.Start();
+
+            // Timer Test
+            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 100);
+            TimerCollection.Add(Timer);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -85,6 +95,45 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             ApplicationRestart = true;
             Application.Exit();
+        }
+
+        private void UpdatePlayerList(object obj)
+        {
+            try
+            {
+                if (Main_CurrentPlayerOnline.InvokeRequired)
+                {
+                    BeginInvoke(new UpdateGUI_Safe(UpdatePlayerList), "");
+                }
+                else
+                {
+                    List<string> ListOfPlayer = new List<string>();
+
+                    for (int i = 0; i < Core.Player.Count; i++)
+                    {
+                        ListOfPlayer.Add(Core.Player[i].ToString());
+                    }
+
+                    Main_CurrentPlayerOnline.DataSource = null;
+                    Main_CurrentPlayerOnline.DataSource = Core.Player.Count > 0 ? ListOfPlayer : null;
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+
+        private void Main_Command_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
+            {
+                if (!string.IsNullOrWhiteSpace(Main_Command.Text))
+                {
+                    PackageHandler.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                }
+                Main_Command.Clear();
+            }
         }
     }
 }

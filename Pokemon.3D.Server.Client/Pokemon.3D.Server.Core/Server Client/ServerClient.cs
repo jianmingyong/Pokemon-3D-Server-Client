@@ -164,6 +164,28 @@ namespace Pokemon_3D_Server_Core.Network
         }
 
         /// <summary>
+        /// Send Package Data to all Operator.
+        /// </summary>
+        /// <param name="p">Package</param>
+        public void SendToAllOperator(Package p)
+        {
+            for (int i = 0; i < Core.Player.Count; i++)
+            {
+                if (p.Client != null && Core.Player[i].Network.Client != p.Client && Core.Player[i].IsOperator())
+                {
+                    if (Core.Player[i].Network.IsActive)
+                    {
+                        Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    }
+                    else
+                    {
+                        Core.Player[i].Network.StartSending(p);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Sent Package Data to All Player
         /// </summary>
         /// <param name="p">Package</param>

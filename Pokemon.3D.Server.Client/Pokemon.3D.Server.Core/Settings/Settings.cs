@@ -537,6 +537,7 @@ namespace Pokemon_3D_Server_Core.Settings
             TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
             TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_RESTART", "This server is restarting. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_COMMANDPERMISSION", "You do not have the required permission to use this command.");
             TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0}. We encourage your stay but also encourage to take a small break :)");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }

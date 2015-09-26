@@ -12,7 +12,7 @@ build:
   parallel: true
   verbosity: minimal
 artifacts:
-- path: Pokemon.3D.Server.Client/Pokemon.3D.Server.Client/bin/Debug
+- path: Pokemon.3D.Server.Client/Pokemon.3D.Server.Client.GUI/bin/Release
   name: Release
 deploy:
 - provider: GitHub
