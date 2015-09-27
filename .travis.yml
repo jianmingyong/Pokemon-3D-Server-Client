@@ -12,8 +12,7 @@ script:
 
 deploy:
   provider: releases
-  api_key:
-    secure: UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc
+  api_key: "UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc"
   file: "Test"
   skip_cleanup: true
   on:
