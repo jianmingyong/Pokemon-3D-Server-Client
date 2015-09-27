@@ -7,6 +7,8 @@ using Pokemon_3D_Server_Core.Network;
 using Pokemon_3D_Server_Core.Packages;
 using System.Threading;
 using System.Collections.Generic;
+using System.Linq;
+using System.IO;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -83,6 +85,18 @@ namespace Pokemon_3D_Server_Client_GUI
                 else
                 {
                     Main_Logger.AppendText(myArgs.OutputMessage + Functions.vbNewLine);
+
+                    if (Main_Logger.Lines.Length > 1000)
+                    {
+                        Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
+                    }
+
+                    if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
+                    {
+                        Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
+                    }
+
+                    File.AppendAllText(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", myArgs.OutputMessage + Functions.vbNewLine);
                 }
             }
             catch (Exception ex)
