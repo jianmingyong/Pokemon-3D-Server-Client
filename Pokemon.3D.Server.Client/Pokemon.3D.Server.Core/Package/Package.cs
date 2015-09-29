@@ -64,6 +64,31 @@ namespace Pokemon_3D_Server_Core.Packages
         public enum PackageTypes
         {
             /// <summary>
+            /// Package Type: RCON Command
+            /// <para>Get: {Origin = ID | DataItem[0] = Command}</para>
+            /// </summary>
+            RCON_Command = -5,
+
+            /// <summary>
+            /// Package Type: RCON Ping
+            /// <para>Get: {Origin = ID | DataItem[0] = null}</para>
+            /// </summary>
+            RCON_Ping = -4,
+
+            /// <summary>
+            /// Package Type: RCON Identification
+            /// <para>Set: {Origin = -1 | DataItem[0] = ID}</para>
+            /// </summary>
+            RCON_ID = -3,
+
+            /// <summary>
+            /// Package Type: RCON Login Token
+            /// <para>Get: {Origin = -1 | DataItem[0] = Password + Second Factor Encryption | DataItem[1] = MD5 Hash}</para>
+            /// <para>Set: {Origin = -1 | DataItem[0] = Authentication Fail or Success.}</para>
+            /// </summary>
+            RCON_Authentication = -2,
+
+            /// <summary>
             /// Package Type: Unknown Data
             /// </summary>
             Unknown = -1,

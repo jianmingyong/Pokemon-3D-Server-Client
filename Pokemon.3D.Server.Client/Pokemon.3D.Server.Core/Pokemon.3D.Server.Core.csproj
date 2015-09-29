@@ -53,12 +53,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandFunctions.cs" />
+    <Compile Include="Commands\Vanilla Commands\Kick.cs" />
     <Compile Include="Common Functions\Functions.cs" />
     <Compile Include="Common Functions\Math.cs" />
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common Functions\PlayerStatus.cs" />
     <Compile Include="Common vb.net Functions\My Namespace.cs" />
     <Compile Include="Event Handler\RestartTrigger.cs" />
+    <Compile Include="Interface\ICommand.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggerCollection.cs" />
     <Compile Include="Event Handler\QueueMessage\MessageEventArgs.cs" />
@@ -70,6 +73,7 @@
     <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server Client\Networking.cs" />
+    <Compile Include="Server Client\RconServerClient.cs" />
     <Compile Include="Server Client\ServerClient.cs" />
     <Compile Include="Settings\Data List\BlackList.cs" />
     <Compile Include="Settings\Data List\CommonList.cs" />
@@ -89,6 +93,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -515,30 +515,34 @@ namespace Pokemon_3D_Server_Core.Settings
         public void Setup()
         {
             // Initialize Tokens
-            TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
-            TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
+            TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
             TokenDefination.Add("SERVER_BLACKLISTED", "You have been banned from server. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
-            TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
             TokenDefination.Add("SERVER_CHATGAMEJOLT", "<{0} ({1})>: {2}");
             TokenDefination.Add("SERVER_CHATNOGAMEJOLT", "<{0}>: {1}");
-            TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
-            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
             TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
+            TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_COMMANDGAMEJOLT", "[Command] {0} ({1}) {2}");
+            TokenDefination.Add("SERVER_COMMANDNOGAMEJOLT", "[Command] {0} {1}");
+            TokenDefination.Add("SERVER_COMMANDPERMISSION", "You do not have the required permission to use this command.");
+            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
+            TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
+            TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
+            TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0}. We encourage your stay but also encourage to take a small break :)");
             TokenDefination.Add("SERVER_MUTED", "You have been muted in the server. Reason: {0} | Ban duration: {1}.");
             TokenDefination.Add("SERVER_MUTEDTEMP", "You have been muted by that player. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_SWEARWARNING", "Please avoid swearing where necessary. Triggered word: {0} | You have {1} infraction point. {2} infraction point will get a timeout.");
-            TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
-            TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
-            TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
-            TokenDefination.Add("SERVER_RESTARTWARNING", "The server is scheduled to restart in {0}. Please enjoy your stay.");
+            TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
             TokenDefination.Add("SERVER_NOPING", "You have a slow connection or you have disconnected from internet for too long.");
-            TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
-            TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
+            TokenDefination.Add("SERVER_PLAYERNOTEXIST", "The requested player does not exist in the server. Please try again.");
             TokenDefination.Add("SERVER_RESTART", "This server is restarting. Sorry for the inconveniences caused.");
-            TokenDefination.Add("SERVER_COMMANDPERMISSION", "You do not have the required permission to use this command.");
-            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0}. We encourage your stay but also encourage to take a small break :)");
+            TokenDefination.Add("SERVER_RESTARTWARNING", "The server is scheduled to restart in {0}. Please enjoy your stay.");
+            TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
+            TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
+            TokenDefination.Add("SERVER_SWEARWARNING", "Please avoid swearing where necessary. Triggered word: {0} | You have {1} infraction point. {2} infraction point will get a timeout.");
+            TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
+            TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
+            TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
             Core.Logger.Add("Setting.cs: Setting initiated.", Logger.LogTypes.Info);
         }
 
