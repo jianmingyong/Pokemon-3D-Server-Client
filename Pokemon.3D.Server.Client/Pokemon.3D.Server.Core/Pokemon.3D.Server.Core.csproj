@@ -54,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandFunctions.cs" />
+    <Compile Include="Commands\Vanilla Commands\Say.cs" />
+    <Compile Include="Commands\Vanilla Commands\Restart.cs" />
+    <Compile Include="Commands\Vanilla Commands\Stop.cs" />
     <Compile Include="Commands\Vanilla Commands\Kick.cs" />
     <Compile Include="Common Functions\Functions.cs" />
     <Compile Include="Common Functions\Math.cs" />

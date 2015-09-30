@@ -16,17 +16,17 @@ namespace Pokemon_3D_Server_Core.Interface
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        string Name { get; set; }
+        string Name { get;}
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        string Description { get; set; }
+        string Description { get;}
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        Player.OperatorTypes RequiredPermission { get; set; }
+        Player.OperatorTypes RequiredPermission { get;}
 
         /// <summary>
         /// Handle the Package data.
@@ -39,6 +39,7 @@ namespace Pokemon_3D_Server_Core.Interface
         /// Create a Help Page.
         /// </summary>
         /// <param name="Pages">Page Number. Start from Zero.</param>
-        void Help(int Pages);
+        /// <param name="Player">Player.</param>
+        void Help(int Pages, Player Player);
     }
 }

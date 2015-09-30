@@ -78,7 +78,7 @@ namespace Pokemon_3D_Server_Core.Commands
             {
                 if (ShowHelp)
                 {
-                    Command.Help(0);
+                    Command.Help(0, Core.Player.GetPlayer(p.Client));
                 }
                 return false;
             }
@@ -159,6 +159,30 @@ namespace Pokemon_3D_Server_Core.Commands
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , LogTypes.Command, Player.Network.Client);
+        }
+
+        /// <summary>
+        /// Generate a Help Page.
+        /// </summary>
+        /// <param name="Command">Command.</param>
+        /// <param name="Player">Player.</param>
+        /// <param name="Message">Message.</param>
+        public static void HelpPageGenerator(this ICommand Command, Player Player, params string[] Message)
+        {
+            if (Player != null)
+            {
+                for (int i = 0; i < Message.Length; i++)
+                {
+                    Core.Server.SentToPlayer(new Package(PackageTypes.ChatMessage, Message[i], Player.Network.Client));
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Message.Length; i++)
+                {
+                    Core.Logger.Add(Message[i], LogTypes.Info);
+                }
+            }
         }
     }
 }

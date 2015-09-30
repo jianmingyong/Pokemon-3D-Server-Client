@@ -2,6 +2,7 @@
 using Pokemon_3D_Server_Core.Interface;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
+using static Pokemon_3D_Server_Core.Players.Player;
 using static Pokemon_3D_Server_Core.Loggers.Logger;
 using static Pokemon_3D_Server_Core.Commands.CommandFunctions;
 using static Pokemon_3D_Server_Core.Packages.Package;
@@ -13,11 +14,11 @@ namespace Pokemon_3D_Server_Core.Commands
     /// </summary>
     public class Kick : ICommand
     {
-        public string Name { get; set; } = "Kick";
+        public string Name { get; } = "Kick";
 
-        public string Description { get; set; } = "Kick the player from the server.";
+        public string Description { get; } = "Kick the player from the server.";
 
-        public Player.OperatorTypes RequiredPermission { get; set; } = Player.OperatorTypes.ServerModerator;
+        public OperatorTypes RequiredPermission { get; } = OperatorTypes.ServerModerator;
 
         public void Handle(Package p, Player Player = null)
         {
@@ -103,9 +104,23 @@ namespace Pokemon_3D_Server_Core.Commands
             #endregion /kick <Name>
         }
 
-        public void Help(int Pages)
+        public void Help(int Pages, Player Player = null)
         {
-
+            switch (Pages)
+            {
+                default:
+                    this.HelpPageGenerator(Player,
+                        string.Format("---------- Help: {0} ----------", Name),
+                        string.Format("Usage: /kick [Name] [Optional:Reason]"),
+                        string.Format("-------------------------------------"),
+                        string.Format("Name: Player Name."),
+                        string.Format("Reason: Reason to kick. [Default: No reason.]"),
+                        string.Format("-------------------------------------"),
+                        string.Format("Description: {0}", Description),
+                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        );
+                    break;
+            }
         }
     }
 }
