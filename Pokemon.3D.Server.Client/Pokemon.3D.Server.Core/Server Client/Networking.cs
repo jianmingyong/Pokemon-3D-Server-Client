@@ -178,7 +178,7 @@ namespace Pokemon_3D_Server_Core.Network
             try
             {
                 Package p = null;
-                if (PackageToSend.Count > 0 && PackageToSend.TryDequeue(out p))
+                if (PackageToSend.TryDequeue(out p))
                 {
                     Writer.WriteLine(p.ToString());
                     Writer.Flush();
