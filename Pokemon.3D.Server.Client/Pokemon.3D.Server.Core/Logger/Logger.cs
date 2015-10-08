@@ -20,9 +20,9 @@ namespace Pokemon_3D_Server_Core.Loggers
         public LogTypes LogType { get; set; }
 
         /// <summary>
-        /// Get/Set Client.
+        /// Get/Set IP Address
         /// </summary>
-        public TcpClient Client { get; set; }
+        public string IPAddress { get; set; }
 
         /// <summary>
         /// Get/Set Message.
@@ -90,7 +90,15 @@ namespace Pokemon_3D_Server_Core.Loggers
         {
             this.Message = Message;
             this.LogType = LogType;
-            this.Client = Client;
+
+            try
+            {
+                IPAddress = Client == null ? "" : ((IPEndPoint)Client.Client.RemoteEndPoint).Address.ToString();
+            }
+            catch (Exception)
+            {
+                IPAddress = "";
+            }
         }
 
         /// <summary>
@@ -145,14 +153,7 @@ namespace Pokemon_3D_Server_Core.Loggers
         /// </summary>
         public override string ToString()
         {
-            if (Client == null)
-            {
-                return string.Format("{0} [{1}] {2}", Time, LogType, Message);
-            }
-            else
-            {
-                return string.Format("{0} [{1}] {2}", Time, LogType, ((IPEndPoint)Client.Client.RemoteEndPoint).Address.ToString() + ": " + Message);
-            }
+            return string.Format("{0} [{1}] {2}", IPAddress == "" ? Time.ToString() : Time.ToString() + " " + IPAddress, LogType, Message);
         }
     }
 }

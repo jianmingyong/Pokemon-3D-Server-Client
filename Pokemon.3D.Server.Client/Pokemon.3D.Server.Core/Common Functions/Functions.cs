@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using System.Media;
 using System.Net;
@@ -19,22 +20,16 @@ namespace Pokemon_3D_Server_Core.Modules
         public static readonly string vbNewLine = Environment.NewLine;
 
         /// <summary>
-        /// Play the system sound for error input.
-        /// </summary>
-        private static void PlaySystemSound()
-        {
-            SystemSounds.Asterisk.Play();
-        }
-
-        /// <summary>
         /// Catch Ex Exception and create a crash log.
         /// </summary>
         /// <param name="ex">Ex Exception.</param>
         public static void CatchError(this Exception ex)
         {
-            PlaySystemSound();
+            try
+            {
+                SystemSounds.Asterisk.Play();
 
-            string ErrorLog = string.Format(@"[CODE]
+                string ErrorLog = string.Format(@"[CODE]
 Pokémon 3D Server Client Crash Log v {0}
 --------------------------------------------------
 
@@ -69,33 +64,31 @@ You should report this error if it is reproduceable or you could not solve it by
 
 Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.org/pokemon/forums/bug-reports.204/ to report this crash.
 [/CODE]",
-Core.Setting.ApplicationVersion,
-My.Computer.Info.OSFullName,
-My.Computer.Info.OSVersion,
-Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
-DateTime.Now.ToString(),
-System.Globalization.CultureInfo.CurrentCulture.EnglishName.ToString(),
-Math.Round((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824, 2).ToString() + " GB / " + Math.Round((double)My.Computer.Info.TotalPhysicalMemory / 1073741824, 2).ToString() + " GB",
-Environment.ProcessorCount.ToString(),
-ex.Message,
-ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
-string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
-ex.Source,
-ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace,
-Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
-);
+                Core.Setting.ApplicationVersion,
+                My.Computer.Info.OSFullName,
+                My.Computer.Info.OSVersion,
+                Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
+                DateTime.Now.ToString(),
+                CultureInfo.CurrentCulture.EnglishName.ToString(),
+                string.Format("{0} GB / {1} GB", Math.Round((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824, 2).ToString(), Math.Round((double)My.Computer.Info.TotalPhysicalMemory / 1073741824, 2).ToString()),
+                Environment.ProcessorCount.ToString(),
+                ex.Message,
+                ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
+                string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
+                ex.Source,
+                ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace,
+                Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
+                );
 
-            if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
-            {
-                Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\CrashLogs");
-            }
+                if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
+                {
+                    Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\CrashLogs");
+                }
 
-            DateTime ErrorTime = DateTime.Now;
-            int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
+                DateTime ErrorTime = DateTime.Now;
+                int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
 
-            try
-            {
-                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", ErrorLog, Encoding.Unicode);
+                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier.ToString("0000000000") + ".dat", ErrorLog, Encoding.Unicode);
                 Core.Logger.Add(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
             }
             catch (Exception exc)
@@ -108,10 +101,9 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
         /// Count the number of index after spliting "|" in the full string.
         /// </summary>
         /// <param name="fullString">The full string to count the number of index.</param>
-        /// <returns></returns>
         public static int SplitCount(this string fullString)
         {
-            return fullString.Contains("|") ? fullString.Split("|".ToCharArray()).Length : 1;
+            return fullString.Contains("|") ? fullString.Split('|').Length : 1;
         }
 
         /// <summary>
@@ -137,11 +129,11 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             }
             else if (valueIndex < fullString.SplitCount())
             {
-                return fullString.Split("|".ToCharArray())[valueIndex];
+                return fullString.Split('|')[valueIndex];
             }
             else
             {
-                return fullString.Split("|".ToCharArray())[fullString.SplitCount() - 1];
+                return fullString.Split('|')[fullString.SplitCount() - 1];
             }
         }
 
@@ -151,7 +143,6 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
         /// <param name="fullString">The full string to be splited.</param>
         /// <param name="valueIndex">The index to return.</param>
         /// <param name="seperator">The seperator.</param>
-        /// <returns></returns>
         public static string GetSplit(this string fullString, int valueIndex, string seperator)
         {
             if (fullString.SplitCount(seperator) == 1)
@@ -178,12 +169,10 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
                 using (WebClient Client = new WebClient())
                 {
                     return Client.DownloadString("https://api.ipify.org");
-
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex.CatchError();
                 return null;
             }
         }
@@ -193,16 +182,24 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
         /// </summary>
         public static string GetPrivateIP()
         {
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-
-            foreach (IPAddress address in host.AddressList)
+            try
             {
-                if (address.AddressFamily == AddressFamily.InterNetwork)
+                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+
+                foreach (IPAddress address in host.AddressList)
                 {
-                    return address.ToString();
+                    if (address.AddressFamily == AddressFamily.InterNetwork)
+                    {
+                        return address.ToString();
+                    }
                 }
+
+                return null;
             }
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -214,7 +211,7 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
             {
                 using (TcpClient Client = new TcpClient())
                 {
-                    if (Client.ConnectAsync(GetPublicIP(), Core.Setting.Port).Wait(1000))
+                    if (Client.ConnectAsync(Core.Setting.IPAddress, Core.Setting.Port).Wait(1000))
                     {
                         return true;
                     }
@@ -222,36 +219,6 @@ Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
                     {
                         return false;
                     }
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Check if the tcpclient is still connected.
-        /// </summary>
-        /// <param name="Client">client to check.</param>
-        public static bool IsConnected(this TcpClient Client)
-        {
-            try
-            {
-                if (Client.Connected)
-                {
-                    if ((Client.Client.Poll(0, SelectMode.SelectWrite)) && (!Client.Client.Poll(0, SelectMode.SelectError)))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    return false;
                 }
             }
             catch (Exception)

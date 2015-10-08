@@ -1,9 +1,7 @@
-﻿using Pokemon_3D_Server_Core.Interface;
-using Pokemon_3D_Server_Core.Network;
+﻿using Pokemon_3D_Server_Core.Event;
+using Pokemon_3D_Server_Core.Interface;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using static Pokemon_3D_Server_Core.Commands.CommandFunctions;
-using static Pokemon_3D_Server_Core.Players.Player;
 
 namespace Pokemon_3D_Server_Core.Commands.Vanilla_Commands
 {
@@ -16,21 +14,21 @@ namespace Pokemon_3D_Server_Core.Commands.Vanilla_Commands
 
         public string Description { get; } = "Restart the server.";
 
-        public OperatorTypes RequiredPermission { get; } = OperatorTypes.Administrator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
             #region /Restart
-            if (this.MatchRequiredParam(p, true, CommandParamType.Nothing))
+            if (this.MatchRequiredParam(p, true, Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    RestartTrigger.Restart();
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
                 else if (Player == null)
                 {
-                    RestartTrigger.Restart();
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
             }
             #endregion /Restart

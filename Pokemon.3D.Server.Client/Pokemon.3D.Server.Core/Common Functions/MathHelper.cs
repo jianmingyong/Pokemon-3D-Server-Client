@@ -290,5 +290,34 @@ namespace Pokemon_3D_Server_Core.Modules
                 return Value;
             }
         }
+
+        /// <summary>
+        /// RollOver the value between the minValue and the maxValue.
+        /// </summary>
+        /// <param name="Value">The value to rollover.</param>
+        /// <param name="minValue">The minimum value.</param>
+        /// <param name="maxValue">The maximum value.</param>
+        public static int RollOver(this int Value, int minValue, int maxValue)
+        {
+            int Diff = maxValue - minValue + 1;
+            int NewValue = Value;
+
+            if (Value > maxValue)
+            {
+                while (Value > maxValue)
+                {
+                    NewValue -= Diff;
+                }
+            }
+            else if (Value < maxValue)
+            {
+                while (Value < maxValue)
+                {
+                    NewValue += Diff;
+                }
+            }
+
+            return NewValue;
+        }
     }
 }

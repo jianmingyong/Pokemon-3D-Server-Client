@@ -6,6 +6,7 @@ using System.Threading;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Event;
 
 namespace Pokemon_3D_Server_Core.Network
 {
@@ -91,7 +92,7 @@ namespace Pokemon_3D_Server_Core.Network
 
         private void ThreadStartListening()
         {
-            do
+            while (true)
             {
                 try
                 {
@@ -112,21 +113,20 @@ namespace Pokemon_3D_Server_Core.Network
                 {
                     Core.Logger.Add("ServerClient.cs: StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
                 }
-            } while (true);
+            }
         }
 
-        private void ThreadAutoRestart(object obj = null)
+        private void ThreadAutoRestart(object obj)
         {
             TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
 
-            if (TimeLeft.TotalSeconds == 600 || TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
+            if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
             {
                 SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", Core.Setting.TimeLeft()), null));
             }
             else if (TimeLeft.TotalSeconds < 1)
             {
-                // Toggle Restart.
-                RestartTrigger.Restart();
+                ClientEvent.Invoke(ClientEvent.Types.Restart);
             }
         }
 

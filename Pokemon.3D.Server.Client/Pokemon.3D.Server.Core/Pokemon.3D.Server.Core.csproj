@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandFunctions.cs" />
+    <Compile Include="Commands\Functions.cs" />
     <Compile Include="Commands\Vanilla Commands\Say.cs" />
     <Compile Include="Commands\Vanilla Commands\Restart.cs" />
     <Compile Include="Commands\Vanilla Commands\Stop.cs" />
@@ -63,12 +63,11 @@
     <Compile Include="Common Functions\MathHelper.cs" />
     <Compile Include="Common Functions\PlayerStatus.cs" />
     <Compile Include="Common vb.net Functions\My Namespace.cs" />
-    <Compile Include="Event Handler\RestartTrigger.cs" />
+    <Compile Include="Event Handler\ClientEvent.cs" />
+    <Compile Include="Event Handler\ClientEventArgs.cs" />
     <Compile Include="Interface\ICommand.cs" />
     <Compile Include="Logger\Logger.cs" />
     <Compile Include="Logger\LoggerCollection.cs" />
-    <Compile Include="Event Handler\QueueMessage\MessageEventArgs.cs" />
-    <Compile Include="Event Handler\QueueMessage\QueueMessage.cs" />
     <Compile Include="Core.cs" />
     <Compile Include="Package\Package.cs" />
     <Compile Include="Package\PackageHandler.cs" />

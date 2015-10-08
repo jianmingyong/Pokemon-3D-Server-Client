@@ -444,7 +444,7 @@ namespace Pokemon_3D_Server_Core.Packages
         /// Handle the package
         /// </summary>
         /// <param name="obj">Null</param>
-        public void Handle(object obj = null)
+        public void Handle(object obj)
         {
             Core.Package.PackageData.Enqueue(this);
         }

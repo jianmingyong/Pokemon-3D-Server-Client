@@ -5,15 +5,13 @@ using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using static Pokemon_3D_Server_Core.Loggers.Logger;
-using static Pokemon_3D_Server_Core.Packages.Package;
 
 namespace Pokemon_3D_Server_Core.Commands
 {
     /// <summary>
     /// Class containing Command Core Functions.
     /// </summary>
-    public static class CommandFunctions
+    public static class Functions
     {
         /// <summary>
         /// Command Paramemter Type
@@ -149,16 +147,16 @@ namespace Pokemon_3D_Server_Core.Commands
         /// <param name="Message2">Message to feedback to the other operator.</param>
         public static void CommandFeedback(this Player Player, string Message, string Message2)
         {
-            Core.Server.SentToPlayer(new Package(PackageTypes.ChatMessage, Message, Player.Network.Client));
+            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
 
-            Core.Server.SendToAllOperator(new Package(PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+            Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
             Core.Logger.Add(Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
-                , LogTypes.Command, Player.Network.Client);
+                , Logger.LogTypes.Command, Player.Network.Client);
         }
 
         /// <summary>
@@ -173,14 +171,14 @@ namespace Pokemon_3D_Server_Core.Commands
             {
                 for (int i = 0; i < Message.Length; i++)
                 {
-                    Core.Server.SentToPlayer(new Package(PackageTypes.ChatMessage, Message[i], Player.Network.Client));
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
                 }
             }
             else
             {
                 for (int i = 0; i < Message.Length; i++)
                 {
-                    Core.Logger.Add(Message[i], LogTypes.Info);
+                    Core.Logger.Add(Message[i], Logger.LogTypes.Info);
                 }
             }
         }

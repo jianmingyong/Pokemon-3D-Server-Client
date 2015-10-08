@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using Pokemon_3D_Server_Core.Event;
 using Pokemon_3D_Server_Core.Interface;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using static Pokemon_3D_Server_Core.Players.Player;
-using static Pokemon_3D_Server_Core.Loggers.Logger;
-using static Pokemon_3D_Server_Core.Commands.CommandFunctions;
-using static Pokemon_3D_Server_Core.Packages.Package;
 
 namespace Pokemon_3D_Server_Core.Commands
 {
@@ -18,21 +14,21 @@ namespace Pokemon_3D_Server_Core.Commands
 
         public string Description { get; } = "Stop the server from running.";
 
-        public OperatorTypes RequiredPermission { get; } = OperatorTypes.Administrator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
             #region /stop
-            if (this.MatchRequiredParam(p,true,CommandParamType.Nothing))
+            if (this.MatchRequiredParam(p, true, Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    throw new System.NotImplementedException("/stop is not implemented.");
+                    ClientEvent.Invoke(ClientEvent.Types.Stop);
                 }
                 else if (Player == null)
                 {
-                    throw new System.NotImplementedException("/stop is not implemented.");
+                    ClientEvent.Invoke(ClientEvent.Types.Stop);
                 }
             }
             #endregion /stop

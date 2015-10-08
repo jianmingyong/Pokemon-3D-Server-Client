@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
+using Pokemon_3D_Server_Core.Event;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
-using Pokemon_3D_Server_Core.Network;
 using Pokemon_3D_Server_Core.Packages;
-using System.Threading;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -17,11 +17,10 @@ namespace Pokemon_3D_Server_Client_GUI
     /// </summary>
     public partial class Main : Form
     {
-        private delegate void QueueMessage_AddMessage_Safe(object myObject, MessageEventArgs myArgs);
-        private delegate void UpdateGUI_Safe(object myObject);
+        private delegate void ClientEvent_Safe(object myObject, ClientEventArgs myArgs);
+        private delegate void UpdatePlayerList_Safe(object myObject);
 
         private bool ApplicationRestart = false;
-
         private List<System.Threading.Timer> TimerCollection = new List<System.Threading.Timer>();
 
         /// <summary>
@@ -35,8 +34,7 @@ namespace Pokemon_3D_Server_Client_GUI
         private void Main_Load(object sender, EventArgs e)
         {
             // Add Handler
-            QueueMessage.AddMessage += QueueMessage_AddMessage;
-            RestartTrigger.RestartSwitch += Restart;
+            ClientEvent.Update += ClientEvent_Update;
 
             // Setup Settings.
             Core.Setting.Setup();
@@ -56,8 +54,8 @@ namespace Pokemon_3D_Server_Client_GUI
             // Setup Server
             Core.Server.Start();
 
-            // Timer Test
-            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 100);
+            // UpdatePlayerList
+            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 1);
             TimerCollection.Add(Timer);
         }
 
@@ -74,29 +72,42 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
-        private void QueueMessage_AddMessage(object myObject, MessageEventArgs myArgs)
+        private void ClientEvent_Update(object myObject, ClientEventArgs myArgs)
         {
             try
             {
                 if (Main_Logger.InvokeRequired)
                 {
-                    BeginInvoke(new QueueMessage_AddMessage_Safe(QueueMessage_AddMessage), myObject, myArgs);
+                    BeginInvoke(new ClientEvent_Safe(ClientEvent_Update), myObject, myArgs);
                 }
                 else
                 {
-                    Main_Logger.AppendText(myArgs.OutputMessage + Functions.vbNewLine);
-
-                    if (Main_Logger.Lines.Length > 1000)
+                    if (myArgs.Type == ClientEvent.Types.Logger)
                     {
-                        Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
-                    }
+                        Main_Logger.AppendText(myArgs.Output + Functions.vbNewLine);
 
-                    if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
+                        if (Main_Logger.Lines.Length > 1000)
+                        {
+                            Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
+                        }
+
+                        if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
+                        {
+                            Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
+                        }
+
+                        File.AppendAllText(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", myArgs.Output + Functions.vbNewLine);
+                    }
+                    else if (myArgs.Type == ClientEvent.Types.Restart)
                     {
-                        Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
+                        ApplicationRestart = true;
+                        Application.Exit();
                     }
-
-                    File.AppendAllText(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", myArgs.OutputMessage + Functions.vbNewLine);
+                    else if (myArgs.Type == ClientEvent.Types.Stop)
+                    {
+                        ApplicationRestart = false;
+                        Application.Exit();
+                    }
                 }
             }
             catch (Exception ex)
@@ -105,19 +116,13 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
-        private void Restart(object myObject, EventArgs myArgs)
-        {
-            ApplicationRestart = true;
-            Application.Exit();
-        }
-
         private void UpdatePlayerList(object obj)
         {
             try
             {
                 if (Main_CurrentPlayerOnline.InvokeRequired)
                 {
-                    BeginInvoke(new UpdateGUI_Safe(UpdatePlayerList), "");
+                    BeginInvoke(new UpdatePlayerList_Safe(UpdatePlayerList), "");
                 }
                 else
                 {
@@ -142,7 +147,7 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
             {
-                if (!string.IsNullOrWhiteSpace(Main_Command.Text))
+                if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
                 {
                     PackageHandler.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
                 }

@@ -2,10 +2,7 @@
 using Pokemon_3D_Server_Core.Interface;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using static Pokemon_3D_Server_Core.Players.Player;
-using static Pokemon_3D_Server_Core.Loggers.Logger;
-using static Pokemon_3D_Server_Core.Commands.CommandFunctions;
-using static Pokemon_3D_Server_Core.Packages.Package;
+using Pokemon_3D_Server_Core.Loggers;
 
 namespace Pokemon_3D_Server_Core.Commands
 {
@@ -18,27 +15,27 @@ namespace Pokemon_3D_Server_Core.Commands
 
         public string Description { get; } = "Chat globally to all player.";
 
-        public OperatorTypes RequiredPermission { get; } = OperatorTypes.ChatModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ChatModerator;
 
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
             #region /Say <Message>
-            if (this.MatchRequiredParam(p, true, CommandParamType.Any))
+            if (this.MatchRequiredParam(p, true, Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, CommandParamType.Any);
+                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Server.SendToAllPlayer(new Package(PackageTypes.ChatMessage, Group[0], Player.Network.Client));
+                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
 
                     Player.CommandFeedback(Group[0], string.Format("have sent a server chat."));
                 }
                 else if (Player == null)
                 {
-                    Core.Server.SendToAllPlayer(new Package(PackageTypes.ChatMessage, Group[0], Player.Network.Client));
+                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
 
-                    Core.Logger.Add(Group[0], LogTypes.Server);
+                    Core.Logger.Add(Group[0], Logger.LogTypes.Server);
                 }
             }
             #endregion /Say <Message>

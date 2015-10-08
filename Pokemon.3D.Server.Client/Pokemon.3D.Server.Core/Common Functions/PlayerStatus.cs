@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Pokemon_3D_Server_Core.Players;
-using Pokemon_3D_Server_Core.Settings;
-using System.Net.Sockets;
 using System.Net;
 using System.Text.RegularExpressions;
+using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Settings;
 
 namespace Pokemon_3D_Server_Core.Modules
 {

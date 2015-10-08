@@ -85,21 +85,21 @@
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
             this.startToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F1)));
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.startToolStripMenuItem.Text = "Start";
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
             this.stopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F2)));
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.stopToolStripMenuItem.Text = "Stop";
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // toolStripDropDownButton2
@@ -199,11 +199,14 @@
             // 
             // Main_Logger
             // 
+            this.Main_Logger.BackColor = System.Drawing.SystemColors.Window;
             this.Main_Logger.Dock = System.Windows.Forms.DockStyle.Fill;
             this.Main_Logger.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Main_Logger.Location = new System.Drawing.Point(0, 0);
             this.Main_Logger.Name = "Main_Logger";
+            this.Main_Logger.ReadOnly = true;
             this.Main_Logger.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
+            this.Main_Logger.ShowSelectionMargin = true;
             this.Main_Logger.Size = new System.Drawing.Size(835, 505);
             this.Main_Logger.TabIndex = 0;
             this.Main_Logger.Text = "";

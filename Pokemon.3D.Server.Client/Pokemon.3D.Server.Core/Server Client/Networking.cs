@@ -110,7 +110,7 @@ namespace Pokemon_3D_Server_Core.Network
                         if (Package.IsValid)
                         {
                             LastValidPing = DateTime.Now;
-                            Package.Handle();
+                            Package.Handle(null);
                         }
                     }
                     else
