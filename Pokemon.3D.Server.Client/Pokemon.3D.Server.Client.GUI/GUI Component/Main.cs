@@ -52,10 +52,11 @@ namespace Pokemon_3D_Server_Client_GUI
             }
 
             // Setup Server
+            Core.Setting.NoPingKickTime = 15;
             Core.Server.Start();
 
             // UpdatePlayerList
-            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 1);
+            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 10);
             TimerCollection.Add(Timer);
         }
 

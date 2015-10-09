@@ -26,7 +26,7 @@ namespace Pokemon_3D_Server_Core.Packages
         /// <summary>
         /// Get Protocol Version.
         /// </summary>
-        public string ProtocolVersion { get { return Core.Setting.ProtocolVersion; } }
+        public string ProtocolVersion { get; } = Core.Setting.ProtocolVersion;
 
         /// <summary>
         /// Get/Set Package Type.
@@ -444,7 +444,7 @@ namespace Pokemon_3D_Server_Core.Packages
         /// Handle the package
         /// </summary>
         /// <param name="obj">Null</param>
-        public void Handle(object obj)
+        public void Handle(object obj = null)
         {
             Core.Package.PackageData.Enqueue(this);
         }

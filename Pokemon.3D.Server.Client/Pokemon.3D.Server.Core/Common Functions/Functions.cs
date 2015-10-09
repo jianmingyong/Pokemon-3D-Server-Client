@@ -211,7 +211,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             {
                 using (TcpClient Client = new TcpClient())
                 {
-                    if (Client.ConnectAsync(Core.Setting.IPAddress, Core.Setting.Port).Wait(1000))
+                    if (Client.ConnectAsync(GetPublicIP(), Core.Setting.Port).Wait(1000))
                     {
                         return true;
                     }

@@ -7,6 +7,8 @@ using System.Threading;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Players;
+using System.Diagnostics;
 
 namespace Pokemon_3D_Server_Core.Network
 {
@@ -75,18 +77,21 @@ namespace Pokemon_3D_Server_Core.Network
         {
             Reader = new StreamReader(Client.GetStream());
             Writer = new StreamWriter(Client.GetStream()) { AutoFlush = true };
+
             this.Client = Client;
+
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
             LoginStartTime = DateTime.Now;
 
             IsActive = true;
 
-            // Timer
-            Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, 0, 1);
-            TimerCollection.Add(Timer);
+            for (int i = 0; i < Environment.ProcessorCount; i++)
+            {
+                Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, 0, 1);
+                TimerCollection.Add(Timer);
+            }
 
-            // Timer
             Timer Timer1 = new Timer(new TimerCallback(ThreadStartPinging), null, 0, 1000);
             TimerCollection.Add(Timer1);
 
@@ -102,7 +107,7 @@ namespace Pokemon_3D_Server_Core.Network
                 try
                 {
                     string ReturnMessage = Reader.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                    if (!string.IsNullOrEmpty(ReturnMessage))
                     {
                         Package Package = new Package(ReturnMessage, Client);
                         Core.Logger.Add("Networking.cs: Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
@@ -110,7 +115,7 @@ namespace Pokemon_3D_Server_Core.Network
                         if (Package.IsValid)
                         {
                             LastValidPing = DateTime.Now;
-                            Package.Handle(null);
+                            Package.Handle();
                         }
                     }
                     else
@@ -123,7 +128,7 @@ namespace Pokemon_3D_Server_Core.Network
                 {
                     return;
                 }
-            } while (true);
+            } while (IsActive);
         }
 
         private void ThreadStartPinging(object obj = null)
@@ -141,7 +146,7 @@ namespace Pokemon_3D_Server_Core.Network
 
                 if (Core.Setting.AFKKickTime >= 10)
                 {
-                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime)
+                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
                     {
                         Core.Player.Remove(Core.Player.GetPlayer(Client).ID, Core.Setting.Token("SERVER_AFK"));
                         return;
@@ -150,7 +155,8 @@ namespace Pokemon_3D_Server_Core.Network
 
                 if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
                 {
-                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME"), Client));
+                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
+                    LastHourCheck++;
                 }
             }
         }
@@ -202,6 +208,8 @@ namespace Pokemon_3D_Server_Core.Network
             {
                 TimerCollection[i].Dispose();
             }
+            TimerCollection.RemoveRange(0, TimerCollection.Count);
+
             Client.Close();
             Reader.Dispose();
             Writer.Dispose();

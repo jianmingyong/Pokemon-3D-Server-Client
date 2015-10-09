@@ -1,25 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Pokemon_3D_Server_Core.Event;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
-using Pokemon_3D_Server_Core.Event;
 
 namespace Pokemon_3D_Server_Core.Network
 {
     /// <summary>
     /// Class containing Server Client
     /// </summary>
-    public class ServerClient
+    public class ServerClient : IDisposable
     {
-        private IPEndPoint IPEndPoint;
-        private TcpListener Listener;
-        private TcpClient Client;
-        private StreamReader Reader;
-        private StreamWriter Writer;
+        private IPEndPoint IPEndPoint { get; set; }
+        private TcpListener Listener { get; set; }
+        private TcpClient Client { get; set; }
+        private StreamReader Reader { get; set; }
+        private StreamWriter Writer { get; set; }
+
+        private bool IsActive { get; set; }
+
+        /// <summary>
+        /// [0] => ThreadStartListening
+        /// </summary>
+        private static List<Thread> ThreadCollection { get; set; } = new List<Thread>();
+
+        /// <summary>
+        /// [0] => Core.World.Update
+        /// [1] => Core.Package.Handle
+        /// [2] => ThreadAutoRestart
+        /// </summary>
+        private static List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
         /// <summary>
         /// Start the server
@@ -31,68 +46,105 @@ namespace Pokemon_3D_Server_Core.Network
                 // Before Running CheckList
                 if (!My.Computer.Network.IsAvailable)
                 {
-                    Core.Logger.Add("ServerClient.cs: Unable to start the server. Check your connection again.", Logger.LogTypes.Warning);
-                    return;
-                }
-
-                IPEndPoint = new IPEndPoint(IPAddress.Any, Core.Setting.Port);
-                Listener = new TcpListener(IPEndPoint);
-                Listener.Start();
-
-                // Threading
-                Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { Name = "ThreadStartListening", IsBackground = true };
-                Thread.Start();
-                Core.ThreadCollection.Add(Thread);
-
-                // Timer 1
-                Timer Timer1 = new Timer(new TimerCallback(Core.World.Update), null, 0, 1000);
-                Core.TimerCollection.Add(Timer1);
-
-                // Timer 2
-                Timer Timer2 = new Timer(new TimerCallback(Core.Package.Handle), null, 0, 1);
-                Core.TimerCollection.Add(Timer2);
-
-                // Timer 3
-                if (Core.Setting.AutoRestartTime >= 10)
-                {
-                    Core.Logger.Add(string.Format(@"ServerClient.cs: The server will restart every {0} seconds.", Core.Setting.AutoRestartTime), Logger.LogTypes.Info);
-                    Timer Timer3 = new Timer(new TimerCallback(ThreadAutoRestart), null, 0, 1000);
-                    Core.TimerCollection.Add(Timer3);
-                }
-
-                Core.Logger.Add("ServerClient.cs: Server Client is initalizing.", Logger.LogTypes.Info);
-                if (Core.Setting.OfflineMode)
-                {
-                    Core.Logger.Add("ServerClient.cs: Players with offline profile can join the server.", Logger.LogTypes.Info);
-                }
-
-                string GameMode = null;
-                for (int i = 0; i < Core.Setting.GameMode.Count; i++)
-                {
-                    GameMode += Core.Setting.GameMode[i] + ", ";
-                }
-                GameMode = GameMode.Remove(GameMode.LastIndexOf(","));
-
-                if (Functions.CheckPortOpen())
-                {
-                    Core.Logger.Add(string.Format(@"ServerClient.cs: Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                    Core.Logger.Add("ServerClient.cs: Network is not available.", Logger.LogTypes.Warning);
+                    Stop(false);
                 }
                 else
                 {
-                    Core.Logger.Add(string.Format(@"ServerClient.cs: The specific Port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
-                    Core.Logger.Add(string.Format(@"ServerClient.cs: Server Started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                    IPEndPoint = new IPEndPoint(IPAddress.Any, Core.Setting.Port);
+                    Listener = new TcpListener(IPEndPoint);
+                    Listener.Start();
+
+                    IsActive = true;
+
+                    // Threading
+                    Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { Name = "ThreadStartListening", IsBackground = true };
+                    Thread.Start();
+                    ThreadCollection.Add(Thread);
+
+                    // Timer 1
+                    Timer Timer1 = new Timer(new TimerCallback(Core.World.Update), null, 0, 1000);
+                    TimerCollection.Add(Timer1);
+
+                    // Timer 2
+                    Timer Timer2 = new Timer(new TimerCallback(Core.Package.Handle), null, 0, 1);
+                    TimerCollection.Add(Timer2);
+
+                    // Timer 3
+                    if (Core.Setting.AutoRestartTime >= 10)
+                    {
+                        Core.Logger.Add(string.Format(@"ServerClient.cs: The server will restart every {0} seconds.", Core.Setting.AutoRestartTime), Logger.LogTypes.Info);
+                        Timer Timer3 = new Timer(new TimerCallback(ThreadAutoRestart), null, 0, 1000);
+                        TimerCollection.Add(Timer3);
+                    }
+
+                    Core.Logger.Add("ServerClient.cs: Server Client is initalizing.", Logger.LogTypes.Info);
+                    if (Core.Setting.OfflineMode)
+                    {
+                        Core.Logger.Add("ServerClient.cs: Players with offline profile can join the server.", Logger.LogTypes.Info);
+                    }
+
+                    string GameMode = null;
+                    for (int i = 0; i < Core.Setting.GameMode.Count; i++)
+                    {
+                        GameMode += Core.Setting.GameMode[i] + ", ";
+                    }
+                    GameMode = GameMode.Remove(GameMode.LastIndexOf(","));
+
+                    if (Functions.CheckPortOpen())
+                    {
+                        Core.Logger.Add(string.Format(@"ServerClient.cs: Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                    }
+                    else
+                    {
+                        Core.Logger.Add(string.Format(@"ServerClient.cs: The specific Port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
+                        Core.Logger.Add(string.Format(@"ServerClient.cs: Server Started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ex.CatchError();
-                Core.Logger.Add("ServerClient.cs: Server failed to start. Please relaunch again.", Logger.LogTypes.Warning);
+                Stop(false);
+            }
+        }
+
+        public void Stop(bool Dispose)
+        {
+            IsActive = false;
+
+            if (Client != null) Client.Close();
+            if (Reader != null) Reader.Close();
+            if (Writer != null) Writer.Close();
+            if (Listener != null) Listener.Stop();
+
+            for (int i = 0; i < ThreadCollection.Count; i++)
+            {
+                if (ThreadCollection[i].IsAlive)
+                {
+                    ThreadCollection[i].Abort();
+                }
+            }
+            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
+
+            for (int i = 0; i < TimerCollection.Count; i++)
+            {
+                TimerCollection[i].Dispose();
+            }
+            TimerCollection.RemoveRange(0, TimerCollection.Count);
+
+            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, Core.Setting.Token("SERVER_CLOSE"), null));
+            Core.Logger.Add("ServerClient.cs: Server stopped.", Logger.LogTypes.Info);
+
+            if (Dispose)
+            {
+                this.Dispose();
             }
         }
 
         private void ThreadStartListening()
         {
-            while (true)
+            do
             {
                 try
                 {
@@ -109,14 +161,18 @@ namespace Pokemon_3D_Server_Core.Network
                         }
                     }
                 }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
                 catch (Exception)
                 {
                     Core.Logger.Add("ServerClient.cs: StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
                 }
-            }
+            } while (IsActive);
         }
 
-        private void ThreadAutoRestart(object obj)
+        private void ThreadAutoRestart(object obj = null)
         {
             TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
 
@@ -134,11 +190,12 @@ namespace Pokemon_3D_Server_Core.Network
         /// Sent Package Data to Player
         /// </summary>
         /// <param name="p">Package</param>
-        public void SentToPlayer(Package p)
+        /// <param name="Threaded">Threaded?</param>
+        public void SentToPlayer(Package p, bool Threaded = true)
         {
             if (Core.Player.HasPlayer(p.Client))
             {
-                if (Core.Player.GetPlayer(p.Client).Network.IsActive)
+                if (Core.Player.GetPlayer(p.Client).Network.IsActive && Threaded)
                 {
                     Core.Player.GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
                 }
@@ -205,6 +262,15 @@ namespace Pokemon_3D_Server_Core.Network
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Dispose ServerClient.
+        /// </summary>
+        public void Dispose()
+        {
+            if (Reader != null) Reader.Dispose();
+            if (Writer != null) Writer.Dispose();
         }
     }
 }

@@ -43,15 +43,5 @@ namespace Pokemon_3D_Server_Core
         /// Get/Set World.
         /// </summary>
         public static World World { get; set; } = new World();
-
-        /// <summary>
-        /// List of running thread
-        /// </summary>
-        public static List<Thread> ThreadCollection { get; set; } = new List<Thread>();
-
-        /// <summary>
-        /// List of running timer
-        /// </summary>
-        public static List<Timer> TimerCollection { get; set; } = new List<Timer>();
     }
 }

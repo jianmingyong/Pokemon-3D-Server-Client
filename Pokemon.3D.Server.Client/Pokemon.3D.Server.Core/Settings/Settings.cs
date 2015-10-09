@@ -56,7 +56,7 @@ namespace Pokemon_3D_Server_Core.Settings
         /// <summary>
         /// Get/Set IP Address
         /// </summary>
-        public IPAddress _IPAddress = System.Net.IPAddress.Parse(Functions.GetPublicIP());
+        public IPAddress _IPAddress = Functions.GetPublicIP() == null ? null : System.Net.IPAddress.Parse(Functions.GetPublicIP());
         /// <summary>
         /// Get/Set IP Address
         /// </summary>
