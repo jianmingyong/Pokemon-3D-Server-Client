@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using Pokemon_3D_Server_Core.Loggers;
-using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Settings;
 
@@ -138,10 +136,7 @@ namespace Pokemon_3D_Server_Core.Players
             return (from Player p in this where p.Network.Client == Client select p).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Get the next valid id that is not in use.
-        /// </summary>
-        public int GetNextValidID()
+        private int GetNextValidID()
         {
             if (Count == 0)
             {

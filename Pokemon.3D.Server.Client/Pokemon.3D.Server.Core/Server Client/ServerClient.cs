@@ -157,7 +157,7 @@ namespace Pokemon_3D_Server_Core.Network
                         Core.Logger.Add("ServerClient.cs: Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
                         if (Package.IsValid)
                         {
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(Package.Handle), null);
+                            Package.Handle();
                         }
                     }
                 }
@@ -202,6 +202,17 @@ namespace Pokemon_3D_Server_Core.Network
                 else
                 {
                     Core.Player.GetPlayer(p.Client).Network.StartSending(p);
+                }
+            }
+            else if (Core.RconPlayer.HasPlayer(p.Client))
+            {
+                if (Core.RconPlayer.GetPlayer(p.Client).Network.IsActive && Threaded)
+                {
+                    Core.RconPlayer.GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
+                }
+                else
+                {
+                    Core.RconPlayer.GetPlayer(p.Client).Network.StartSending(p);
                 }
             }
             else

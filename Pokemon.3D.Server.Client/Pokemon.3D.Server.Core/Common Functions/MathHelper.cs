@@ -302,16 +302,16 @@ namespace Pokemon_3D_Server_Core.Modules
             int Diff = maxValue - minValue + 1;
             int NewValue = Value;
 
-            if (Value > maxValue)
+            if (NewValue > maxValue)
             {
-                while (Value > maxValue)
+                while (NewValue > maxValue)
                 {
                     NewValue -= Diff;
                 }
             }
-            else if (Value < maxValue)
+            else if (NewValue < maxValue)
             {
-                while (Value < maxValue)
+                while (NewValue < maxValue)
                 {
                     NewValue += Diff;
                 }

@@ -74,8 +74,10 @@
     <Compile Include="Player\Player.cs" />
     <Compile Include="Player\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RconPlayer\RconPlayer.cs" />
+    <Compile Include="RconPlayer\RconPlayerCollection.cs" />
     <Compile Include="Server Client\Networking.cs" />
-    <Compile Include="Server Client\RconServerClient.cs" />
+    <Compile Include="Server Client\RconNetworking.cs" />
     <Compile Include="Server Client\ServerClient.cs" />
     <Compile Include="Settings\Data List\BlackList.cs" />
     <Compile Include="Settings\Data List\CommonList.cs" />

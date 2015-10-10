@@ -36,11 +36,12 @@ namespace Pokemon_3D_Server_Client_GUI
             // Add Handler
             ClientEvent.Update += ClientEvent_Update;
 
-            // Setup Settings.
+            // Setup
+            Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
+            Core.Logger.Setup();
             Core.Setting.Setup();
 
             // Setup Settings
-            Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
             if (Core.Setting.Load())
             {
                 Core.Setting.Save();
@@ -91,13 +92,6 @@ namespace Pokemon_3D_Server_Client_GUI
                         {
                             Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
                         }
-
-                        if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
-                        {
-                            Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
-                        }
-
-                        File.AppendAllText(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", myArgs.Output + Functions.vbNewLine);
                     }
                     else if (myArgs.Type == ClientEvent.Types.Restart)
                     {

@@ -26,18 +26,7 @@ namespace Pokemon_3D_Server_Core.Worlds
             }
             set
             {
-                if (value < 0)
-                {
-                    _Season = 0;
-                }
-                else if (value > 3)
-                {
-                    _Season = 3;
-                }
-                else
-                {
-                    _Season = value;
-                }
+                _Season = value.RollOver(0, 3);
             }
         }
 
@@ -53,18 +42,7 @@ namespace Pokemon_3D_Server_Core.Worlds
             }
             set
             {
-                if (value < 0)
-                {
-                    _Weather = 0;
-                }
-                else if (value > 9)
-                {
-                    _Weather = 9;
-                }
-                else
-                {
-                    _Weather = value;
-                }
+                _Weather = value.RollOver(0, 9);
             }
         }
 

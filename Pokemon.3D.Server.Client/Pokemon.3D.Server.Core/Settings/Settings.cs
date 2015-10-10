@@ -153,6 +153,11 @@ namespace Pokemon_3D_Server_Core.Settings
         /// Get/Set Offline Mode
         /// </summary>
         public bool OfflineMode { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set Rcon Password
+        /// </summary>
+        public string RconPassword { get; set; } = "Password";
         #endregion Main Server Property
 
         #region Advanced Server Property
@@ -749,6 +754,17 @@ namespace Pokemon_3D_Server_Core.Settings
                                         else
                                         {
                                             Core.Logger.Add("Settings.cs: \"Main Server Property.OfflineMode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "RconPassword", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            RconPassword = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Add("Settings.cs: \"Main Server Property.RconPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
@@ -1949,7 +1965,11 @@ namespace Pokemon_3D_Server_Core.Settings
 
         /* OfflineMode:  The ability for offline profile player to join the server.
 		   Syntax: Boolean: true, false */
-        ""OfflineMode"": {12}
+        ""OfflineMode"": {12},
+
+        /* RconPassword:  The password for the Rcon to connect.
+		   Syntax: String. Please do not insert password that contains your personal infomation. */
+        ""RconPassword"": ""{55}""
     }},
 
     ""Advanced Server Property"":
@@ -2161,7 +2181,8 @@ LoggerPM.ToString().ToLower(), // LoggerPM
 LoggerServer.ToString().ToLower(), // LoggerServer
 LoggerTrade.ToString().ToLower(), // LoggerTrade
 LoggerPvP.ToString().ToLower(), // LoggerPvP
-LoggerCommand.ToString().ToLower() // LoggerCommand
+LoggerCommand.ToString().ToLower(), // LoggerCommand
+RconPassword.ToString() // RconPassword
 ), Encoding.Unicode);
                 #endregion application_settings.json
 

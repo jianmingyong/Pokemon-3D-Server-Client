@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
 using System.Net.Sockets;
-using System;
 using Pokemon_3D_Server_Core.Event;
 
 namespace Pokemon_3D_Server_Core.Loggers
@@ -8,8 +7,29 @@ namespace Pokemon_3D_Server_Core.Loggers
     /// <summary>
     /// Class containing Logger Collections.
     /// </summary>
-    public class LoggerCollection : List<Logger>
+    public class LoggerCollection
     {
+        private FileStream FileStream;
+        private StreamReader Reader;
+        private StreamWriter Writer;
+
+        /// <summary>
+        /// Setup new Logger.
+        /// </summary>
+        public void Setup()
+        {
+            if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
+            {
+                Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
+            }
+
+            FileStream = new FileStream(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            Reader = new StreamReader(FileStream);
+            Writer = new StreamWriter(FileStream) { AutoFlush = true };
+
+            Add("LoggerCollection.cs: Logger initiated.",Logger.LogTypes.Info);
+        }
+
         /// <summary>
         /// Add the logger to the top of the collection.
         /// </summary>
@@ -18,27 +38,11 @@ namespace Pokemon_3D_Server_Core.Loggers
         /// <param name="Client">Optional: Client.</param>
         public void Add(string Message, Logger.LogTypes LogType, TcpClient Client = null)
         {
-            if (Count >= 1000)
-            {
-                RemoveAt(0);
-            }
+            Logger Logger = new Logger(Message, LogType, Client);
+            Writer.WriteLine(Logger.ToString());
+            Writer.Flush();
 
-            ClientEvent.Invoke(new Logger(Message, LogType, Client));
-            Add(new Logger(Message, LogType, Client));
-        }
-
-        /// <summary>
-        /// Get the last 1000 logs.
-        /// </summary>
-        public override string ToString()
-        {
-            string ReturnString = null;
-
-            for (int i = 0; i < Count; i++)
-            {
-                ReturnString += this[i].ToString() + Environment.NewLine;
-            }
-            return ReturnString;
+            ClientEvent.Invoke(Logger);
         }
     }
 }

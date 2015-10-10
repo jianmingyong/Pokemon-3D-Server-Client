@@ -83,7 +83,7 @@ namespace Pokemon_3D_Server_Core.Packages
 
             /// <summary>
             /// Package Type: RCON Login Token
-            /// <para>Get: {Origin = -1 | DataItem[0] = Password + Second Factor Encryption | DataItem[1] = MD5 Hash}</para>
+            /// <para>Get: {Origin = -1 | DataItem[0] = Md5 Hash Password | DataItem[1] = Sha1 Hash Password | DataItem[2] = Sha256 Hash Password}</para>
             /// <para>Set: {Origin = -1 | DataItem[0] = Authentication Fail or Success.}</para>
             /// </summary>
             RCON_Authentication = -2,
@@ -443,8 +443,7 @@ namespace Pokemon_3D_Server_Core.Packages
         /// <summary>
         /// Handle the package
         /// </summary>
-        /// <param name="obj">Null</param>
-        public void Handle(object obj = null)
+        public void Handle()
         {
             Core.Package.PackageData.Enqueue(this);
         }

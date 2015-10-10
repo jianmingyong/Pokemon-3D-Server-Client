@@ -6,14 +6,13 @@ using System.Net.Sockets;
 using System.Threading;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Packages;
-using Pokemon_3D_Server_Core.Players;
 
 namespace Pokemon_3D_Server_Core.Network
 {
     /// <summary>
-    /// Class containing Networking
+    /// Class containing Rcon Networking.
     /// </summary>
-    public class Networking : IDisposable
+    public class RconNetworking : IDisposable
     {
         /// <summary>
         /// Get/Set SteamReader
@@ -41,26 +40,14 @@ namespace Pokemon_3D_Server_Core.Network
         public List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
         /// <summary>
-        /// Get/Set Player Last Valid Ping
+        /// Get/Set Rcon Player Last Valid Ping.
         /// </summary>
         public DateTime LastValidPing { get; set; }
-
-        /// <summary>
-        /// Get/Set Player Last Valid Movement
-        /// </summary>
-        public DateTime LastValidMovement { get; set; }
-
-        /// <summary>
-        /// Get/Set Player Login StartTime
-        /// </summary>
-        public DateTime LoginStartTime { get; set; }
 
         /// <summary>
         /// Get/Set Network IsActive.
         /// </summary>
         public bool IsActive { get; set; }
-
-        private int LastHourCheck = 0;
 
         /// <summary>
         /// Get/Set Player Queue for sending package.
@@ -71,7 +58,7 @@ namespace Pokemon_3D_Server_Core.Network
         /// New Networking
         /// </summary>
         /// <param name="Client">Client</param>
-        public Networking(TcpClient Client)
+        public RconNetworking(TcpClient Client)
         {
             Reader = new StreamReader(Client.GetStream());
             Writer = new StreamWriter(Client.GetStream()) { AutoFlush = true };
@@ -79,9 +66,6 @@ namespace Pokemon_3D_Server_Core.Network
             this.Client = Client;
 
             LastValidPing = DateTime.Now;
-            LastValidMovement = DateTime.Now;
-            LoginStartTime = DateTime.Now;
-
             IsActive = true;
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
@@ -108,7 +92,7 @@ namespace Pokemon_3D_Server_Core.Network
                     if (!string.IsNullOrEmpty(ReturnMessage))
                     {
                         Package Package = new Package(ReturnMessage, Client);
-                        Core.Logger.Add("Networking.cs: Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
+                        Core.Logger.Add("RconNetworking.cs: Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
 
                         if (Package.IsValid)
                         {
@@ -118,7 +102,7 @@ namespace Pokemon_3D_Server_Core.Network
                     }
                     else
                     {
-                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, "You have left the game.");
+                        Core.RconPlayer.Remove(Core.RconPlayer.GetPlayer(Client).ID, "Rcon connection is closed.");
                         return;
                     }
                 }
@@ -137,24 +121,9 @@ namespace Pokemon_3D_Server_Core.Network
                 {
                     if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
                     {
-                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, Core.Setting.Token("SERVER_NOPING"));
+                        Core.RconPlayer.Remove(Core.RconPlayer.GetPlayer(Client).ID, Core.Setting.Token("SERVER_NOPING"));
                         return;
                     }
-                }
-
-                if (Core.Setting.AFKKickTime >= 10)
-                {
-                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
-                    {
-                        Core.Player.Remove(Core.Player.GetPlayer(Client).ID, Core.Setting.Token("SERVER_AFK"));
-                        return;
-                    }
-                }
-
-                if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
-                {
-                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
-                    LastHourCheck++;
                 }
             }
         }
@@ -169,7 +138,7 @@ namespace Pokemon_3D_Server_Core.Network
             {
                 Writer.WriteLine(p.ToString());
                 Writer.Flush();
-                Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
+                Core.Logger.Add("RconNetworking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
             }
             catch (Exception)
             {
@@ -186,7 +155,7 @@ namespace Pokemon_3D_Server_Core.Network
                 {
                     Writer.WriteLine(p.ToString());
                     Writer.Flush();
-                    Core.Logger.Add("Networking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
+                    Core.Logger.Add("RconNetworking.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
                 }
             }
             catch (Exception)

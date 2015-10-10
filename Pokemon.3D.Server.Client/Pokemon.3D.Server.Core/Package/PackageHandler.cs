@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Rcon.Players;
 using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Core.Packages
@@ -39,6 +40,18 @@ namespace Pokemon_3D_Server_Core.Packages
                 {
                     switch (p.PackageType)
                     {
+                        case (int)Package.PackageTypes.RCON_Command:
+                            HandleRCON_Command(p);
+                            break;
+
+                        case (int)Package.PackageTypes.RCON_Ping:
+                            HandleRCON_Ping(p);
+                            break;
+
+                        case (int)Package.PackageTypes.RCON_Authentication:
+                            HandleRCON_Authentication(p);
+                            break;
+
                         case (int)Package.PackageTypes.Unknown:
                             Core.Logger.Add("PackageHandler.cs: Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                             break;
@@ -130,7 +143,8 @@ namespace Pokemon_3D_Server_Core.Packages
             }
         }
 
-        private static void HandleGameData(Package p)
+        #region Pokemon 3D Data
+        private void HandleGameData(Package p)
         {
             if (Core.Player.HasPlayer(p.Client))
             {
@@ -244,7 +258,7 @@ namespace Pokemon_3D_Server_Core.Packages
             }
         }
 
-        private static void HandlePrivateMessage(Package p)
+        private void HandlePrivateMessage(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PMPlayer = Core.Player.GetPlayer(p.DataItems[0]);
@@ -304,7 +318,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a private message to " + p.DataItems[0]), Logger.LogTypes.PM, p.Client);
         }
 
-        private static void HandleChatMessage(Package p)
+        private void HandleChatMessage(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
 
@@ -368,13 +382,13 @@ namespace Pokemon_3D_Server_Core.Packages
             Player.LastChatTime = DateTime.Now;
         }
 
-        private static void HandlePing(Package p)
+        private void HandlePing(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player.Network.LastValidPing = DateTime.Now;
         }
 
-        private static void HandleGamestateMessage(Package p)
+        private void HandleGamestateMessage(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
@@ -385,7 +399,7 @@ namespace Pokemon_3D_Server_Core.Packages
                 "The player " + Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Server, p.Client);
         }
 
-        private static void HandleTradeRequest(Package p)
+        private void HandleTradeRequest(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -422,7 +436,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a trade request to " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
-        private static void HandleTradeJoin(Package p)
+        private void HandleTradeJoin(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -447,7 +461,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have joined the trade request from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
-        private static void HandleTradeQuit(Package p)
+        private void HandleTradeQuit(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -460,7 +474,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the trade request from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
-        private static void HandleTradeOffer(Package p)
+        private void HandleTradeOffer(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -468,7 +482,7 @@ namespace Pokemon_3D_Server_Core.Packages
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.TradeOffer, Player.ID, p.DataItems[1], TradePlayer.Network.Client));
         }
 
-        private static void HandleTradeStart(Package p)
+        private void HandleTradeStart(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -481,7 +495,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the trade from " + TradePlayerName), Logger.LogTypes.Trade, p.Client);
         }
 
-        private static void HandleBattleRequest(Package p)
+        private void HandleBattleRequest(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -518,7 +532,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a battle request to " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
-        private static void HandleBattleJoin(Package p)
+        private void HandleBattleJoin(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -543,7 +557,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have joined the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
-        private static void HandleBattleQuit(Package p)
+        private void HandleBattleQuit(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -556,7 +570,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
-        private static void HandleBattleOffer(Package p)
+        private void HandleBattleOffer(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -564,7 +578,7 @@ namespace Pokemon_3D_Server_Core.Packages
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
-        private static void HandleBattleStart(Package p)
+        private void HandleBattleStart(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -577,7 +591,7 @@ namespace Pokemon_3D_Server_Core.Packages
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
         }
 
-        private static void HandleBattleClientData(Package p)
+        private void HandleBattleClientData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -585,7 +599,7 @@ namespace Pokemon_3D_Server_Core.Packages
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleClientData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
-        private static void HandleBattleHostData(Package p)
+        private void HandleBattleHostData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -593,7 +607,7 @@ namespace Pokemon_3D_Server_Core.Packages
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattleHostData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
-        private static void HandleBattlePokemonData(Package p)
+        private void HandleBattlePokemonData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
@@ -601,7 +615,7 @@ namespace Pokemon_3D_Server_Core.Packages
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.BattlePokemonData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
 
-        private static void HandleServerDataRequest(Package p)
+        private void HandleServerDataRequest(Package p)
         {
             List<string> DataItems = new List<string>
             {
@@ -910,5 +924,39 @@ namespace Pokemon_3D_Server_Core.Packages
             }
             return ReturnString;
         }
+        #endregion Pokemon 3D Data
+
+        #region Rcon Data
+        private void HandleRCON_Authentication(Package p)
+        {
+            // Get: {Origin = -1 | DataItem[0] = Md5 Hash Password | DataItem[1] = Sha1 Hash Password | DataItem[2] = Sha256 Hash Password}
+
+            // Check Authentication Data
+            string CorrectMD5HashPassword = Core.Setting.RconPassword.Md5HashGenerator();
+            string CorrectSha1HashPassword = Core.Setting.RconPassword.SHA1HashGenerator();
+            string CorrectSha256HashPassword = Core.Setting.RconPassword.SHA256HashGenerator();
+
+            if (p.DataItems[0] == CorrectMD5HashPassword && p.DataItems[1] == CorrectSha1HashPassword && p.DataItems[2] == CorrectSha256HashPassword)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "1", p.Client));
+                Core.RconPlayer.Add(p);
+            }
+            else
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "0", p.Client));
+            }
+        }
+
+        private void HandleRCON_Ping(Package p)
+        {
+            RconPlayer Player = Core.RconPlayer.GetPlayer(p.Client);
+            Player.Network.LastValidPing = DateTime.Now;
+        }
+
+        private void HandleRCON_Command(Package p)
+        {
+            HandleChatCommand(p);
+        }
+        #endregion Rcon Data
     }
 }

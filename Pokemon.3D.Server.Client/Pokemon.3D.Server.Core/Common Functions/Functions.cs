@@ -5,6 +5,8 @@ using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Security;
+using System.Security.Cryptography;
 using Pokemon_3D_Server_Core.Loggers;
 
 namespace Pokemon_3D_Server_Core.Modules
@@ -225,6 +227,60 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Generate Md5 Checksum from string.
+        /// </summary>
+        /// <param name="Value">String to compute.</param>
+        public static string Md5HashGenerator(this string Value)
+        {
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Generate SHA1 Checksum from string.
+        /// </summary>
+        /// <param name="Value">String to compute.</param>
+        public static string SHA1HashGenerator(this string Value)
+        {
+            SHA1 sha1 = SHA1.Create();
+            byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
+            byte[] hash = sha1.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Generate SHA256 Checksum from string.
+        /// </summary>
+        /// <param name="Value">String to compute.</param>
+        public static string SHA256HashGenerator(this string Value)
+        {
+            SHA256 sha256 = SHA256.Create();
+            byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
+            byte[] hash = sha256.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
         }
     }
 }
