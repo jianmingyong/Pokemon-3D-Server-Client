@@ -1,30 +1,31 @@
 ﻿using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Interface;
+using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
 
 namespace Pokemon_3D_Server_Core.Commands
 {
     /// <summary>
-    /// Class containing Say Function.
+    /// Class containing Weather Function.
     /// </summary>
-    public class Say : ICommand
+    public class Weather : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Say";
+        public string Name { get; } = "Global.Weather";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Chat globally to all player.";
+        public string Description { get; } = "Change the Global Weather.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ChatModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
 
         /// <summary>
         /// Handle the Package data.
@@ -34,25 +35,26 @@ namespace Pokemon_3D_Server_Core.Commands
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Say <Message>
-            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Any))
+            #region /Global.Weather <id>
+
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
-
-                    Player.CommandFeedback(Group[0], string.Format("have sent a server chat."));
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    
+                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Weather."));
                 }
                 else if (Player == null)
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
 
-                    Core.Logger.Add(Group[0], Logger.LogTypes.Server);
+                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /Say <Message>
+            #endregion /Global.Weather <id>
         }
 
         /// <summary>
@@ -67,9 +69,10 @@ namespace Pokemon_3D_Server_Core.Commands
                 default:
                     this.HelpPageGenerator(Player,
                         string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Say [Message]"),
+                        string.Format("Usage: /Global.Weather [ID]"),
                         string.Format("-------------------------------------"),
-                        string.Format("Message: Message."),
+                        string.Format("ID: Weather ID."),
+                        string.Format("Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4"),
                         string.Format("-------------------------------------"),
                         string.Format("Description: {0}", Description),
                         string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))

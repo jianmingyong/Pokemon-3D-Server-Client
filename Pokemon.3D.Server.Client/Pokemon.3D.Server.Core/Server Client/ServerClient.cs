@@ -100,6 +100,8 @@ namespace Pokemon_3D_Server_Core.Network
                         Core.Logger.Add(string.Format(@"ServerClient.cs: The specific Port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
                         Core.Logger.Add(string.Format(@"ServerClient.cs: Server Started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
                     }
+
+                    Core.Command.AddCommand();
                 }
             }
             catch (Exception ex)
@@ -109,6 +111,10 @@ namespace Pokemon_3D_Server_Core.Network
             }
         }
 
+        /// <summary>
+        /// Stop the Server Client.
+        /// </summary>
+        /// <param name="Dispose">Dispose?</param>
         public void Stop(bool Dispose)
         {
             IsActive = false;
@@ -219,7 +225,7 @@ namespace Pokemon_3D_Server_Core.Network
             {
                 try
                 {
-                    Writer = new StreamWriter(p.Client.GetStream()) { AutoFlush = true };
+                    Writer = new StreamWriter(p.Client.GetStream());
                     Writer.WriteLine(p.ToString());
                     Writer.Flush();
                     Core.Logger.Add("ServerClient.cs: Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);

@@ -63,8 +63,13 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), null));
+            for (int i = 0; i < Core.Player.Count; i++)
+            {
+                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client),false);
+            }
+            Core.Server.Stop(true);
             Core.Setting.Save();
+
             Core.Logger.Add("Main.cs: Application closed successfully!", Logger.LogTypes.Info);
 
             if (ApplicationRestart)

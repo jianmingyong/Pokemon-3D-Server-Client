@@ -11,17 +11,31 @@ namespace Pokemon_3D_Server_Core.Commands
     /// </summary>
     public class Kick : ICommand
     {
+        /// <summary>
+        /// Name of the command. [To use, add "/" before the name]
+        /// </summary>
         public string Name { get; } = "Kick";
 
+        /// <summary>
+        /// Short Description of the command.
+        /// </summary>
         public string Description { get; } = "Kick the player from the server.";
 
+        /// <summary>
+        /// Minimum Permission require to use this command.
+        /// </summary>
         public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
 
+        /// <summary>
+        /// Handle the Package data.
+        /// </summary>
+        /// <param name="p">Package data.</param>
+        /// <param name="Player">Player.</param>
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
             #region /Kick <Name> [Reason]
-            if (this.MatchRequiredParam(p, false, Functions.CommandParamType.Any, Functions.CommandParamType.Any))
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Any))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Any);
 
@@ -61,7 +75,7 @@ namespace Pokemon_3D_Server_Core.Commands
             #endregion /Kick <Name> [Reason]
 
             #region /kick <Name>
-            if (this.MatchRequiredParam(p, true, Functions.CommandParamType.Any))
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
@@ -101,6 +115,11 @@ namespace Pokemon_3D_Server_Core.Commands
             #endregion /kick <Name>
         }
 
+        /// <summary>
+        /// Create a Help Page.
+        /// </summary>
+        /// <param name="Pages">Page Number. Start from Zero.</param>
+        /// <param name="Player">Player.</param>
         public void Help(int Pages, Player Player = null)
         {
             switch (Pages)

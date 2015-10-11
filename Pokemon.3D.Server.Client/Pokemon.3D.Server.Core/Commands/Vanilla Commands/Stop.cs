@@ -10,17 +10,31 @@ namespace Pokemon_3D_Server_Core.Commands
     /// </summary>
     public class Stop : ICommand
     {
+        /// <summary>
+        /// Name of the command. [To use, add "/" before the name]
+        /// </summary>
         public string Name { get; } = "Stop";
 
+        /// <summary>
+        /// Short Description of the command.
+        /// </summary>
         public string Description { get; } = "Stop the server from running.";
 
+        /// <summary>
+        /// Minimum Permission require to use this command.
+        /// </summary>
         public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
+        /// <summary>
+        /// Handle the Package data.
+        /// </summary>
+        /// <param name="p">Package data.</param>
+        /// <param name="Player">Player.</param>
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
             #region /stop
-            if (this.MatchRequiredParam(p, true, Functions.CommandParamType.Nothing))
+            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -34,6 +48,11 @@ namespace Pokemon_3D_Server_Core.Commands
             #endregion /stop
         }
 
+        /// <summary>
+        /// Create a Help Page.
+        /// </summary>
+        /// <param name="Pages">Page Number. Start from Zero.</param>
+        /// <param name="Player">Player.</param>
         public void Help(int Pages, Player Player = null)
         {
             switch (Pages)

@@ -74,7 +74,7 @@ namespace Pokemon_3D_Server_Core.Network
         public Networking(TcpClient Client)
         {
             Reader = new StreamReader(Client.GetStream());
-            Writer = new StreamWriter(Client.GetStream()) { AutoFlush = true };
+            Writer = new StreamWriter(Client.GetStream());
 
             this.Client = Client;
 
@@ -86,7 +86,7 @@ namespace Pokemon_3D_Server_Core.Network
 
             for (int i = 0; i < Environment.ProcessorCount; i++)
             {
-                Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, 0, 1);
+                Timer Timer = new Timer(new TimerCallback(ThreadStartSending), null, i * 1000, 1);
                 TimerCollection.Add(Timer);
             }
 

@@ -27,6 +27,7 @@ namespace Pokemon_3D_Server_Core.Worlds
             set
             {
                 _Season = value.RollOver(0, 3);
+                
             }
         }
 
@@ -383,8 +384,8 @@ namespace Pokemon_3D_Server_Core.Worlds
 
                     ReturnList = new List<string>
                     {
-                        OnlineSetting.CurrentWorldSeason.ToString(),
-                        OnlineSetting.CurrentWorldWeather.ToString(),
+                        OnlineSetting.Season == (int)SeasonType.Nothing ? Season.ToString() : OnlineSetting.CurrentWorldSeason.ToString(),
+                        OnlineSetting.Weather == (int)WeatherType.Nothing ? Weather.ToString() : OnlineSetting.CurrentWorldWeather.ToString(),
                         CurrentTime
                     };
                 }

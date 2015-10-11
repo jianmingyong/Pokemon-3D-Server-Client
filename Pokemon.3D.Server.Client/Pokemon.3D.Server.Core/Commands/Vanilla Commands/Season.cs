@@ -1,30 +1,31 @@
 ﻿using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Interface;
+using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
-using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
 
 namespace Pokemon_3D_Server_Core.Commands
 {
     /// <summary>
-    /// Class containing Say Function.
+    /// Class containing Season Function.
     /// </summary>
-    public class Say : ICommand
+    public class Season : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Say";
+        public string Name { get; } = "Global.Season";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Chat globally to all player.";
+        public string Description { get; } = "Change the Global Season.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ChatModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
 
         /// <summary>
         /// Handle the Package data.
@@ -34,25 +35,26 @@ namespace Pokemon_3D_Server_Core.Commands
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Say <Message>
-            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Any))
+            #region /Global.Season <id>
+
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
-
-                    Player.CommandFeedback(Group[0], string.Format("have sent a server chat."));
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    
+                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Season."));
                 }
                 else if (Player == null)
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
 
-                    Core.Logger.Add(Group[0], Logger.LogTypes.Server);
+                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /Say <Message>
+            #endregion /Global.Season <id>
         }
 
         /// <summary>
@@ -67,9 +69,10 @@ namespace Pokemon_3D_Server_Core.Commands
                 default:
                     this.HelpPageGenerator(Player,
                         string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Say [Message]"),
+                        string.Format("Usage: /Global.Season [ID]"),
                         string.Format("-------------------------------------"),
-                        string.Format("Message: Message."),
+                        string.Format("ID: Season ID."),
+                        string.Format("Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"),
                         string.Format("-------------------------------------"),
                         string.Format("Description: {0}", Description),
                         string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))

@@ -21,6 +21,9 @@ namespace Pokemon_3D_Server_Core.Rcon.Players
         /// </summary>
         public List<Player> Player { get; set; } = new List<Player>();
 
+        /// <summary>
+        /// Get/Set Rcon Neteork.
+        /// </summary>
         public RconNetworking Network { get; set; }
 
         /// <summary>
@@ -36,6 +39,9 @@ namespace Pokemon_3D_Server_Core.Rcon.Players
             Core.Server.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
         }
 
+        /// <summary>
+        /// Dispose Rcon Player.
+        /// </summary>
         public void Dispose()
         {
             Network.Dispose();

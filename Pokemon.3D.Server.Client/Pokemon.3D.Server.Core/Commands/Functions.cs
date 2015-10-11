@@ -44,9 +44,8 @@ namespace Pokemon_3D_Server_Core.Commands
         /// </summary>
         /// <param name="Command">Command to check.</param>
         /// <param name="p">Package Data.</param>
-        /// <param name="ShowHelp">Should show help when return false?</param>
         /// <param name="ParamType">List of Paramenter.</param>
-        public static bool MatchRequiredParam(this ICommand Command, Package p, bool ShowHelp, params CommandParamType[] ParamType)
+        public static bool MatchRequiredParam(this ICommand Command, Package p, params CommandParamType[] ParamType)
         {
             string RegexFilter = "^" + Regex.Escape("/" + Command.Name);
 
@@ -74,10 +73,6 @@ namespace Pokemon_3D_Server_Core.Commands
             }
             else
             {
-                if (ShowHelp)
-                {
-                    Command.Help(0, Core.Player.GetPlayer(p.Client));
-                }
                 return false;
             }
         }
@@ -154,8 +149,8 @@ namespace Pokemon_3D_Server_Core.Commands
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
             Core.Logger.Add(Player.isGameJoltPlayer ?
-                Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
-                Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
+                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
+                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, Message2)
                 , Logger.LogTypes.Command, Player.Network.Client);
         }
 

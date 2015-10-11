@@ -1,10 +1,11 @@
-﻿using Pokemon_3D_Server_Core.Loggers;
+﻿using Pokemon_3D_Server_Core.Commands;
+using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Network;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Rcon.Players;
 using Pokemon_3D_Server_Core.Settings;
 using Pokemon_3D_Server_Core.Worlds;
-using Pokemon_3D_Server_Core.Rcon.Players;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -13,6 +14,11 @@ namespace Pokemon_3D_Server_Core
     /// </summary>
     public class Core
     {
+        /// <summary>
+        /// Get/Set Comamnd List.
+        /// </summary>
+        public static CommandCollection Command { get; set; } = new CommandCollection();
+
         /// <summary>
         /// Get/Set Logger.
         /// </summary>
