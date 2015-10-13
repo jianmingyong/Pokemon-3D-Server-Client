@@ -51,7 +51,7 @@ namespace Pokemon_3D_Server_Core.Commands
                 {
                     Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
 
-                    Core.Logger.Add(Core.World.ToString(), Logger.LogTypes.Info);
+                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
             #endregion /Global.Weather <id>

@@ -27,6 +27,7 @@
     <DocumentationFile>bin\Debug\Pokemon.3D.Server.Core.xml</DocumentationFile>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -36,6 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -61,41 +63,40 @@
     <Compile Include="Commands\Vanilla Commands\Restart.cs" />
     <Compile Include="Commands\Vanilla Commands\Stop.cs" />
     <Compile Include="Commands\Vanilla Commands\Kick.cs" />
-    <Compile Include="Common Functions\Functions.cs" />
-    <Compile Include="Common Functions\Math.cs" />
-    <Compile Include="Common Functions\MathHelper.cs" />
-    <Compile Include="Common Functions\PlayerStatus.cs" />
-    <Compile Include="Common vb.net Functions\My Namespace.cs" />
-    <Compile Include="Event Handler\ClientEvent.cs" />
-    <Compile Include="Event Handler\ClientEventArgs.cs" />
+    <Compile Include="Modules\Functions.cs" />
+    <Compile Include="Modules\Math.cs" />
+    <Compile Include="Modules\MathHelper.cs" />
+    <Compile Include="Modules\PlayerStatus.cs" />
+    <Compile Include="Modules\My Namespace.cs" />
+    <Compile Include="Events\ClientEvent.cs" />
     <Compile Include="Interface\ICommand.cs" />
-    <Compile Include="Logger\Logger.cs" />
-    <Compile Include="Logger\LoggerCollection.cs" />
+    <Compile Include="Loggers\Logger.cs" />
+    <Compile Include="Loggers\LoggerCollection.cs" />
     <Compile Include="Core.cs" />
-    <Compile Include="Package\Package.cs" />
-    <Compile Include="Package\PackageHandler.cs" />
-    <Compile Include="Player\Player.cs" />
-    <Compile Include="Player\PlayerCollection.cs" />
+    <Compile Include="Packages\Package.cs" />
+    <Compile Include="Packages\PackageHandler.cs" />
+    <Compile Include="Players\Player.cs" />
+    <Compile Include="Players\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RconPlayer\RconPlayer.cs" />
-    <Compile Include="RconPlayer\RconPlayerCollection.cs" />
-    <Compile Include="Server Client\Networking.cs" />
-    <Compile Include="Server Client\RconNetworking.cs" />
-    <Compile Include="Server Client\ServerClient.cs" />
-    <Compile Include="Settings\Data List\BlackList.cs" />
-    <Compile Include="Settings\Data List\CommonList.cs" />
-    <Compile Include="Settings\Data List\IPBlackList.cs" />
-    <Compile Include="Settings\Data List\MapFileList.cs" />
-    <Compile Include="Settings\Data List\MuteList.cs" />
-    <Compile Include="Settings\Data List\OnlineSetting.cs" />
-    <Compile Include="Settings\Data List\OperatorList.cs" />
-    <Compile Include="Settings\Data List\SwearInfractionFilterList.cs" />
-    <Compile Include="Settings\Data List\SwearInfractionList.cs" />
-    <Compile Include="Settings\Data List\WhiteList.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="World\SeasonMonth.cs" />
-    <Compile Include="World\WeatherSeason.cs" />
-    <Compile Include="World\World.cs" />
+    <Compile Include="Old Stuff\RconPlayer\RconPlayer.cs" />
+    <Compile Include="Old Stuff\RconPlayer\RconPlayerCollection.cs" />
+    <Compile Include="Players\Networking.cs" />
+    <Compile Include="Old Stuff\Server Client\RconNetworking.cs" />
+    <Compile Include="Settings\Data\MapFileList.cs" />
+    <Compile Include="Settings\Data\MuteList.cs" />
+    <Compile Include="Settings\Data\OnlineSetting.cs" />
+    <Compile Include="Settings\Data\OperatorList.cs" />
+    <Compile Include="Settings\Data\SwearInfractionFilterList.cs" />
+    <Compile Include="Settings\Data\SwearInfractionList.cs" />
+    <Compile Include="Settings\Data\WhiteList.cs" />
+    <Compile Include="Settings\Data\IPBlackList.cs" />
+    <Compile Include="Settings\Data\BlackList.cs" />
+    <Compile Include="Settings\Data\CommonData.cs" />
+    <Compile Include="Settings\Setting.cs" />
+    <Compile Include="Worlds\SeasonMonth.cs" />
+    <Compile Include="Worlds\WeatherSeason.cs" />
+    <Compile Include="Worlds\World.cs" />
+    <Compile Include="Servers\Listener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

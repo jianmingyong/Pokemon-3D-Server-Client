@@ -1,4 +1,4 @@
-﻿using Pokemon_3D_Server_Core.Event;
+﻿using Pokemon_3D_Server_Core.Events;
 using Pokemon_3D_Server_Core.Interface;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
@@ -38,11 +38,11 @@ namespace Pokemon_3D_Server_Core.Commands
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart);
+                    ClientEvent.Invoke(ClientEvent.Types.Restart, null);
                 }
                 else if (Player == null)
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart);
+                    ClientEvent.Invoke(ClientEvent.Types.Restart, null);
                 }
             }
             #endregion /Restart

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using Pokemon_3D_Server_Core;
-using Pokemon_3D_Server_Core.Event;
+using Pokemon_3D_Server_Core.Events;
 using Pokemon_3D_Server_Core.Modules;
 
 namespace Pokémon_3D_Server_Client
@@ -20,47 +20,24 @@ namespace Pokémon_3D_Server_Client
             // Add Handler
             ClientEvent.Update += ClientEvent_Update;
 
-            // Setup Settings.
-            Core.Setting.Setup();
-
-            // Setup Settings
-            Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
-            if (Core.Setting.Load())
-            {
-                Core.Setting.Save();
-            }
-            else
-            {
-                Core.Setting.Save();
-                Environment.Exit(0);
-            }
-
-            // Setup Server
-            Core.Server.Start();
+            Core.Start(Environment.CurrentDirectory);
 
             Console.Read();
         }
 
-        private static void ClientEvent_Update(object myObject, ClientEventArgs myArgs)
+        private static void ClientEvent_Update(ClientEvent.Types Type, object Args)
         {
             try
             {
-                if (myArgs.Type == ClientEvent.Types.Logger)
+                if (Type == ClientEvent.Types.Logger)
                 {
-                    Console.WriteLine(myArgs.Output);
-
-                    if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
-                    {
-                        Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
-                    }
-
-                    File.AppendAllText(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", myArgs.Output + Functions.vbNewLine);
+                    Console.WriteLine(Args);
                 }
-                else if (myArgs.Type == ClientEvent.Types.Restart)
+                else if (Type == ClientEvent.Types.Restart)
                 {
                     
                 }
-                else if (myArgs.Type == ClientEvent.Types.Stop)
+                else if (Type == ClientEvent.Types.Stop)
                 {
                     
                 }

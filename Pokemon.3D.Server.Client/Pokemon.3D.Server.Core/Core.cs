@@ -1,9 +1,11 @@
-﻿using Pokemon_3D_Server_Core.Commands;
+﻿using System;
+using Pokemon_3D_Server_Core.Commands;
 using Pokemon_3D_Server_Core.Loggers;
-using Pokemon_3D_Server_Core.Network;
+using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
 using Pokemon_3D_Server_Core.Players;
 using Pokemon_3D_Server_Core.Rcon.Players;
+using Pokemon_3D_Server_Core.Servers;
 using Pokemon_3D_Server_Core.Settings;
 using Pokemon_3D_Server_Core.Worlds;
 
@@ -15,19 +17,29 @@ namespace Pokemon_3D_Server_Core
     public class Core
     {
         /// <summary>
-        /// Get/Set Comamnd List.
+        /// Get Pokemon 3D Listener
         /// </summary>
-        public static CommandCollection Command { get; set; } = new CommandCollection();
+        public static Listener Listener { get; set; } = new Listener();
 
         /// <summary>
-        /// Get/Set Logger.
+        /// Get Logger.
         /// </summary>
         public static LoggerCollection Logger { get; set; } = new LoggerCollection();
 
         /// <summary>
-        /// Get/Set Server.
+        /// Get Setting.
         /// </summary>
-        public static ServerClient Server { get; set; } = new ServerClient();
+        public static Setting Setting { get; set; } = new Setting();
+
+        /// <summary>
+        /// Get Player Collection.
+        /// </summary>
+        public static PlayerCollection Player { get; set; } = new PlayerCollection();
+
+        /// <summary>
+        /// Get/Set Comamnd List.
+        /// </summary>
+        public static CommandCollection Command { get; set; } = new CommandCollection();
 
         /// <summary>
         /// Get/Set Package Handler.
@@ -35,9 +47,9 @@ namespace Pokemon_3D_Server_Core
         public static PackageHandler Package { get; set; } = new PackageHandler();
 
         /// <summary>
-        /// Get/Set Player Collection.
+        /// Get/Set World.
         /// </summary>
-        public static PlayerCollection Player { get; set; } = new PlayerCollection();
+        public static World World { get; set; } = new World();
 
         /// <summary>
         /// Get/Set Rcon Player Collection.
@@ -45,13 +57,48 @@ namespace Pokemon_3D_Server_Core
         public static RconPlayerCollection RconPlayer { get; set; } = new RconPlayerCollection();
 
         /// <summary>
-        /// Get/Set Setting.
+        /// Server Main Entry Point - Initialize as many things as possible here.
         /// </summary>
-        public static Setting Setting { get; set; } = new Setting();
+        public static void Start(string Directory)
+        {
+            try
+            {
+                // Initialize Logger.
+                Logger.Start();
+
+                // Initialize Setting.
+                Setting.ApplicationDirectory = Directory;
+                Setting.Setup();
+
+                if (Setting.Load())
+                {
+                    Setting.Save();
+                }
+                else
+                {
+                    Setting.Save();
+                    Environment.Exit(0);
+                    return;
+                }
+
+                // Initialize Listener.
+                Listener.Start();
+
+                // Initialize Command.
+                Command.AddCommand();
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
 
         /// <summary>
-        /// Get/Set World.
+        /// Dispose All Server Client Objects.
         /// </summary>
-        public static World World { get; set; } = new World();
+        public static void Dispose()
+        {
+            
+        }
     }
 }

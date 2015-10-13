@@ -41,15 +41,15 @@ namespace Pokemon_3D_Server_Core.Commands
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
 
                     Player.CommandFeedback(Group[0], string.Format("have sent a server chat."));
                 }
                 else if (Player == null)
                 {
-                    Core.Server.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
 
-                    Core.Logger.Add(Group[0], Logger.LogTypes.Server);
+                    Core.Logger.Log(Group[0], Logger.LogTypes.Server);
                 }
             }
             #endregion /Say <Message>

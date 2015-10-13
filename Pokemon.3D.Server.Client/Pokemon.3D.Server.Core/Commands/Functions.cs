@@ -90,8 +90,8 @@ namespace Pokemon_3D_Server_Core.Commands
             }
             else
             {
-                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_COMMANDPERMISSION"), Player.Network.Client));
-                Core.Logger.Add(Player.isGameJoltPlayer ?
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_COMMANDPERMISSION"), Player.Network.Client));
+                Core.Logger.Log(Player.isGameJoltPlayer ?
                         Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to use /" + Command.Name + " due to insufficient permission.") :
                         Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to use /" + Command.Name + " due to insufficient permission."), Logger.LogTypes.Command, Player.Network.Client);
                 return false;
@@ -142,13 +142,13 @@ namespace Pokemon_3D_Server_Core.Commands
         /// <param name="Message2">Message to feedback to the other operator.</param>
         public static void CommandFeedback(this Player Player, string Message, string Message2)
         {
-            Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
+            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
 
-            Core.Server.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+            Core.Player.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
-            Core.Logger.Add(Player.isGameJoltPlayer ?
+            Core.Logger.Log(Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, Message2)
                 , Logger.LogTypes.Command, Player.Network.Client);
@@ -166,14 +166,14 @@ namespace Pokemon_3D_Server_Core.Commands
             {
                 for (int i = 0; i < Message.Length; i++)
                 {
-                    Core.Server.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
                 }
             }
             else
             {
                 for (int i = 0; i < Message.Length; i++)
                 {
-                    Core.Logger.Add(Message[i], Logger.LogTypes.Info);
+                    Core.Logger.Log(Message[i], Logger.LogTypes.Info);
                 }
             }
         }

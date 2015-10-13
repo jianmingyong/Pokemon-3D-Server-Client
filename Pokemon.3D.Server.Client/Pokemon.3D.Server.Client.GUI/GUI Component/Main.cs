@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
-using Pokemon_3D_Server_Core.Event;
+using Pokemon_3D_Server_Core.Events;
 using Pokemon_3D_Server_Core.Loggers;
 using Pokemon_3D_Server_Core.Modules;
 using Pokemon_3D_Server_Core.Packages;
@@ -17,7 +17,7 @@ namespace Pokemon_3D_Server_Client_GUI
     /// </summary>
     public partial class Main : Form
     {
-        private delegate void ClientEvent_Safe(object myObject, ClientEventArgs myArgs);
+        private delegate void ClientEvent_Safe(ClientEvent.Types Type, object Args);
         private delegate void UpdatePlayerList_Safe(object myObject);
 
         private bool ApplicationRestart = false;
@@ -36,25 +36,7 @@ namespace Pokemon_3D_Server_Client_GUI
             // Add Handler
             ClientEvent.Update += ClientEvent_Update;
 
-            // Setup
-            Core.Setting.ApplicationDirectory = Environment.CurrentDirectory;
-            Core.Logger.Setup();
-            Core.Setting.Setup();
-
-            // Setup Settings
-            if (Core.Setting.Load())
-            {
-                Core.Setting.Save();
-            }
-            else
-            {
-                Core.Setting.Save();
-                Environment.Exit(0);
-            }
-
-            // Setup Server
-            Core.Setting.NoPingKickTime = 15;
-            Core.Server.Start();
+            Core.Start(Environment.CurrentDirectory);
 
             // UpdatePlayerList
             System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 10);
@@ -65,12 +47,12 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             for (int i = 0; i < Core.Player.Count; i++)
             {
-                Core.Server.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client),false);
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
             }
-            Core.Server.Stop(true);
+            Core.Listener.Dispose();
             Core.Setting.Save();
 
-            Core.Logger.Add("Main.cs: Application closed successfully!", Logger.LogTypes.Info);
+            Core.Logger.Log("Application closed successfully!", Logger.LogTypes.Info);
 
             if (ApplicationRestart)
             {
@@ -79,31 +61,31 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
-        private void ClientEvent_Update(object myObject, ClientEventArgs myArgs)
+        private void ClientEvent_Update(ClientEvent.Types Type, object Args)
         {
             try
             {
                 if (Main_Logger.InvokeRequired)
                 {
-                    BeginInvoke(new ClientEvent_Safe(ClientEvent_Update), myObject, myArgs);
+                    BeginInvoke(new ClientEvent_Safe(ClientEvent_Update), Type, Args);
                 }
                 else
                 {
-                    if (myArgs.Type == ClientEvent.Types.Logger)
+                    if (Type == ClientEvent.Types.Logger)
                     {
-                        Main_Logger.AppendText(myArgs.Output + Functions.vbNewLine);
+                        Main_Logger.AppendText(Args + Functions.vbNewLine);
 
                         if (Main_Logger.Lines.Length > 1000)
                         {
                             Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
                         }
                     }
-                    else if (myArgs.Type == ClientEvent.Types.Restart)
+                    else if (Type == ClientEvent.Types.Restart)
                     {
                         ApplicationRestart = true;
                         Application.Exit();
                     }
-                    else if (myArgs.Type == ClientEvent.Types.Stop)
+                    else if (Type == ClientEvent.Types.Stop)
                     {
                         ApplicationRestart = false;
                         Application.Exit();
@@ -149,7 +131,7 @@ namespace Pokemon_3D_Server_Client_GUI
             {
                 if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
                 {
-                    PackageHandler.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    Core.Package.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
                 }
                 Main_Command.Clear();
             }
