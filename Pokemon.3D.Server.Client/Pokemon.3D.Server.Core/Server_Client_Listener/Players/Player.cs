@@ -294,6 +294,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             Player,
 
             /// <summary>
+            /// GameJolt Player
+            /// </summary>
+            GameJoltPlayer,
+
+            /// <summary>
             /// Player with Chat Moderator ability
             /// </summary>
             ChatModerator,

@@ -41,9 +41,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,8 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Player_Season.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\About.cs" />
     <Compile Include="Server_Client_Listener\Commands\Functions.cs" />
-    <Compile Include="Server_Client_Listener\Commands\Data\Season.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Global_Season.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Weather.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Say.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Restart.cs" />
@@ -100,9 +102,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="packages\Newtonsoft.Json.7.0.1\Newtonsoft.Json.7.0.1.nupkg" />
+    <None Include="packages\Newtonsoft.Json.7.0.1\tools\install.ps1" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Rcon_Client_Listener\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net35\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net35\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net40\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\portable-net45+wp80+win8+wpa81+dnxcore50\Newtonsoft.Json.dll" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\lib\portable-net45+wp80+win8+wpa81+dnxcore50\Newtonsoft.Json.xml" />
+    <Content Include="packages\Newtonsoft.Json.7.0.1\[Content_Types].xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

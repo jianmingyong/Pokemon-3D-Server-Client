@@ -84,7 +84,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         /// <param name="Player">Player.</param>
         public static bool MatchRequiredPermission(this ICommand Command, Player Player)
         {
-            if (Command.RequiredPermission == Player.OperatorTypes.Player || Player.GameJoltID == 116016 || Player.GameJoltID == 222452 || (Player.GetOperatorList() != null && Player.GetOperatorList().OperatorLevel >= (int)Command.RequiredPermission))
+            if (Command.RequiredPermission == Player.OperatorTypes.Player || (Command.RequiredPermission == Player.OperatorTypes.GameJoltPlayer && Player.isGameJoltPlayer) || (Player.GetOperatorList() != null && Player.GetOperatorList().OperatorLevel >= (int)Command.RequiredPermission))
             {
                 return true;
             }

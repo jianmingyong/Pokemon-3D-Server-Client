@@ -1,31 +1,29 @@
-﻿using System.Collections.Generic;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 {
     /// <summary>
-    /// Class containing Season Function.
+    /// Class containing About Function.
     /// </summary>
-    public class Season : ICommand
+    public class About : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Global.Season";
+        public string Name { get; } = "About";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the Global Season.";
+        public string Description { get; } = "Display Server Client Info.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Player;
 
         /// <summary>
         /// Handle the Package data.
@@ -35,26 +33,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Global.Season <id>
-
-            if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
+            #region /About
+            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
-
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
-                    
-                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Season."));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, "This server is created by jianmingyong.", Player.Network.Client));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, "It is running v" + Core.Setting.ApplicationVersion, Player.Network.Client));
                 }
                 else if (Player == null)
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
-
-                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
+                    Core.Logger.Log("This server is created by jianmingyong.", Logger.LogTypes.Info);
+                    Core.Logger.Log("It is running v" + Core.Setting.ApplicationVersion, Logger.LogTypes.Info);
                 }
             }
-            #endregion /Global.Season <id>
+            #endregion /About
         }
 
         /// <summary>
@@ -69,10 +62,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Global.Season [ID]"),
-                        string.Format("-------------------------------------"),
-                        string.Format("ID: Season ID."),
-                        string.Format("Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"),
+                        string.Format("Usage: /About"),
                         string.Format("-------------------------------------"),
                         string.Format("Description: {0}", Description),
                         string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))

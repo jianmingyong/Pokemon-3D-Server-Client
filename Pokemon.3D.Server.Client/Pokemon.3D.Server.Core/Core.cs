@@ -19,42 +19,42 @@ namespace Pokemon_3D_Server_Core
         /// <summary>
         /// Get Pokemon 3D Listener
         /// </summary>
-        public static Listener Listener { get; set; } = new Listener();
+        public static Listener Listener { get; } = new Listener();
 
         /// <summary>
         /// Get Logger.
         /// </summary>
-        public static LoggerCollection Logger { get; set; } = new LoggerCollection();
+        public static LoggerCollection Logger { get; } = new LoggerCollection();
 
         /// <summary>
         /// Get Setting.
         /// </summary>
-        public static Setting Setting { get; set; } = new Setting();
+        public static Setting Setting { get; } = new Setting();
 
         /// <summary>
         /// Get Player Collection.
         /// </summary>
-        public static PlayerCollection Player { get; set; } = new PlayerCollection();
+        public static PlayerCollection Player { get; } = new PlayerCollection();
 
         /// <summary>
-        /// Get/Set Comamnd List.
+        /// Get Comamnd List.
         /// </summary>
-        public static CommandCollection Command { get; set; } = new CommandCollection();
+        public static CommandCollection Command { get; } = new CommandCollection();
 
         /// <summary>
-        /// Get/Set Package Handler.
+        /// Get Package Handler.
         /// </summary>
-        public static PackageHandler Package { get; set; } = new PackageHandler();
+        public static PackageHandler Package { get; } = new PackageHandler();
 
         /// <summary>
-        /// Get/Set World.
+        /// Get World.
         /// </summary>
-        public static World World { get; set; } = new World();
+        public static World World { get; } = new World();
 
         /// <summary>
-        /// Get/Set Rcon Player Collection.
+        /// Get Rcon Player Collection.
         /// </summary>
-        public static RconPlayerCollection RconPlayer { get; set; } = new RconPlayerCollection();
+        public static RconPlayerCollection RconPlayer { get; } = new RconPlayerCollection();
 
         /// <summary>
         /// Server Main Entry Point - Initialize as many things as possible here.

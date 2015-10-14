@@ -8,24 +8,24 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 {
     /// <summary>
-    /// Class containing Weather Function.
+    /// Class containing Season Function.
     /// </summary>
-    public class Weather : ICommand
+    public class Player_Season : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Global.Weather";
+        public string Name { get; } = "Player.Season";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the global weather.";
+        public string Description { get; } = "Change the player season.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Player;
 
         /// <summary>
         /// Handle the Package data.
@@ -35,26 +35,26 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Global.Weather <id>
+            #region /Player.Season <id>
 
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
 
-                if (Player != null && this.MatchRequiredPermission(Player))
+                if (Player != null && this.MatchRequiredPermission(Player) && Player.isGameJoltPlayer)
                 {
-                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
                     
-                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Weather."));
+                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Player Season."));
                 }
                 else if (Player == null)
                 {
-                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
 
                     Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /Global.Weather <id>
+            #endregion /Player.Season <id>
         }
 
         /// <summary>
@@ -69,10 +69,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Global.Weather [ID]"),
+                        string.Format("Usage: /Global.Season [ID]"),
                         string.Format("-------------------------------------"),
-                        string.Format("ID: Weather ID."),
-                        string.Format("Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4"),
+                        string.Format("ID: Season ID."),
+                        string.Format("Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"),
                         string.Format("-------------------------------------"),
                         string.Format("Description: {0}", Description),
                         string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
