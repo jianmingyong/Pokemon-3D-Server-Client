@@ -55,53 +55,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandCollection.cs" />
-    <Compile Include="Commands\Functions.cs" />
-    <Compile Include="Commands\Vanilla Commands\Season.cs" />
-    <Compile Include="Commands\Vanilla Commands\Weather.cs" />
-    <Compile Include="Commands\Vanilla Commands\Say.cs" />
-    <Compile Include="Commands\Vanilla Commands\Restart.cs" />
-    <Compile Include="Commands\Vanilla Commands\Stop.cs" />
-    <Compile Include="Commands\Vanilla Commands\Kick.cs" />
-    <Compile Include="Modules\Functions.cs" />
-    <Compile Include="Modules\Math.cs" />
-    <Compile Include="Modules\MathHelper.cs" />
-    <Compile Include="Modules\PlayerStatus.cs" />
-    <Compile Include="Modules\My Namespace.cs" />
-    <Compile Include="Events\ClientEvent.cs" />
-    <Compile Include="Interface\ICommand.cs" />
-    <Compile Include="Loggers\Logger.cs" />
-    <Compile Include="Loggers\LoggerCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Functions.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Season.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Weather.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Say.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Restart.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Stop.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Kick.cs" />
+    <Compile Include="Server_Client_Listener\Modules\Functions.cs" />
+    <Compile Include="Server_Client_Listener\Modules\Math.cs" />
+    <Compile Include="Server_Client_Listener\Modules\MathHelper.cs" />
+    <Compile Include="Server_Client_Listener\Modules\PlayerStatus.cs" />
+    <Compile Include="Server_Client_Listener\Modules\My Namespace.cs" />
+    <Compile Include="Server_Client_Listener\Events\ClientEvent.cs" />
+    <Compile Include="Server_Client_Listener\Interface\ICommand.cs" />
+    <Compile Include="Server_Client_Listener\Loggers\Logger.cs" />
+    <Compile Include="Server_Client_Listener\Loggers\LoggerCollection.cs" />
     <Compile Include="Core.cs" />
-    <Compile Include="Packages\Package.cs" />
-    <Compile Include="Packages\PackageHandler.cs" />
-    <Compile Include="Players\Player.cs" />
-    <Compile Include="Players\PlayerCollection.cs" />
+    <Compile Include="Server_Client_Listener\Packages\Package.cs" />
+    <Compile Include="Server_Client_Listener\Packages\PackageHandler.cs" />
+    <Compile Include="Server_Client_Listener\Players\Player.cs" />
+    <Compile Include="Server_Client_Listener\Players\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Old Stuff\RconPlayer\RconPlayer.cs" />
-    <Compile Include="Old Stuff\RconPlayer\RconPlayerCollection.cs" />
-    <Compile Include="Players\Networking.cs" />
-    <Compile Include="Old Stuff\Server Client\RconNetworking.cs" />
-    <Compile Include="Settings\Data\MapFileList.cs" />
-    <Compile Include="Settings\Data\MuteList.cs" />
-    <Compile Include="Settings\Data\OnlineSetting.cs" />
-    <Compile Include="Settings\Data\OperatorList.cs" />
-    <Compile Include="Settings\Data\SwearInfractionFilterList.cs" />
-    <Compile Include="Settings\Data\SwearInfractionList.cs" />
-    <Compile Include="Settings\Data\WhiteList.cs" />
-    <Compile Include="Settings\Data\IPBlackList.cs" />
-    <Compile Include="Settings\Data\BlackList.cs" />
-    <Compile Include="Settings\Data\CommonData.cs" />
-    <Compile Include="Settings\Setting.cs" />
-    <Compile Include="Worlds\SeasonMonth.cs" />
-    <Compile Include="Worlds\WeatherSeason.cs" />
-    <Compile Include="Worlds\World.cs" />
-    <Compile Include="Servers\Listener.cs" />
+    <Compile Include="Server_Client_Listener\Old Stuff\RconPlayer\RconPlayer.cs" />
+    <Compile Include="Server_Client_Listener\Old Stuff\RconPlayer\RconPlayerCollection.cs" />
+    <Compile Include="Server_Client_Listener\Players\Networking.cs" />
+    <Compile Include="Server_Client_Listener\Old Stuff\Server Client\RconNetworking.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\MapFileList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\MuteList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\OnlineSetting.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\OperatorList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\SwearInfractionFilterList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\SwearInfractionList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\WhiteList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\IPBlackList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\BlackList.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Data\CommonData.cs" />
+    <Compile Include="Server_Client_Listener\Settings\Setting.cs" />
+    <Compile Include="Server_Client_Listener\Worlds\SeasonMonth.cs" />
+    <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
+    <Compile Include="Server_Client_Listener\Worlds\World.cs" />
+    <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Rcon_Client_Listener\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
