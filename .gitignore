@@ -148,6 +148,9 @@ publish/
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
 #!**/packages/repositories.config
+# Needed Stuff
+!**/Packages/Package.cs
+!**/Packages/PackageHandler.cs
 
 # Windows Azure Build Output
 csx/
