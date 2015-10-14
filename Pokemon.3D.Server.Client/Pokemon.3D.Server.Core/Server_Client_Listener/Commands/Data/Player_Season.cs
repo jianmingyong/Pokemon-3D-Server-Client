@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 {
@@ -43,7 +45,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player) && Player.isGameJoltPlayer)
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    OnlineSetting Settings = Player.GetOnlineSetting();
+                    Settings.Season = Group[0].Toint().RollOver(-4, 3);
+                    Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
+                    Settings.LastWorldUpdate = DateTime.Now;
                     
                     Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Player Season."));
                 }

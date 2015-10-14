@@ -614,5 +614,15 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
         {
             return string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString());
         }
+
+        /// <summary>
+        /// Get current World with custom season and weather.
+        /// </summary>
+        /// <param name="Season">Season.</param>
+        /// <param name="Weather">Weather.</param>
+        public string ToString(int Season, int Weather)
+        {
+            return string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString());
+        }
     }
 }

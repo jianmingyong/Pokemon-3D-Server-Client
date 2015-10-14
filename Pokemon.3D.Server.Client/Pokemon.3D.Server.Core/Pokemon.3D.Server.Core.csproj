@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Rcon_Client_Listener\" />
+    <Folder Include="Updater\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages\Newtonsoft.Json.7.0.1\lib\net20\Newtonsoft.Json.dll" />
