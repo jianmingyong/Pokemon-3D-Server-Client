@@ -1,13 +1,13 @@
 ﻿using System;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using Pokemon_3D_Server_Core.Commands;
+using Pokemon_3D_Server_Core.Loggers;
+using Pokemon_3D_Server_Core.Modules;
+using Pokemon_3D_Server_Core.Packages;
+using Pokemon_3D_Server_Core.Players;
+using Pokemon_3D_Server_Core.Rcon.Players;
+using Pokemon_3D_Server_Core.Servers;
+using Pokemon_3D_Server_Core.Settings;
+using Pokemon_3D_Server_Core.Worlds;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -80,8 +80,6 @@ namespace Pokemon_3D_Server_Core
                     Environment.Exit(0);
                     return;
                 }
-
-                Setting.NoPingKickTime = 20;
 
                 // Initialize Listener.
                 Listener.Start();

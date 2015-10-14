@@ -1,7 +1,8 @@
 ﻿using System;
+using System.IO;
 using Pokemon_3D_Server_Core;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Events;
+using Pokemon_3D_Server_Core.Modules;
 
 namespace Pokémon_3D_Server_Client
 {
