@@ -64,6 +64,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         public enum PackageTypes
         {
             /// <summary>
+            /// Package Type: RCON Kick
+            /// <para>Set: {Origin = -1 | DataItem[0] = Reason}</para>
+            /// </summary>
+            RCON_KICKED = -6,
+
+            /// <summary>
             /// Package Type: RCON Command
             /// <para>Get: {Origin = ID | DataItem[0] = Command}</para>
             /// </summary>

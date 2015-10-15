@@ -4,7 +4,6 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
@@ -37,6 +36,11 @@ namespace Pokemon_3D_Server_Core
         public static PlayerCollection Player { get; } = new PlayerCollection();
 
         /// <summary>
+        /// Get Rcon Player Collection.
+        /// </summary>
+        public static Server_Client_Listener.Rcon.Players.PlayerCollection RconPlayer { get; } = new Server_Client_Listener.Rcon.Players.PlayerCollection();
+
+        /// <summary>
         /// Get Comamnd List.
         /// </summary>
         public static CommandCollection Command { get; } = new CommandCollection();
@@ -50,11 +54,6 @@ namespace Pokemon_3D_Server_Core
         /// Get World.
         /// </summary>
         public static World World { get; } = new World();
-
-        /// <summary>
-        /// Get Rcon Player Collection.
-        /// </summary>
-        public static RconPlayerCollection RconPlayer { get; } = new RconPlayerCollection();
 
         /// <summary>
         /// Server Main Entry Point - Initialize as many things as possible here.

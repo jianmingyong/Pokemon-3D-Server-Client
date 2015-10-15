@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 {
@@ -647,18 +646,18 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             if (p.DataItems[0] == CorrectMD5HashPassword && p.DataItems[1] == CorrectSha1HashPassword && p.DataItems[2] == CorrectSha256HashPassword)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "1", p.Client));
+                Core.RconPlayer.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "1", p.Client));
                 Core.RconPlayer.Add(p);
             }
             else
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "0", p.Client));
+                Core.RconPlayer.SentToPlayer(new Package(Package.PackageTypes.RCON_Authentication, "0", p.Client));
             }
         }
 
         private void HandleRCON_Ping(Package p)
         {
-            RconPlayer Player = Core.RconPlayer.GetPlayer(p.Client);
+            Rcon.Players.Player Player = Core.RconPlayer.GetPlayer(p.Client);
             Player.Network.LastValidPing = DateTime.Now;
         }
 

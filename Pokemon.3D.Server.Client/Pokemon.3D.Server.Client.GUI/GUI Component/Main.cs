@@ -135,5 +135,11 @@ namespace Pokemon_3D_Server_Client_GUI
                 Main_Command.Clear();
             }
         }
+
+        private void About_Button_Click(object sender, EventArgs e)
+        {
+            About About = new About();
+            About.Show();
+        }
     }
 }

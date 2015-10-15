@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -35,7 +36,15 @@
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripDropDownButton2 = new System.Windows.Forms.ToolStripDropDownButton();
             this.applicationSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.About_Button = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.Rcon_IPAddress = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
+            this.Rcon_Password = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.Rcon_Connect = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Main_PlayerOnline = new System.Windows.Forms.GroupBox();
             this.Main_CurrentPlayerOnline = new System.Windows.Forms.ListBox();
@@ -62,7 +71,15 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripDropDownButton2,
-            this.toolStripButton1});
+            this.About_Button,
+            this.toolStripSeparator1,
+            this.toolStripLabel1,
+            this.Rcon_IPAddress,
+            this.toolStripSeparator2,
+            this.toolStripLabel2,
+            this.Rcon_Password,
+            this.toolStripSeparator3,
+            this.Rcon_Connect});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1123, 27);
@@ -85,21 +102,21 @@
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
             this.startToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F1)));
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.startToolStripMenuItem.Text = "Start";
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
             this.stopToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F2)));
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.stopToolStripMenuItem.Text = "Stop";
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // toolStripDropDownButton2
@@ -118,13 +135,60 @@
             this.applicationSettingsToolStripMenuItem.Size = new System.Drawing.Size(218, 26);
             this.applicationSettingsToolStripMenuItem.Text = "Application Settings";
             // 
-            // toolStripButton1
+            // About_Button
             // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(54, 24);
-            this.toolStripButton1.Text = "About";
+            this.About_Button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.About_Button.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.About_Button.Name = "About_Button";
+            this.About_Button.Size = new System.Drawing.Size(54, 24);
+            this.About_Button.Text = "About";
+            this.About_Button.Click += new System.EventHandler(this.About_Button_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 27);
+            // 
+            // toolStripLabel1
+            // 
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(77, 24);
+            this.toolStripLabel1.Text = "IPAddress:";
+            // 
+            // Rcon_IPAddress
+            // 
+            this.Rcon_IPAddress.Name = "Rcon_IPAddress";
+            this.Rcon_IPAddress.Size = new System.Drawing.Size(200, 27);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(78, 24);
+            this.toolStripLabel2.Text = "Password: ";
+            // 
+            // Rcon_Password
+            // 
+            this.Rcon_Password.Name = "Rcon_Password";
+            this.Rcon_Password.Size = new System.Drawing.Size(150, 27);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
+            // 
+            // Rcon_Connect
+            // 
+            this.Rcon_Connect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.Rcon_Connect.Image = ((System.Drawing.Image)(resources.GetObject("Rcon_Connect.Image")));
+            this.Rcon_Connect.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Rcon_Connect.Name = "Rcon_Connect";
+            this.Rcon_Connect.Size = new System.Drawing.Size(167, 24);
+            this.Rcon_Connect.Text = "Connect to Rcon Server";
             // 
             // splitContainer1
             // 
@@ -259,7 +323,7 @@
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton2;
         private System.Windows.Forms.ToolStripMenuItem applicationSettingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton About_Button;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.GroupBox Main_PlayerOnline;
         private System.Windows.Forms.ListBox Main_CurrentPlayerOnline;
@@ -267,6 +331,14 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.TextBox Main_Command;
         private System.Windows.Forms.RichTextBox Main_Logger;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.ToolStripTextBox Rcon_IPAddress;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripTextBox Rcon_Password;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripButton Rcon_Connect;
     }
 }
 

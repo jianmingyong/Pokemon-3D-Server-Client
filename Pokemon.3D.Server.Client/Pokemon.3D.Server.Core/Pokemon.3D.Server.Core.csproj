@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rcon_Client_Listener\Servers\Listener.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Player_Season.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\About.cs" />
@@ -80,10 +81,10 @@
     <Compile Include="Server_Client_Listener\Players\Player.cs" />
     <Compile Include="Server_Client_Listener\Players\PlayerCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server_Client_Listener\Old Stuff\RconPlayer\RconPlayer.cs" />
-    <Compile Include="Server_Client_Listener\Old Stuff\RconPlayer\RconPlayerCollection.cs" />
+    <Compile Include="Server_Client_Listener\Rcon\Players\Networking.cs" />
+    <Compile Include="Server_Client_Listener\Rcon\Players\Player.cs" />
+    <Compile Include="Server_Client_Listener\Rcon\Players\PlayerCollection.cs" />
     <Compile Include="Server_Client_Listener\Players\Networking.cs" />
-    <Compile Include="Server_Client_Listener\Old Stuff\Server Client\RconNetworking.cs" />
     <Compile Include="Server_Client_Listener\Settings\Data\MapFileList.cs" />
     <Compile Include="Server_Client_Listener\Settings\Data\MuteList.cs" />
     <Compile Include="Server_Client_Listener\Settings\Data\OnlineSetting.cs" />
@@ -106,7 +107,6 @@
     <None Include="packages\Newtonsoft.Json.7.0.1\tools\install.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Rcon_Client_Listener\" />
     <Folder Include="Updater\" />
   </ItemGroup>
   <ItemGroup>

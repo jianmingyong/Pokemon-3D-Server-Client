@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Network;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players
 {
     /// <summary>
     /// Class containing Rcon Player Data
     /// </summary>
-    public class RconPlayer : IDisposable
+    public class Player : IDisposable
     {
         /// <summary>
         /// Get/Set Rcon Player ID
@@ -17,24 +14,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players
         public int ID { get; set; }
 
         /// <summary>
-        /// Get/Set List of Players data.
-        /// </summary>
-        public List<Player> Player { get; set; } = new List<Player>();
-
-        /// <summary>
         /// Get/Set Rcon Neteork.
         /// </summary>
-        public RconNetworking Network { get; set; }
+        public Networking Network { get; set; }
 
         /// <summary>
         /// New Rcon Player
         /// </summary>
         /// <param name="p">Package Data</param>
         /// <param name="ID">ID.</param>
-        public RconPlayer(Package p, int ID)
+        public Player(Package p, int ID)
         {
             this.ID = ID;
-            Network = new RconNetworking(p.Client);
+            Network = new Networking(p.Client);
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
         }

@@ -6,7 +6,7 @@ using System.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players
 {
     /// <summary>
     /// Class containing Networking
@@ -30,19 +30,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public TcpClient Client { get; set; }
 
         /// <summary>
-        /// Get/Set Player Last Valid Ping
+        /// Get/Set Rcon Player Last Valid Ping
         /// </summary>
         public DateTime LastValidPing { get; set; }
-
-        /// <summary>
-        /// Get/Set Player Last Valid Movement
-        /// </summary>
-        public DateTime LastValidMovement { get; set; }
-
-        /// <summary>
-        /// Get Player Login StartTime
-        /// </summary>
-        public DateTime LoginStartTime { get; } = DateTime.Now;
 
         /// <summary>
         /// Get/Set Network IsActive.
@@ -63,7 +53,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             this.Client = Client;
 
             LastValidPing = DateTime.Now;
-            LastValidMovement = DateTime.Now;
 
             Timer Timer1 = new Timer(new TimerCallback(ThreadStartPinging), null, 0, 1000);
             TimerCollection.Add(Timer1);
@@ -105,7 +94,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 else if (string.IsNullOrWhiteSpace((string)ReturnMessage) && IsActive)
                 {
                     IsActive = false;
-                    Core.Player.Remove(Client, "You have left the game.");
+                    Core.RconPlayer.Remove(Client, "You have closed the connection to the server.");
                 }
             }
         }
@@ -118,30 +107,15 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 {
                     if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
                     {
-                        Core.Player.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
+                        Core.RconPlayer.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
                         return;
                     }
-                }
-
-                if (Core.Setting.AFKKickTime >= 10)
-                {
-                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
-                    {
-                        Core.Player.Remove(Client, Core.Setting.Token("SERVER_AFK"));
-                        return;
-                    }
-                }
-
-                if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
-                {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
-                    LastHourCheck++;
                 }
             }
         }
 
         /// <summary>
-        /// Sent the package to the player.
+        /// Sent the package to the rcon player.
         /// </summary>
         /// <param name="p">Package</param>
         public void SentToPlayer(Package p)

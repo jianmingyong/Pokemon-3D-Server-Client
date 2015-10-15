@@ -68,29 +68,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                         TimerCollection.Add(Timer3);
                     }
 
-                    if (Core.Setting.OfflineMode)
-                    {
-                        Core.Logger.Log("Players with offline profile can join the server.", Logger.LogTypes.Info);
-                    }
-
-                    string GameMode = null;
-                    for (int i = 0; i < Core.Setting.GameMode.Count; i++)
-                    {
-                        GameMode += Core.Setting.GameMode[i] + ", ";
-                    }
-                    GameMode = GameMode.Remove(GameMode.LastIndexOf(","));
-
-                    if (Functions.CheckPortOpen())
-                    {
-                        Core.Logger.Log(string.Format(@"Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
-                    }
-                    else
-                    {
-                        Core.Logger.Log(string.Format(@"The specific port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
-                        Core.Logger.Log(string.Format(@"Server started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
-                    }
-
-                    Core.Logger.Log("Pokemon 3D Listener initialized.", Logger.LogTypes.Info);
+                    Core.Logger.Log("Pokemon 3D Listener initializing...", Logger.LogTypes.Info);
                 }
             }
             catch (Exception ex)
@@ -171,6 +149,30 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
         private void ThreadStartListening()
         {
+            if (Core.Setting.OfflineMode)
+            {
+                Core.Logger.Log("Players with offline profile can join the server.", Logger.LogTypes.Info);
+            }
+
+            string GameMode = null;
+            for (int i = 0; i < Core.Setting.GameMode.Count; i++)
+            {
+                GameMode += Core.Setting.GameMode[i] + ", ";
+            }
+            GameMode = GameMode.Remove(GameMode.LastIndexOf(","));
+
+            if (Functions.CheckPortOpen())
+            {
+                Core.Logger.Log(string.Format(@"Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+            }
+            else
+            {
+                Core.Logger.Log(string.Format(@"The specific port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
+                Core.Logger.Log(string.Format(@"Server started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+            }
+
+            Core.Logger.Log("Pokemon 3D Listener initialized.", Logger.LogTypes.Info);
+
             do
             {
                 try
