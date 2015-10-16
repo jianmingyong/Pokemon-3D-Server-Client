@@ -19,8 +19,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Rcon.Players
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
         private List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
-        private int LastHourCheck = 0;
-
         private static readonly object Lock = new object();
         private static readonly object Lock1 = new object();
 

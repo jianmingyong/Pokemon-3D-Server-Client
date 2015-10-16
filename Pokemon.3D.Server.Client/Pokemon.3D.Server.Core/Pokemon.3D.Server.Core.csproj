@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Rcon_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="Rcon_Client_Listener\Tokens\Login.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Player_Season.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\About.cs" />

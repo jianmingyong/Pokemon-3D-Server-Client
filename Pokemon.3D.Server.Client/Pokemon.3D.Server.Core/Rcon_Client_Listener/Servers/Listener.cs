@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using Pokemon_3D_Server_Core.Rcon_Client_Listener.Tokens;
 
 namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
 {
@@ -31,7 +30,7 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
         /// <summary>
         /// Start the Listener.
         /// </summary>
-        public void Start(string IPAddress)
+        public void Start(Login Tokens)
         {
             try
             {
@@ -43,11 +42,11 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
                 }
                 else
                 {
-                    Client = new TcpClient(IPAddress, Core.Setting.Port);
+                    Client = new TcpClient(Tokens.IPAddress, Core.Setting.Port);
 
                     // Threading
                     Thread Thread = new Thread(new ParameterizedThreadStart(ThreadStartListening)) { IsBackground = true };
-                    Thread.Start(IPAddress);
+                    Thread.Start(Tokens);
                     ThreadCollection.Add(Thread);
 
                     Core.Logger.Log("Pokemon 3D Rcon Listener initialized.", Logger.LogTypes.Info);
@@ -57,7 +56,7 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
             {
                 ex.CatchError();
                 Stop();
-            }  
+            }
         }
 
         /// <summary>
@@ -74,6 +73,7 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
 
             if (Client != null) Client.Close();
             if (Reader != null) Reader.Close();
+            if (Writer != null) Writer.Close();
 
             for (int i = 0; i < ThreadCollection.Count; i++)
             {
@@ -107,6 +107,7 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
 
             if (Client != null) Client.Close();
             if (Reader != null) Reader.Dispose();
+            if (Writer != null) Writer.Dispose();
 
             for (int i = 0; i < ThreadCollection.Count; i++)
             {
@@ -126,31 +127,47 @@ namespace Pokemon_3D_Server_Core.Rcon_Client_Listener.Servers
             Core.Logger.Log("Rcon connection closed.", Logger.LogTypes.Info);
         }
 
-        private void ThreadStartListening(object IPAddress)
+        private void ThreadStartListening(object Tokens)
         {
             try
             {
+                Login Login = (Login)Tokens;
                 Core.Logger.Log("Connecting to the Rcon Server...", Logger.LogTypes.Info);
-                if (Client.ConnectAsync((string)IPAddress, Core.Setting.Port).Wait(5000))
+                if (Client.ConnectAsync(Login.IPAddress, Core.Setting.Port).Wait(5000))
                 {
                     IsActive = true;
 
-                    do
+                    Writer = new StreamWriter(Client.GetStream());
+                    Writer.WriteLine(new Package(Package.PackageTypes.RCON_Authentication, new List<string> { Login.Password.Md5HashGenerator(), Login.Password.SHA1HashGenerator(), Login.Password.SHA256HashGenerator() }, null).ToString());
+                    Reader = new StreamReader(Client.GetStream());
+                    string p = Reader.ReadLine();
+
+                    if (new Package(p,null).DataItems[0] == "1")
                     {
-                        try
+                        Core.Logger.Log("Connected to the server.", Logger.LogTypes.Info);
+
+                        do
                         {
-                            Reader = new StreamReader(Client.GetStream());
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(PreHandlePackage), Reader.ReadLine());
-                        }
-                        catch (ThreadAbortException)
-                        {
-                            return;
-                        }
-                        catch (Exception)
-                        {
-                            Core.Logger.Log("StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
-                        }
-                    } while (IsActive);
+                            try
+                            {
+                                ThreadPool.QueueUserWorkItem(new WaitCallback(PreHandlePackage), Reader.ReadLine());
+                            }
+                            catch (ThreadAbortException)
+                            {
+                                return;
+                            }
+                            catch (Exception)
+                            {
+                                Core.Logger.Log("StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
+                            }
+                        } while (IsActive);
+                    }
+                    else
+                    {
+                        IsActive = false;
+                        Core.Logger.Log("Unable to connect to the Rcon Server. Please try again later.", Logger.LogTypes.Info);
+                        Stop();
+                    }
                 }
                 else
                 {
