@@ -206,13 +206,14 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         /// <summary>
         /// Check if the port is open.
         /// </summary>
-        public static bool CheckPortOpen()
+        /// <param name="Port">Port to check.</param>
+        public static bool CheckPortOpen(int Port)
         {
             try
             {
                 using (TcpClient Client = new TcpClient())
                 {
-                    if (Client.ConnectAsync(GetPublicIP(), Core.Setting.Port).Wait(5000))
+                    if (Client.ConnectAsync(GetPublicIP(), Port).Wait(5000))
                     {
                         return true;
                     }

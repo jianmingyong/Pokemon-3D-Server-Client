@@ -1,4 +1,5 @@
 ﻿using System;
+using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
@@ -21,6 +22,11 @@ namespace Pokemon_3D_Server_Core
         public static Listener Listener { get; } = new Listener();
 
         /// <summary>
+        /// Get SCON Listener
+        /// </summary>
+        public static SCONListener SCONListener { get; } = new SCONListener();
+
+        /// <summary>
         /// Get Logger.
         /// </summary>
         public static LoggerCollection Logger { get; } = new LoggerCollection();
@@ -34,11 +40,6 @@ namespace Pokemon_3D_Server_Core
         /// Get Player Collection.
         /// </summary>
         public static PlayerCollection Player { get; } = new PlayerCollection();
-
-        /// <summary>
-        /// Get Rcon Player Collection.
-        /// </summary>
-        public static Server_Client_Listener.Rcon.Players.PlayerCollection RconPlayer { get; } = new Server_Client_Listener.Rcon.Players.PlayerCollection();
 
         /// <summary>
         /// Get Comamnd List.
@@ -62,11 +63,12 @@ namespace Pokemon_3D_Server_Core
         {
             try
             {
+                Setting.ApplicationDirectory = Directory;
+
                 // Initialize Logger.
                 Logger.Start();
 
                 // Initialize Setting.
-                Setting.ApplicationDirectory = Directory;
                 Setting.Setup();
 
                 if (Setting.Load())
@@ -84,6 +86,12 @@ namespace Pokemon_3D_Server_Core
 
                 // Initialize Listener.
                 Listener.Start();
+
+                // Initialize SCONListener.
+                if (Setting.SCONEnable)
+                {
+                    SCONListener.Start();
+                }
 
                 // Initialize Command.
                 Command.AddCommand();

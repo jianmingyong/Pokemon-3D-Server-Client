@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using Aragas.Core.Data;
 using Newtonsoft.Json;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
@@ -76,7 +77,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
         }
 
-        private static int _Port = 15124;
+        private int _Port = 15124;
         /// <summary>
         /// Get/Set Port
         /// </summary>
@@ -141,9 +142,31 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public bool OfflineMode { get; set; } = false;
 
         /// <summary>
-        /// Get/Set Rcon Password
+        /// Get/Set SCON Enable?
         /// </summary>
-        public string RconPassword { get; set; } = "Password";
+        public bool SCONEnable { get; set; } = true;
+
+        private ushort _SCONPort = 15126;
+        /// <summary>
+        /// Get/Set SCON Port
+        /// </summary>
+        public ushort SCONPort
+        {
+            get
+            {
+                return _SCONPort;
+            }
+            set
+            {
+                _SCONPort = value.Clamp(0, 65535);
+            }
+        }
+
+        private string _SCONPassword = "Password";
+        /// <summary>
+        /// Get/Set SCON Port Password
+        /// </summary>
+        public static PasswordStorage SCONPassword { get; set; }
 
         private int _Season = -2;
         /// <summary>
@@ -705,20 +728,51 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                             Core.Logger.Log("\"Main Server Property.OfflineMode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
-                                    else if (string.Equals(PropertyName, "RconPassword", StringComparison.OrdinalIgnoreCase))
+                                }
+                            }
+                            #endregion Main Server Property
+                            #region SCON Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "SCON Server Property", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "SCONEnable", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if (Reader.TokenType == JsonToken.String)
+                                        if (Reader.TokenType == JsonToken.Boolean)
                                         {
-                                            RconPassword = Reader.Value.ToString();
+                                            SCONEnable = (bool)Reader.Value;
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Main Server Property.RconPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"SCON Server Property.SCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SCONPort", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            SCONPort = Reader.Value.ToString().Toushort();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SCON Server Property.SCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SCONPassword", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            _SCONPassword = Reader.Value.ToString();
+                                            SCONPassword = new PasswordStorage(_SCONPassword);
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SCON Server Property.SCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
                             }
-                            #endregion Main Server Property
+                            #endregion SCON Server Property
                             #region World
                             else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "World", StringComparison.OrdinalIgnoreCase))
                             {
@@ -1918,10 +1972,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /* OfflineMode:  The ability for offline profile player to join the server.
 		   Syntax: Boolean: true, false */
         ""OfflineMode"": {12},
+    }},
 
-        /* RconPassword:  The password for the Rcon to connect.
+    ""SCON Server Property"":
+    {{
+        /* SCONEnable:  Enable SCON
+		   Syntax: Boolean: true, false */
+        ""SCONEnable"": {56},
+
+        /* SCONPort:  The port for SCON Listener. Please be unique and don't be same as Pokemon Listener Port.
+		   Syntax: Integer: Between 0 to 65535 inclusive. */
+        ""SCONPort"": {57},
+
+        /* SCONPassword:  The password for the SCON to connect.
 		   Syntax: String. Please do not insert password that contains your personal infomation. */
-        ""RconPassword"": ""{55}""
+        ""SCONPassword"": ""{55}""
     }},
 
     ""Advanced Server Property"":
@@ -2134,7 +2199,9 @@ LoggerServer.ToString().ToLower(), // LoggerServer
 LoggerTrade.ToString().ToLower(), // LoggerTrade
 LoggerPvP.ToString().ToLower(), // LoggerPvP
 LoggerCommand.ToString().ToLower(), // LoggerCommand
-RconPassword.ToString() // RconPassword
+_SCONPassword, // SCONPassword
+SCONEnable.ToString().ToLower(), // SCONEnable
+SCONPort.ToString() // SCONPort
 ), Encoding.Unicode);
                 #endregion application_settings.json
 

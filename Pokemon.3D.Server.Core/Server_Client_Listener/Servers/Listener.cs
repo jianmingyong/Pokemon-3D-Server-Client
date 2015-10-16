@@ -161,7 +161,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             }
             GameMode = GameMode.Remove(GameMode.LastIndexOf(","));
 
-            if (Functions.CheckPortOpen())
+            if (Functions.CheckPortOpen(Core.Setting.Port))
             {
                 Core.Logger.Log(string.Format(@"Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
             }
