@@ -516,6 +516,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
             TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
             TokenDefination.Add("SERVER_KICKSELF", "You are trying to kick yourself. For your personal safety, we will not kick you :)");
+            TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
 
             OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
             OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));

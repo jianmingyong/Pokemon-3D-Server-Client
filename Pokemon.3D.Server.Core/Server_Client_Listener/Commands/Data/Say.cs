@@ -41,9 +41,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], Player.Network.Client));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
 
-                    Player.CommandFeedback(Group[0], string.Format("have sent a server chat."));
+                    Player.CommandFeedback(null, string.Format("have sent a server chat."));
                 }
                 else if (Player == null)
                 {

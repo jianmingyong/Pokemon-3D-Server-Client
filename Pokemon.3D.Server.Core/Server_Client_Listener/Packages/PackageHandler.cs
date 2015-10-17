@@ -133,6 +133,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     return;
                 }
 
+                // Offline mode?
+                if (!Core.Setting.OfflineMode && !Player.isGameJoltPlayer)
+                {
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_OFFLINEMODE"), p.Client));
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_OFFLINEMODE")) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to join the server with the following reason: " + Core.Setting.Token("SERVER_OFFLINEMODE")), Logger.LogTypes.Info, p.Client);
+                    return;
+                }
+
                 // GameMode
                 bool IsGameModeMatched = false;
                 for (int i = 0; i < Core.Setting.GameMode.Count; i++)

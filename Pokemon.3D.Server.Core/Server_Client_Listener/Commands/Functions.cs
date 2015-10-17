@@ -142,7 +142,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         /// <param name="Message2">Message to feedback to the other operator.</param>
         public static void CommandFeedback(this Player Player, string Message, string Message2)
         {
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
+            if (Message != null)
+            {
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
+            }
 
             Core.Player.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
