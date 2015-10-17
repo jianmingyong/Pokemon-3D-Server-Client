@@ -5,6 +5,9 @@ using System.Net.Sockets;
 using System.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -16,13 +19,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         private StreamReader Reader { get; set; }
         private StreamWriter Writer { get; set; }
 
+        private ConcurrentQueue<string> PackageToReceive = new ConcurrentQueue<string>();
+        /// <summary>
+        /// Package to send.
+        /// </summary>
+        public ConcurrentQueue<Package> PackageToSend = new ConcurrentQueue<Package>();
+
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
         private List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
         private int LastHourCheck = 0;
-
-        private static readonly object Lock = new object();
-        private static readonly object Lock1 = new object();
 
         /// <summary>
         /// Get/Set Client
@@ -65,12 +71,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
 
-            Timer Timer1 = new Timer(new TimerCallback(ThreadStartPinging), null, 0, 1000);
-            TimerCollection.Add(Timer1);
-
             Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
             Thread.Start();
             ThreadCollection.Add(Thread);
+
+            Thread Thread1 = new Thread(new ThreadStart(ThreadHandlePackage)) { IsBackground = true };
+            Thread1.Start();
+            ThreadCollection.Add(Thread1);
+
+            Thread Thread2 = new Thread(new ThreadStart(ThreadStartPinging)) { IsBackground = true };
+            Thread2.Start();
+            ThreadCollection.Add(Thread2);
+
+            Thread Thread3 = new Thread(new ThreadStart(ThreadSentToPlayer)) { IsBackground = true };
+            Thread3.Start();
+            ThreadCollection.Add(Thread3);
         }
 
         private void ThreadStartListening()
@@ -79,86 +94,151 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 try
                 {
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(PreHandlePackage), Reader.ReadLine());
+                    PackageToReceive.Enqueue(Reader.ReadLine());
                 }
-                catch (Exception)
+                catch (ThreadAbortException)
                 {
                     return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
                 }
             } while (IsActive);
         }
 
-        private void PreHandlePackage(object ReturnMessage)
+        private void ThreadHandlePackage()
         {
-            lock (Lock1)
-            {
-                if (!string.IsNullOrWhiteSpace((string)ReturnMessage))
-                {
-                    Package Package = new Package((string)ReturnMessage, Client);
-                    Core.Logger.Log("Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
-                    if (Package.IsValid)
-                    {
-                        LastValidPing = DateTime.Now;
-                        Package.Handle();
-                    }
-                }
-                else if (string.IsNullOrWhiteSpace((string)ReturnMessage) && IsActive)
-                {
-                    IsActive = false;
-                    Core.Player.Remove(Client, "You have left the game.");
-                }
-            }
-        }
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
-        private void ThreadStartPinging(object obj)
-        {
-            if (IsActive)
-            {
-                if (Core.Setting.NoPingKickTime >= 10)
-                {
-                    if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
-                    {
-                        Core.Player.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
-                        return;
-                    }
-                }
-
-                if (Core.Setting.AFKKickTime >= 10)
-                {
-                    if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
-                    {
-                        Core.Player.Remove(Client, Core.Setting.Token("SERVER_AFK"));
-                        return;
-                    }
-                }
-
-                if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
-                {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
-                    LastHourCheck++;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sent the package to the player.
-        /// </summary>
-        /// <param name="p">Package</param>
-        public void SentToPlayer(Package p)
-        {
-            lock (Lock)
+            do
             {
                 try
                 {
-                    Writer.WriteLine(p.ToString());
-                    Writer.Flush();
-                    Core.Logger.Log("Sent: " + p.ToString(), Logger.LogTypes.Debug, Client);
+                    string NewData;
+                    if (PackageToReceive.TryDequeue(out NewData))
+                    {
+                        if (!string.IsNullOrWhiteSpace(NewData))
+                        {
+                            Package Package = new Package(NewData, Client);
+                            Core.Logger.Log($"Receive: {NewData}", Logger.LogTypes.Debug, Client);
+
+                            if (Package.IsValid)
+                            {
+                                LastValidPing = DateTime.Now;
+                                Package.Handle();
+                            }
+                        }
+                        else if (string.IsNullOrWhiteSpace(NewData) && IsActive)
+                        {
+                            IsActive = false;
+                            Core.Player.Remove(Client, "You have left the game.");
+                        }
+                    }
                 }
-                catch (Exception)
+                catch (ThreadAbortException)
                 {
-                    Core.Logger.Log("StreamWriter failed to send package data.", Logger.LogTypes.Debug, Client);
+                    return;
                 }
-            }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 100)
+                {
+                    Thread.Sleep(100 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
+            } while (IsActive);
+        }
+
+        private void ThreadStartPinging()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            do
+            {
+                try
+                {
+                    if (Core.Setting.NoPingKickTime >= 10)
+                    {
+                        if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
+                        {
+                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
+                            return;
+                        }
+                    }
+
+                    if (Core.Setting.AFKKickTime >= 10)
+                    {
+                        if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
+                        {
+                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_AFK"));
+                            return;
+                        }
+                    }
+
+                    if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
+                    {
+                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
+                        LastHourCheck++;
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 1000)
+                {
+                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
+            } while (IsActive);
+        }
+
+        private void ThreadSentToPlayer()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            do
+            {
+                try
+                {
+                    Package Package;
+                    if (PackageToSend.TryDequeue(out Package))
+                    {
+                        Writer.WriteLine(Package.ToString());
+                        Writer.Flush();
+                        Core.Logger.Log($"Sent: {Package.ToString()}", Logger.LogTypes.Debug, Client);
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 10)
+                {
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
+            } while (true);
         }
 
         /// <summary>
@@ -168,11 +248,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             IsActive = false;
 
-            for (int i = 0; i < TimerCollection.Count; i++)
+            for (int i = 0; i < ThreadCollection.Count; i++)
             {
-                TimerCollection[i].Dispose();
+                if (ThreadCollection[i].IsAlive)
+                {
+                    ThreadCollection[i].Abort();
+                }
             }
-            TimerCollection.RemoveRange(0, TimerCollection.Count);
+            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
 
             Client.Close();
             Reader.Dispose();

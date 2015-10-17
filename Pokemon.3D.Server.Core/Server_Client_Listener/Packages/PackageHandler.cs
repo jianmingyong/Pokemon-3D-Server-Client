@@ -22,7 +22,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 switch (p.PackageType)
                 {
                     case (int)Package.PackageTypes.Unknown:
-                        Core.Logger.Log("PackageHandler.cs: Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
+                        Core.Logger.Log("Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                         break;
 
                     case (int)Package.PackageTypes.GameData:
@@ -101,7 +101,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                         HandleServerDataRequest(p);
                         break;
                     default:
-                        Core.Logger.Log("PackageHandler.cs: Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
+                        Core.Logger.Log("Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                         break;
                 }
             }
@@ -116,7 +116,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         {
             if (Core.Player.HasPlayer(p.Client))
             {
-                Core.Player.GetPlayer(p.Client).UpdatePlayer.Enqueue(p);
+                Core.Player.GetPlayer(p.Client).Update(p, true);
             }
             else
             {

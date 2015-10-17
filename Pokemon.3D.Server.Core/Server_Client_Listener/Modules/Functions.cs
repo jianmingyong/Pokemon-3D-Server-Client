@@ -165,16 +165,16 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         /// </summary>
         public static string GetPublicIP()
         {
-            try
+            using (WebClient Client = new WebClient())
             {
-                using (WebClient Client = new WebClient())
+                try
                 {
                     return Client.DownloadString("https://api.ipify.org");
                 }
-            }
-            catch (Exception)
-            {
-                return null;
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 
@@ -209,9 +209,9 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         /// <param name="Port">Port to check.</param>
         public static bool CheckPortOpen(int Port)
         {
-            try
+            using (TcpClient Client = new TcpClient())
             {
-                using (TcpClient Client = new TcpClient())
+                try
                 {
                     if (Client.ConnectAsync(GetPublicIP(), Port).Wait(5000))
                     {
@@ -222,10 +222,10 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
                         return false;
                     }
                 }
-            }
-            catch (Exception)
-            {
-                return false;
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
 

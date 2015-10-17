@@ -1083,7 +1083,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 #if DEBUG
                                             LoggerDebug = true;
 #else
-                                            LoggerDebug = (bool)Reader.Value;
+                                            LoggerDebug = false;
 #endif
                                         }
                                         else

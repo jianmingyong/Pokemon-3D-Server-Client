@@ -12,17 +12,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
     /// </summary>
     public class Package
     {
-        /* Package data:
-        ProtcolVersion|PackageType|Origin|DataItemsCount|Offset1|Offset2|Offset3...|Data1Data2Data3
-        The package contains:
-            - Its protocol version.
-            - The PackageType, defining the type of the package
-            - The Origin, indicating which computer sent this package.
-            - The DataItemsCount tells the package how many data items it contains.
-            - A list of offsets that separate the data.
-            - A list of data items, that aren't separated.
-        */
-
         /// <summary>
         /// Get Protocol Version.
         /// </summary>
@@ -63,37 +52,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         /// </summary>
         public enum PackageTypes
         {
-            /// <summary>
-            /// Package Type: RCON Kick
-            /// <para>Set: {Origin = -1 | DataItem[0] = Reason}</para>
-            /// </summary>
-            RCON_KICKED = -6,
-
-            /// <summary>
-            /// Package Type: RCON Command
-            /// <para>Get: {Origin = ID | DataItem[0] = Command}</para>
-            /// </summary>
-            RCON_Command = -5,
-
-            /// <summary>
-            /// Package Type: RCON Ping
-            /// <para>Get: {Origin = ID | DataItem[0] = null}</para>
-            /// </summary>
-            RCON_Ping = -4,
-
-            /// <summary>
-            /// Package Type: RCON Identification
-            /// <para>Set: {Origin = -1 | DataItem[0] = ID}</para>
-            /// </summary>
-            RCON_ID = -3,
-
-            /// <summary>
-            /// Package Type: RCON Login Token
-            /// <para>Get: {Origin = -1 | DataItem[0] = Md5 Hash Password | DataItem[1] = Sha1 Hash Password | DataItem[2] = Sha256 Hash Password}</para>
-            /// <para>Set: {Origin = -1 | DataItem[0] = Authentication Fail or Success.}</para>
-            /// </summary>
-            RCON_Authentication = -2,
-
             /// <summary>
             /// Package Type: Unknown Data
             /// </summary>
@@ -276,7 +234,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
                 if (!FullData.Contains("|"))
                 {
-                    Core.Logger.Log("Package.cs: Package is incomplete.", Logger.LogTypes.Debug, Client);
+                    Core.Logger.Log("Package is incomplete.", Logger.LogTypes.Debug, Client);
                     IsValid = false;
                     return;
                 }
@@ -288,7 +246,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     // Protocol Version
                     if (!string.Equals(Core.Setting.ProtocolVersion, bits[0], StringComparison.OrdinalIgnoreCase))
                     {
-                        Core.Logger.Log("Package.cs: Package does not contains valid Protocol Version.", Logger.LogTypes.Debug, Client);
+                        Core.Logger.Log("Package does not contains valid Protocol Version.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -300,7 +258,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     }
                     catch (Exception)
                     {
-                        Core.Logger.Log("Package.cs: Package does not contains valid Package Type.", Logger.LogTypes.Debug, Client);
+                        Core.Logger.Log("Package does not contains valid Package Type.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -312,7 +270,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     }
                     catch (Exception)
                     {
-                        Core.Logger.Log("Package.cs: Package does not contains valid Origin.", Logger.LogTypes.Debug, Client);
+                        Core.Logger.Log("Package does not contains valid Origin.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -325,7 +283,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     }
                     catch (Exception)
                     {
-                        Core.Logger.Log("Package.cs: Package does not contains valid DataItemsCount.", Logger.LogTypes.Debug, Client);
+                        Core.Logger.Log("Package does not contains valid DataItemsCount.", Logger.LogTypes.Debug, Client);
                         IsValid = false;
                         return;
                     }
@@ -373,16 +331,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 }
                 else
                 {
-                    Core.Logger.Log("Package.cs: Package is incomplete.", Logger.LogTypes.Debug, Client);
+                    Core.Logger.Log("Package is incomplete.", Logger.LogTypes.Debug, Client);
                     IsValid = false;
-                    return;
                 }
             }
             catch (Exception ex)
             {
-                Core.Logger.Log("Package.cs: " + ex.Message, Logger.LogTypes.Debug, Client);
+                Core.Logger.Log(ex.Message, Logger.LogTypes.Debug, Client);
                 IsValid = false;
-                return;
             }
         }
 

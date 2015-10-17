@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -17,18 +19,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
     public class Listener : IDisposable
     {
         private IPEndPoint IPEndPoint { get; set; }
-
         private TcpListener TcpListener { get; set; }
+
         private TcpClient Client { get; set; }
 
         private StreamReader Reader { get; set; }
 
-        private bool IsActive { get; set; } = false;
+        private ConcurrentQueue<string> PackageToReceive = new ConcurrentQueue<string>();
 
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
-        private List<Timer> TimerCollection { get; set; } = new List<Timer>();
 
-        private static readonly object Lock = new object();
+        private bool IsActive { get; set; } = false;
 
         /// <summary>
         /// Start the Listener.
@@ -41,7 +42,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 if (!My.Computer.Network.IsAvailable)
                 {
                     Core.Logger.Log("Network is not available.", Logger.LogTypes.Warning);
-                    Stop();
+                    Dispose();
                 }
                 else
                 {
@@ -56,61 +57,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     Thread.Start();
                     ThreadCollection.Add(Thread);
 
-                    //// Timer 1
-                    Timer Timer1 = new Timer(new TimerCallback(Core.World.Update), null, 0, 1000);
-                    TimerCollection.Add(Timer1);
+                    Thread Thread1 = new Thread(new ThreadStart(ThreadHandlePackage)) { IsBackground = true };
+                    Thread1.Start();
+                    ThreadCollection.Add(Thread1);
 
-                    // Timer 3
                     if (Core.Setting.AutoRestartTime >= 10)
                     {
-                        Core.Logger.Log(string.Format(@"The server will restart every {0} seconds.", Core.Setting.AutoRestartTime), Logger.LogTypes.Info);
-                        Timer Timer3 = new Timer(new TimerCallback(ThreadAutoRestart), null, 0, 1000);
-                        TimerCollection.Add(Timer3);
-                    }
+                        Core.Logger.Log($"The server will restart every {Core.Setting.AutoRestartTime.ToString()} seconds.", Logger.LogTypes.Info);
 
-                    Core.Logger.Log("Pokemon 3D Listener initializing...", Logger.LogTypes.Info);
+                        Thread Thread2 = new Thread(new ThreadStart(ThreadAutoRestart)) { IsBackground = true };
+                        Thread2.Start();
+                        ThreadCollection.Add(Thread2);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 ex.CatchError();
-                Stop();
+                Dispose();
             }
-        }
-
-        /// <summary>
-        /// Stop the Listener.
-        /// </summary>
-        public void Stop()
-        {
-            IsActive = false;
-
-            if (Client != null)
-            {
-                Client.Close();
-            }
-
-            if (Client != null) Client.Close();
-            if (Reader != null) Reader.Close();
-            if (TcpListener != null) TcpListener.Stop();
-
-            for (int i = 0; i < ThreadCollection.Count; i++)
-            {
-                if (ThreadCollection[i].IsAlive)
-                {
-                    ThreadCollection[i].Abort();
-                }
-            }
-            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
-
-            for (int i = 0; i < TimerCollection.Count; i++)
-            {
-                TimerCollection[i].Dispose();
-            }
-            TimerCollection.RemoveRange(0, TimerCollection.Count);
-
-            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, Core.Setting.Token("SERVER_CLOSE"), null));
-            Core.Logger.Log("Server stopped.", Logger.LogTypes.Info);
         }
 
         /// <summary>
@@ -120,14 +85,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
         {
             IsActive = false;
 
-            if (Client != null)
-            {
-                Client.Close();
-            }
-
+            if (TcpListener != null) TcpListener.Stop();
             if (Client != null) Client.Close();
             if (Reader != null) Reader.Dispose();
-            if (TcpListener != null) TcpListener.Stop();
 
             for (int i = 0; i < ThreadCollection.Count; i++)
             {
@@ -138,13 +98,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             }
             ThreadCollection.RemoveRange(0, ThreadCollection.Count);
 
-            for (int i = 0; i < TimerCollection.Count; i++)
-            {
-                TimerCollection[i].Dispose();
-            }
-            TimerCollection.RemoveRange(0, TimerCollection.Count);
-
             Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, Core.Setting.Token("SERVER_CLOSE"), null));
+            Core.Logger.Log("Pokemon 3D Listener Disposed.", Logger.LogTypes.Info);
         }
 
         private void ThreadStartListening()
@@ -163,15 +118,15 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
             if (Functions.CheckPortOpen(Core.Setting.Port))
             {
-                Core.Logger.Log(string.Format(@"Server Started. Players can join using the following address: {0}:{1} (Global), {2}:{3} (Local) and with the following GameMode: {4}.", Core.Setting.IPAddress, Core.Setting.Port, Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                Core.Logger.Log($"Server started. Players can join using the following address: {Core.Setting.IPAddress}:{Core.Setting.Port.ToString()} (Global), {Functions.GetPrivateIP()}:{Core.Setting.Port.ToString()} (Local) and with the following GameMode: {GameMode}.", Logger.LogTypes.Info);
             }
             else
             {
-                Core.Logger.Log(string.Format(@"The specific port {0} is not opened. External/Global IP will not accept new players.", Core.Setting.Port), Logger.LogTypes.Info);
-                Core.Logger.Log(string.Format(@"Server started. Players can join using the following address: {0}:{1} (Local) and with the following GameMode: {2}.", Functions.GetPrivateIP(), Core.Setting.Port, GameMode), Logger.LogTypes.Info);
+                Core.Logger.Log($"The specific port {Core.Setting.Port.ToString()} is not opened. External/Global IP will not accept new players.", Logger.LogTypes.Info);
+                Core.Logger.Log($"Server started. Players can join using the following address: {Functions.GetPrivateIP()}:{Core.Setting.Port.ToString()} (Local) and with the following GameMode: {GameMode}.", Logger.LogTypes.Info);
             }
 
-            Core.Logger.Log("Pokemon 3D Listener initialized.", Logger.LogTypes.Info);
+            Core.Logger.Log("Pokémon 3D Listener initialized.", Logger.LogTypes.Info);
 
             do
             {
@@ -179,47 +134,98 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 {
                     Client = TcpListener.AcceptTcpClient();
                     Reader = new StreamReader(Client.GetStream());
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(PreHandlePackage), Reader.ReadLine());
+                    PackageToReceive.Enqueue(Reader.ReadLine());
                 }
                 catch (ThreadAbortException)
                 {
                     return;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    Core.Logger.Log("StreamReader failed to receive package data.", Logger.LogTypes.Debug, Client);
+                    ex.CatchError();
                 }
             } while (IsActive);
         }
 
-        private void PreHandlePackage(object ReturnMessage)
+        private void ThreadHandlePackage()
         {
-            lock (Lock)
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            do
             {
-                if (!string.IsNullOrWhiteSpace((string)ReturnMessage))
+                try
                 {
-                    Package Package = new Package((string)ReturnMessage, Client);
-                    Core.Logger.Log("Receive: " + ReturnMessage, Logger.LogTypes.Debug, Client);
-                    if (Package.IsValid)
+                    string NewData;
+                    if (PackageToReceive.TryDequeue(out NewData))
                     {
-                        Package.Handle();
+                        if (!string.IsNullOrWhiteSpace(NewData))
+                        {
+                            Package Package = new Package(NewData, Client);
+                            Core.Logger.Log($"Receive: {NewData}", Logger.LogTypes.Debug, Client);
+
+                            if (Package.IsValid)
+                            {
+                                Package.Handle();
+                            }
+                        }
                     }
                 }
-            }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 100)
+                {
+                    Thread.Sleep(100 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
+            } while (IsActive);
         }
 
-        private void ThreadAutoRestart(object obj)
+        private void ThreadAutoRestart()
         {
-            TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
 
-            if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
+            do
             {
-                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
+                try
+                {
+                    TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
+
+                    if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
+                    {
+                        Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
+                    }
+                    else if (TimeLeft.TotalSeconds < 1)
+                    {
+                        ClientEvent.Invoke(ClientEvent.Types.Restart, null);
+                    }
+                }
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 1000)
+                {
+                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
             }
-            else if (TimeLeft.TotalSeconds < 1)
-            {
-                ClientEvent.Invoke(ClientEvent.Types.Restart, null);
-            }
+            while (IsActive);
         }
 
         /// <summary>

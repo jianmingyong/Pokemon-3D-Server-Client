@@ -248,7 +248,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (Core.Player.HasPlayer(p.Client))
             {
-                GetPlayer(p.Client).Network.SentToPlayer(p);
+                GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
             }
             else
             {
@@ -259,11 +259,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         StreamWriter Writer = new StreamWriter(p.Client.GetStream());
                         Writer.WriteLine(p.ToString());
                         Writer.Flush();
-                        Core.Logger.Log("Sent: " + p.ToString(), Logger.LogTypes.Debug, p.Client);
+                        Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, p.Client);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        Core.Logger.Log("StreamWriter failed to send package data.", Logger.LogTypes.Debug, p.Client);
+                        ex.CatchError();
                     }
                 }
             }
@@ -279,7 +279,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client != null && Core.Player[i].Network.Client != p.Client && (Core.Player[i].IsOperator() || Core.Player[i].GameJoltID == 116016 || Core.Player[i].GameJoltID == 222452))
                 {
-                    Core.Player[i].Network.SentToPlayer(p);
+                    Core.Player[i].Network.PackageToSend.Enqueue(p);
                 }
             }
         }
@@ -294,7 +294,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    Core.Player[i].Network.SentToPlayer(p);
+                    Core.Player[i].Network.PackageToSend.Enqueue(p);
                 }
             }
         }
