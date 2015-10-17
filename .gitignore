@@ -213,3 +213,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+
+# SubModule Ignore.
+Aragas.Core/
+PokeD.Core/
