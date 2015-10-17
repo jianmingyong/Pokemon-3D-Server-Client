@@ -67,7 +67,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 }
             }
             else
+            {
                 _listener.RemovePlayer(this);
+            }
+                
         }
 
         private void HandleData(byte[] data)
