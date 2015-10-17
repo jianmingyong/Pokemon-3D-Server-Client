@@ -127,7 +127,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 {
                     SCONClients.Add(new SCONClient(Listener.AcceptNetworkTCPClient(), this));
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(100);
             } while (IsActive);
         }
 
@@ -141,18 +141,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
                     if (client != null)
                     {
-                        try
-                        {
-                            client.Update();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                            RemovePlayer(client);
-                        }
+                        client.Update();
                     }
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(100);
             } while (IsActive);
         }
 

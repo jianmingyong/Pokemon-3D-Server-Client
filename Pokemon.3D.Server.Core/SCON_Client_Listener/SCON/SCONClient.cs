@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Aragas.Core.Data;
 using Aragas.Core.Interfaces;
@@ -12,6 +13,7 @@ using PokeD.Core.Packets.SCON.Logs;
 using PokeD.Core.Packets.SCON.Status;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 {
@@ -89,7 +91,14 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                             var packet = SCONPacketResponses.Packets[id]().ReadPacket(reader);
                             packet.Origin = origin;
 
-                            HandlePacket(packet);
+                            try
+                            {
+                                HandlePacket(packet);
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.CatchError();
+                            }
 
 #if DEBUG
                             Received.Add(packet);
