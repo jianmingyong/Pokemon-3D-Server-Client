@@ -21,10 +21,11 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
-        List<SCONClient> SCONClients { get; } = new List<SCONClient>();
+        private List<SCONClient> SCONClients { get; set; } = new List<SCONClient>();
 
-        static SCONListener()
+        public SCONListener()
         {
+            AppDomainWrapper.Instance = new AppDomainWrapperInstance();
             NetworkTCPServerWrapper.Instance = new NetworkTCPServerWrapperInstance();
         }
 
@@ -124,21 +125,36 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
             do
             {
                 if (Listener.AvailableClients)
+                {
                     SCONClients.Add(new SCONClient(Listener.AcceptNetworkTCPClient(), this));
+                }
                 Thread.Sleep(1);
             } while (IsActive);
         }
 
         private void Update()
         {
-            for (var i = 0; i < SCONClients.Count; i++)
+            do
             {
-                var client = SCONClients[i];
+                for (var i = 0; i < SCONClients.Count; i++)
+                {
+                    SCONClient client = SCONClients[i];
 
-                if (client != null)
-                    client.Update();
-            }
-            Thread.Sleep(1);
+                    if (client != null)
+                    {
+                        try
+                        {
+                            client.Update();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                            RemovePlayer(client);
+                        }
+                    }
+                }
+                Thread.Sleep(1);
+            } while (IsActive);
         }
 
         public void RemovePlayer(SCONClient sconClient)

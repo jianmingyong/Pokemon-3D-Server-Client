@@ -12,6 +12,8 @@ using PokeD.Core.Packets.SCON.Status;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using System.IO;
+using System.Net;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 {
@@ -36,7 +38,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 
             if (AuthorizationStatus.HasFlag(AuthorizationStatus.RemoteClientEnabled))
             {
-                if (Setting.SCONPassword.Hash == packet.PasswordHash)
+                if (Core.Setting.SCONPassword.Hash == packet.PasswordHash)
                 {
                     Authorized = true;
                     SendPacket(new AuthorizationCompletePacket());
@@ -73,7 +75,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            //ChatReceiving = true;
+            ChatReceiving = true;
         }
         /// <summary>
         /// Not used right now.
@@ -86,24 +88,37 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            //ChatReceiving = false;
+            ChatReceiving = false;
         }
 
         private void HandlePlayerInfoListRequest(PlayerInfoListRequestPacket packet)
         {
-            // Rewrite
             if (!Authorized)
             {
                 SendPacket(new AuthorizationDisconnectPacket { Reason = "Not authorized!" });
                 return;
             }
 
-            //SendPacket(new PlayerInfoListResponsePacket { PlayerInfoList = new PlayerInfoList(_server.GetAllClientsInfo()) });
+            List<PlayerInfo> Player = new List<PlayerInfo>();
+            for (int i = 0; i < Core.Player.Count; i++)
+            {
+                Player.Add(new PlayerInfo()
+                {
+                    Name = Core.Player[i].Name,
+                    GameJoltID = Core.Player[i].GameJoltID.ToString().Toulong(),
+                    IP = ((IPEndPoint)Core.Player[i].Network.Client.Client.RemoteEndPoint).Address.ToString(),
+                    LevelFile = Core.Player[i].LevelFile,
+                    Position = new Vector3(Core.Player[i].Position_X, Core.Player[i].Position_Y, Core.Player[i].Position_Z),
+                    Ping = 0,
+                    PlayTime = DateTime.Now - Core.Player[i].Network.LoginStartTime
+                });
+            }
+
+            SendPacket(new PlayerInfoListResponsePacket { PlayerInfoList = new PlayerInfoList(Player.ToArray()) });
         }
 
         private void HandleLogListRequest(LogListRequestPacket packet)
         {
-            // Rewrite 
             if (!Authorized)
             {
                 SendPacket(new AuthorizationDisconnectPacket { Reason = "Not authorized!" });
@@ -113,26 +128,23 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             List<Log> Logs = new List<Log>();
             for (int i = 0; i < Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger").Length; i++)
             {
-                Logs.Add(new Log() { LogFileName = Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger")[i] });
+                Logs.Add(new Log() { LogFileName = Path.GetFileName(Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger")[i]) });
             }
 
             SendPacket(new LogListResponsePacket { LogList = new LogList(Logs.ToArray()) });
         }
         private void HandleLogFileRequest(LogFileRequestPacket packet)
         {
-            // Rewrite
             if (!Authorized)
             {
                 SendPacket(new AuthorizationDisconnectPacket { Reason = "Not authorized!" });
                 return;
             }
 
-            //if (FileSystemWrapper.LogFolder.CheckExistsAsync(packet.LogFilename).Result == ExistenceCheckResult.FileExists)
-            //{
-            //    var logText = FileSystemWrapper.LogFolder.GetFileAsync(packet.LogFilename).Result.ReadAllTextAsync().Result;
-
-            //    SendPacket(new LogFileResponsePacket { LogFilename = packet.LogFilename, LogFile = logText });
-            //}
+            if (File.Exists(Core.Setting.ApplicationDirectory + "\\Logger\\" + packet.LogFilename))
+            {
+                SendPacket(new LogFileResponsePacket { LogFilename = packet.LogFilename, LogFile = File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Logger\\" + packet.LogFilename) });
+            }
         }
 
         private void HandleCrashLogListRequest(CrashLogListRequestPacket packet)
@@ -144,16 +156,13 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            //if (FileSystemWrapper.LogFolder.CheckExistsAsync("Crash").Result == ExistenceCheckResult.FolderExists)
-            //{
-            //    var list = FileSystemWrapper.LogFolder.GetFolderAsync("Crash").Result.GetFilesAsync().Result;
+            List<Log> Logs = new List<Log>();
+            for (int i = 0; i < Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs").Length; i++)
+            {
+                Logs.Add(new Log() { LogFileName = Path.GetFileName(Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs")[i]) });
+            }
 
-            //    var crashLogs = new List<Log>();
-            //    foreach (var file in list)
-            //        crashLogs.Add(new Log { LogFileName = file.Name });
-
-            //    SendPacket(new CrashLogListResponsePacket { CrashLogList = new LogList(crashLogs.ToArray()) });
-            //}
+            SendPacket(new CrashLogListResponsePacket { CrashLogList = new LogList(Logs.ToArray()) });
         }
         private void HandleCrashLogFileRequest(CrashLogFileRequestPacket packet)
         {
@@ -164,13 +173,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            //if (FileSystemWrapper.LogFolder.CheckExistsAsync("Crash").Result == ExistenceCheckResult.FolderExists)
-            //    if (FileSystemWrapper.LogFolder.GetFolderAsync("Crash").Result.CheckExistsAsync(packet.CrashLogFilename).Result == ExistenceCheckResult.FileExists)
-            //    {
-            //        var crashLogText = FileSystemWrapper.LogFolder.GetFolderAsync("Crash").Result.GetFileAsync(packet.CrashLogFilename).Result.ReadAllTextAsync().Result;
-
-            //        SendPacket(new CrashLogFileResponsePacket { CrashLogFilename = packet.CrashLogFilename, CrashLogFile = crashLogText });
-            //    }
+            if (File.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs\\" + packet.CrashLogFilename))
+            {
+                SendPacket(new CrashLogFileResponsePacket { CrashLogFilename = packet.CrashLogFilename, CrashLogFile = File.ReadAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\" + packet.CrashLogFilename) });
+            }
         }
 
         /// <summary>

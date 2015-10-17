@@ -166,7 +166,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// <summary>
         /// Get/Set SCON Port Password
         /// </summary>
-        public static PasswordStorage SCONPassword { get; set; }
+        public PasswordStorage SCONPassword { get; set; }
 
         private int _Season = -2;
         /// <summary>

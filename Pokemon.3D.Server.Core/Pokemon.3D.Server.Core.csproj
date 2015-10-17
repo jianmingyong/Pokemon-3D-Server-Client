@@ -58,6 +58,7 @@
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
     <Compile Include="SCON_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="SCON_Client_Listener\WrapperInstances\AppDomainWrapperInstance.cs" />
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPClientWrapperInstance.cs" />
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
