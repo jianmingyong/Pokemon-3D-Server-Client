@@ -72,7 +72,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            ChatReceiving = true;
+            //ChatReceiving = true;
         }
         /// <summary>
         /// Not used right now.
@@ -85,7 +85,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            ChatReceiving = false;
+            //ChatReceiving = false;
         }
 
         private void HandlePlayerInfoListRequest(PlayerInfoListRequestPacket packet)

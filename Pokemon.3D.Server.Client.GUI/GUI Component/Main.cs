@@ -48,10 +48,9 @@ namespace Pokemon_3D_Server_Client_GUI
             {
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
             }
-            Core.Listener.Dispose();
-            Core.Setting.Save();
 
-            Core.Logger.Log("Application closed successfully!", Logger.LogTypes.Info);
+            Core.Setting.Save();
+            Core.Dispose();
 
             if (ApplicationRestart)
             {

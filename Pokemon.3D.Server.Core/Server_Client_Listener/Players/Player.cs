@@ -248,11 +248,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public string LastPokemonMovementPosition { get; set; }
 
         /// <summary>
-        /// Get/Set Timer.
-        /// </summary>
-        public List<Timer> TimerCollection { get; set; } = new List<Timer>();
-
-        /// <summary>
         /// A Collection of Busy Type
         /// </summary>
         public enum BusyTypes
@@ -375,9 +370,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Listener.TimeLeft()), p.Client));
             }
-
-            Timer Timer = new Timer(new TimerCallback(UpdateTrigger), null, 0, 1);
-            TimerCollection.Add(Timer);
         }
 
         /// <summary>
@@ -555,10 +547,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public void Dispose()
         {
-            for (int i = 0; i < TimerCollection.Count; i++)
-            {
-                TimerCollection[i].Dispose();
-            }
             Network.Dispose();
         }
     }

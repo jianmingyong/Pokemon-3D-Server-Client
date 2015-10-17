@@ -110,7 +110,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public void Remove(TcpClient Client, string Reason)
         {
             Player Player = GetPlayer(Client);
-            Player.Network.IsActive = false;
 
             if (Player.isGameJoltPlayer)
             {
@@ -248,7 +247,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (Core.Player.HasPlayer(p.Client))
             {
-                GetPlayer(p.Client).Network.PackageToSend.Enqueue(p);
+                Player Player = GetPlayer(p.Client);
+                if (Player.Network.IsActive)
+                {
+                    Player.Network.PackageToSend.Enqueue(p);
+                }
             }
             else
             {
@@ -279,7 +282,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client != null && Core.Player[i].Network.Client != p.Client && (Core.Player[i].IsOperator() || Core.Player[i].GameJoltID == 116016 || Core.Player[i].GameJoltID == 222452))
                 {
-                    Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    if (Core.Player[i].Network.IsActive)
+                    {
+                        Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    }
                 }
             }
         }
@@ -294,7 +300,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    if (Core.Player[i].Network.IsActive)
+                    {
+                        Core.Player[i].Network.PackageToSend.Enqueue(p);
+                    }
                 }
             }
         }

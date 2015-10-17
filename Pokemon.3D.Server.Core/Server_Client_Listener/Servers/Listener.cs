@@ -69,6 +69,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                         Thread2.Start();
                         ThreadCollection.Add(Thread2);
                     }
+
+                    Thread Thread3 = new Thread(new ThreadStart(Core.World.Update)) { IsBackground = true };
+                    Thread3.Start();
+                    ThreadCollection.Add(Thread3);
                 }
             }
             catch (Exception ex)
@@ -98,7 +102,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             }
             ThreadCollection.RemoveRange(0, ThreadCollection.Count);
 
-            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ServerClose, Core.Setting.Token("SERVER_CLOSE"), null));
             Core.Logger.Log("Pokemon 3D Listener Disposed.", Logger.LogTypes.Info);
         }
 
@@ -181,9 +184,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 }
 
                 sw.Stop();
-                if (sw.ElapsedMilliseconds < 100)
+                if (sw.ElapsedMilliseconds < 10)
                 {
-                    Thread.Sleep(100 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
                 }
                 sw.Restart();
             } while (IsActive);

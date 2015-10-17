@@ -6,6 +6,7 @@ using Pokemon_3D_Server_Core.SCON_Client_Listener.SCON;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using System.Diagnostics;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 {
@@ -39,7 +40,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 if (!My.Computer.Network.IsAvailable)
                 {
                     Core.Logger.Log("Network is not available.", Logger.LogTypes.Warning);
-                    Stop();
+                    Dispose();
                 }
                 else
                 {
@@ -56,36 +57,13 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                     Listener.Start();
 
                     IsActive = true;
-                    
-                    Core.Logger.Log("SCON Listener initializing...", Logger.LogTypes.Info);
                 }
             }
             catch (Exception ex)
             {
                 ex.CatchError();
-                Stop();
+                Dispose();
             }
-        }
-
-        /// <summary>
-        /// Stop the Listener.
-        /// </summary>
-        public void Stop()
-        {
-            IsActive = false;
-
-            if (Listener != null) Listener.Stop();
-
-            for (int i = 0; i < ThreadCollection.Count; i++)
-            {
-                if (ThreadCollection[i].IsAlive)
-                {
-                    ThreadCollection[i].Abort();
-                }
-            }
-            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
-
-            Core.Logger.Log("SCON stopped.", Logger.LogTypes.Info);
         }
 
         /// <summary>
@@ -105,52 +83,96 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 }
             }
             ThreadCollection.RemoveRange(0, ThreadCollection.Count);
+
+            Core.Logger.Log("SCON Listener Disposed.", Logger.LogTypes.Info);
         }
 
         private void ThreadStartListening()
         {
             if (Functions.CheckPortOpen(Core.Setting.SCONPort.ToString().Toint()))
             {
-                Core.Logger.Log(string.Format(@"SCON Started. SCON clients can join using the following address: {0}:{1} (Global), {2}:{3} (Local).", Core.Setting.IPAddress, Core.Setting.SCONPort.ToString(), Functions.GetPrivateIP(), Core.Setting.SCONPort.ToString()), Logger.LogTypes.Info);
+                Core.Logger.Log($"SCON started. SCON clients can join using the following address: {Core.Setting.IPAddress}:{Core.Setting.SCONPort.ToString()} (Global), {Functions.GetPrivateIP()}:{Core.Setting.SCONPort.ToString()} (Local).", Logger.LogTypes.Info);
             }
             else
             {
-                Core.Logger.Log(string.Format(@"The specific port {0} is not opened. External/Global IP will not accept new SCON clients.", Core.Setting.SCONPort.ToString()), Logger.LogTypes.Info);
-                Core.Logger.Log(string.Format(@"SCON started. SCON clients can join using the following address: {0}:{1} (Local).", Functions.GetPrivateIP(), Core.Setting.SCONPort.ToString()), Logger.LogTypes.Info);
+                Core.Logger.Log($"The specific port {Core.Setting.SCONPort.ToString()} is not opened. External/Global IP will not accept new SCON clients.", Logger.LogTypes.Info);
+                Core.Logger.Log($"SCON started. SCON clients can join using the following address: {Functions.GetPrivateIP()}:{Core.Setting.SCONPort.ToString()} (Local).", Logger.LogTypes.Info);
             }
 
             Core.Logger.Log("SCON Listener initialized.", Logger.LogTypes.Info);
 
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             do
             {
-                if (Listener.AvailableClients)
+                try
                 {
-                    SCONClients.Add(new SCONClient(Listener.AcceptNetworkTCPClient(), this));
+                    if (Listener.AvailableClients)
+                    {
+                        SCONClients.Add(new SCONClient(Listener.AcceptNetworkTCPClient(), this));
+                        Core.Logger.Log("New SCON Player Added.", Logger.LogTypes.Debug);
+                    }
                 }
-                Thread.Sleep(100);
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 10)
+                {
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
             } while (IsActive);
         }
 
         private void Update()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
             do
             {
-                for (var i = 0; i < SCONClients.Count; i++)
+                try
                 {
-                    SCONClient client = SCONClients[i];
-
-                    if (client != null)
+                    for (var i = 0; i < SCONClients.Count; i++)
                     {
-                        client.Update();
+                        SCONClient client = SCONClients[i];
+
+                        if (client != null)
+                        {
+                            client.Update();
+                        }
                     }
                 }
-                Thread.Sleep(100);
+                catch (ThreadAbortException)
+                {
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ex.CatchError();
+                }
+
+                sw.Stop();
+                if (sw.ElapsedMilliseconds < 10)
+                {
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
+                }
+                sw.Restart();
             } while (IsActive);
         }
 
         public void RemovePlayer(SCONClient sconClient)
         {
             SCONClients.Remove(sconClient);
+            Core.Logger.Log("SCON Player Removed.", Logger.LogTypes.Debug);
         }
     }
 }

@@ -102,12 +102,11 @@ namespace Pokemon_3D_Server_Core
             }
         }
 
-        /// <summary>
-        /// Dispose All Server Client Objects.
-        /// </summary>
         public static void Dispose()
         {
-            
+            Listener.Dispose();
+            SCONListener.Dispose();
+            Logger.Dispose();
         }
     }
 }

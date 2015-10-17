@@ -132,8 +132,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         }
                         else if (string.IsNullOrWhiteSpace(NewData) && IsActive)
                         {
-                            IsActive = false;
                             Core.Player.Remove(Client, "You have left the game.");
+                            return;
                         }
                     }
                 }
@@ -147,12 +147,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
 
                 sw.Stop();
-                if (sw.ElapsedMilliseconds < 100)
+                if (sw.ElapsedMilliseconds < 1)
                 {
-                    Thread.Sleep(100 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(1 - sw.ElapsedMilliseconds.ToString().Toint());
                 }
                 sw.Restart();
-            } while (IsActive);
+            } while (true);
         }
 
         private void ThreadStartPinging()
@@ -248,18 +248,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             IsActive = false;
 
-            for (int i = 0; i < ThreadCollection.Count; i++)
+            while (PackageToSend.Count > 0)
             {
-                if (ThreadCollection[i].IsAlive)
-                {
-                    ThreadCollection[i].Abort();
-                }
+                Thread.Sleep(1000);
             }
-            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
-
-            Client.Close();
-            Reader.Dispose();
-            Writer.Dispose();
         }
     }
 }
