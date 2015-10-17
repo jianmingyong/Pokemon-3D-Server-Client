@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Aragas.Core.Wrappers;
 
@@ -8,7 +10,27 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
     public class NetworkTCPClientWrapperInstance : INetworkTCPClient
     {
         public string IP => !IsDisposed && Client != null ? ((IPEndPoint)Client.Client.RemoteEndPoint).Address.ToString() : "";
-        public bool Connected => !IsDisposed && Client != null && Client.Client.Connected;
+        public bool Connected
+        {
+            get
+            {
+                if (IsDisposed || Client == null)
+                    return false;
+                
+                var ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+                var tcpConnections = ipProperties.GetActiveTcpConnections()
+                    .Where(x => x.LocalEndPoint.Equals(Client.Client.LocalEndPoint) && x.RemoteEndPoint.Equals(Client.Client.RemoteEndPoint)).ToArray();
+
+                if (tcpConnections.Length > 0)
+                {
+                    var stateOfConnection = tcpConnections.First().State;
+
+                    return stateOfConnection == TcpState.Established;
+                }
+                else
+                    return false;
+            }
+        }
         public int DataAvailable => !IsDisposed && Client != null ? Client.Available : 0;
 
 
