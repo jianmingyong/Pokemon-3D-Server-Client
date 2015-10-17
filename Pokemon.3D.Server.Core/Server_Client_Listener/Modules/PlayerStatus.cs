@@ -288,7 +288,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
                 }
                 else
                 {
-                    return (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
+                    return PlayerList.isGameJoltPlayer ? (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() : null;
                 }
             }
             else

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using Aragas.Core.Wrappers;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.SCON;

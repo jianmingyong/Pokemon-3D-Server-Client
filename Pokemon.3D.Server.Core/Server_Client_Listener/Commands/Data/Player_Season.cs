@@ -50,13 +50,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
                     Settings.LastWorldUpdate = DateTime.Now;
                     
-                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Player Season."));
+                    Player.CommandFeedback(Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), string.Format("have changed the Player Season."));
                 }
                 else if (Player == null)
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
-
-                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
+                    
                 }
             }
             #endregion /Player.Season <id>

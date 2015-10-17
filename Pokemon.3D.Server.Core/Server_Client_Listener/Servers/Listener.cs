@@ -75,7 +75,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             {
                 ex.CatchError();
                 Stop();
-            }  
+            }
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             }
             else if (TimeLeft.TotalSeconds < 1)
             {
-                ClientEvent.Invoke(ClientEvent.Types.Restart,null);
+                ClientEvent.Invoke(ClientEvent.Types.Restart, null);
             }
         }
 

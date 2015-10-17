@@ -38,8 +38,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, "This server is created by jianmingyong.", Player.Network.Client));
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, "It is running v" + Core.Setting.ApplicationVersion, Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "This server is created by jianmingyong.", Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "It is running v" + Core.Setting.ApplicationVersion, Player.Network.Client));
                 }
                 else if (Player == null)
                 {

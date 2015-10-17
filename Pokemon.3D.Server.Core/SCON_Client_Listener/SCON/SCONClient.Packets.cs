@@ -1,19 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using Aragas.Core.Data;
-using Aragas.Core.Wrappers;
-using PokeD.Core;
 using PokeD.Core.Data.Structs;
 using PokeD.Core.Packets.SCON;
 using PokeD.Core.Packets.SCON.Authorization;
 using PokeD.Core.Packets.SCON.Chat;
 using PokeD.Core.Packets.SCON.Logs;
 using PokeD.Core.Packets.SCON.Status;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
-using System.IO;
-using System.Net;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 {
@@ -190,7 +187,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            SendPacket(new PlayerDatabaseListResponsePacket { PlayerDatabaseList = new PlayerDatabaseList() });
+            // SendPacket(new PlayerDatabaseListResponsePacket { PlayerDatabaseList = new PlayerDatabaseList() });
         }
 
         /// <summary>
@@ -204,7 +201,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 return;
             }
 
-            SendPacket(new BanListResponsePacket { BanList = new BanList() });
+            // SendPacket(new BanListResponsePacket { BanList = new BanList() });
         }
     }
 }
