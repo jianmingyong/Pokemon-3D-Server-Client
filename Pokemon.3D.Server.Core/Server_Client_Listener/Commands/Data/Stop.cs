@@ -59,11 +59,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 default:
                     this.HelpPageGenerator(Player,
-                        string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /stop"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Description: {0}", Description),
-                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        $"---------- Help: {Name} ----------",
+                        $"Usage: /Stop",
+                        $"-------------------------------------",
+                        $"Description: {Description}",
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

@@ -18,7 +18,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Display Server Client Info.";
+        public string Description { get; } = "Display server info.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
@@ -34,17 +34,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         {
             // Start from the most inner depth Command.
             #region /About
-            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "This server is created by jianmingyong.", Player.Network.Client));
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, "It is running v" + Core.Setting.ApplicationVersion, Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, $"This server is created by jianmingyong.", Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, $"It is running v{Core.Setting.ApplicationVersion}", Player.Network.Client));
                 }
                 else if (Player == null)
                 {
                     Core.Logger.Log("This server is created by jianmingyong.", Logger.LogTypes.Info);
-                    Core.Logger.Log("It is running v" + Core.Setting.ApplicationVersion, Logger.LogTypes.Info);
+                    Core.Logger.Log($"It is running v{Core.Setting.ApplicationVersion}", Logger.LogTypes.Info);
                 }
             }
             #endregion /About
@@ -61,11 +61,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 default:
                     this.HelpPageGenerator(Player,
-                        string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /About"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Description: {0}", Description),
-                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        $"---------- Help: {Name} ----------",
+                        $"Usage: /About",
+                        $"-------------------------------------",
+                        $"Description: {Description}",
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

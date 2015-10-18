@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
@@ -9,19 +8,19 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 {
     /// <summary>
-    /// Class containing Season Function.
+    /// Class containing World Function.
     /// </summary>
-    public class Player_Season : ICommand
+    public class Player_World : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Player.Season";
+        public string Name { get; } = "Player.World";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the player season.";
+        public string Description { get; } = "Display player world.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
@@ -36,22 +35,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Player.Season <id>
-            if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
+            #region /Player.World
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Nothing))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
-
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
                     OnlineSetting Settings = Player.GetOnlineSetting();
-                    Settings.Season = Group[0].Toint().RollOver(-4, 3);
-                    Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
-                    Settings.LastWorldUpdate = DateTime.Now;
-
-                    Player.CommandFeedback(Core.World.ToString(Settings.CurrentWorldSeason, Settings.CurrentWorldWeather), $"have changed the player season.");
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), Player.Network.Client));
                 }
             }
-            #endregion /Player.Season <id>
+            #endregion /Player.World
         }
 
         /// <summary>
@@ -66,13 +59,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Player.Season [ID]",
-                        $"-------------------------------------",
-                        $"ID: Season ID.",
-                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3 | Server Default = -4",
+                        $"Usage: /Player.World",
                         $"-------------------------------------",
                         $"Description: {Description}",
-                        $"Required Permission: GameJolt Player."
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

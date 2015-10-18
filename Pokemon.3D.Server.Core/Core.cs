@@ -47,11 +47,6 @@ namespace Pokemon_3D_Server_Core
         public static CommandCollection Command { get; } = new CommandCollection();
 
         /// <summary>
-        /// Get Package Handler.
-        /// </summary>
-        public static PackageHandler Package { get; } = new PackageHandler();
-
-        /// <summary>
         /// Get World.
         /// </summary>
         public static World World { get; } = new World();

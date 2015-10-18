@@ -47,6 +47,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         /// </summary>
         public TcpClient Client { get; set; }
 
+        public PackageHandler PackageHandler { get; } = new PackageHandler();
+
         /// <summary>
         /// A collection of Package Type.
         /// </summary>
@@ -407,7 +409,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         /// </summary>
         public void Handle()
         {
-            Core.Package.Handle(this);
+            PackageHandler.Handle(this);
         }
 
         /// <summary>

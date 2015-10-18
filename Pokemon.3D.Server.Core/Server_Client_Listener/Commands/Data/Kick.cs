@@ -53,11 +53,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     else
                     {
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
+                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", Group[1]), KickPlayer.Network.Client));
 
-                        Player.CommandFeedback("You have successfully kicked " + KickPlayerName, string.Format("have kick {0} with the following reason: {1}", KickPlayerName, Group[1]));
+                        Player.CommandFeedback("You have successfully kicked " + KickPlayerName, $"have kick {KickPlayerName} with the following reason: {Group[1]}");
                     }
                 }
                 else if (Player == null)
@@ -69,7 +69,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     else
                     {
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
+                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", Group[1]), KickPlayer.Network.Client));
 
@@ -135,14 +135,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 default:
                     this.HelpPageGenerator(Player,
-                        string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /kick [Name] [Optional:Reason]"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Name: Player Name."),
-                        string.Format("Reason: Reason to kick. [Default: No reason.]"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Description: {0}", Description),
-                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        $"---------- Help: {Name} ----------",
+                        $"Usage: /kick [Name] [Optional:Reason]",
+                        $"-------------------------------------",
+                        $"Name: Player Name.",
+                        $"Reason: Reason to kick. [Default: No reason.]",
+                        $"-------------------------------------",
+                        $"Description: {Description}",
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

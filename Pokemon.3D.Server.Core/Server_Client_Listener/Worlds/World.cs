@@ -29,7 +29,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             set
             {
                 _Season = value.RollOver(0, 3);
-                
+
             }
         }
 
@@ -76,11 +76,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
         /// Get/Set Current World Time Offset
         /// </summary>
         public int TimeOffset { get; set; } = 0;
-
-        /// <summary>
-        /// Get/Set Current World Can Update?
-        /// </summary>
-        public bool CanUpdate { get; set; } = true;
 
         private DateTime LastWorldUpdate { get; set; }
 
@@ -236,120 +231,117 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                 {
                     _CurrentTime = DateTime.Now;
 
-                    if (CanUpdate)
+                    if (LastWorldUpdate == null || LastWorldUpdate.AddHours(1) <= DateTime.Now)
                     {
-                        if (LastWorldUpdate == null || LastWorldUpdate.AddHours(1) <= DateTime.Now)
+                        switch (Core.Setting.Season)
                         {
-                            switch (Core.Setting.Season)
-                            {
-                                case (int)SeasonType.DefaultSeason:
-                                    switch (WeekOfYear % 4)
-                                    {
-                                        case 0:
-                                            Season = (int)SeasonType.Fall;
-                                            break;
-                                        case 1:
-                                            Season = (int)SeasonType.Winter;
-                                            break;
-                                        case 2:
-                                            Season = (int)SeasonType.Spring;
-                                            break;
-                                        case 3:
-                                            Season = (int)SeasonType.Summer;
-                                            break;
-                                        default:
-                                            Season = (int)SeasonType.Summer;
-                                            break;
-                                    }
-                                    break;
-                                case (int)SeasonType.Random:
-                                    Season = MathHelper.Random(0, 3);
-                                    break;
-                                case (int)SeasonType.Custom:
-                                    Season = GetCustomSeason();
-                                    break;
-                                default:
-                                    Season = Core.Setting.Season;
-                                    break;
-                            }
-
-                            switch (Core.Setting.Weather)
-                            {
-                                case (int)WeatherType.DefaultWeather:
-                                    int Random = MathHelper.Random(1, 100);
-                                    switch (Season)
-                                    {
-                                        case (int)SeasonType.Winter:
-                                            if (Random > 50)
-                                            {
-                                                Weather = (int)WeatherType.Snow;
-                                            }
-                                            else if (Random > 20)
-                                            {
-                                                Weather = (int)WeatherType.Clear;
-                                            }
-                                            else
-                                            {
-                                                Weather = (int)WeatherType.Rain;
-                                            }
-                                            break;
-                                        case (int)SeasonType.Spring:
-                                            if (Random > 40)
-                                            {
-                                                Weather = (int)WeatherType.Clear;
-                                            }
-                                            else if (Random > 5)
-                                            {
-                                                Weather = (int)WeatherType.Rain;
-                                            }
-                                            else
-                                            {
-                                                Weather = (int)WeatherType.Snow;
-                                            }
-                                            break;
-                                        case (int)SeasonType.Summer:
-                                            if (Random > 10)
-                                            {
-                                                Weather = (int)WeatherType.Clear;
-                                            }
-                                            else
-                                            {
-                                                Weather = (int)WeatherType.Rain;
-                                            }
-                                            break;
-                                        case (int)SeasonType.Fall:
-                                            if (Random > 80)
-                                            {
-                                                Weather = (int)WeatherType.Clear;
-                                            }
-                                            else if (Random > 5)
-                                            {
-                                                Weather = (int)WeatherType.Rain;
-                                            }
-                                            else
-                                            {
-                                                Weather = (int)WeatherType.Snow;
-                                            }
-                                            break;
-                                        default:
-                                            Weather = (int)WeatherType.Clear;
-                                            break;
-                                    }
-                                    break;
-                                case (int)WeatherType.Random:
-                                    Weather = MathHelper.Random(0, 9);
-                                    break;
-                                case (int)WeatherType.Custom:
-                                    Weather = GetCustomWeather();
-                                    break;
-                                default:
-                                    Weather = Core.Setting.Weather;
-                                    break;
-                            }
-
-                            LastWorldUpdate = DateTime.Now;
-                            Core.Logger.Log(string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
+                            case (int)SeasonType.DefaultSeason:
+                                switch (WeekOfYear % 4)
+                                {
+                                    case 0:
+                                        Season = (int)SeasonType.Fall;
+                                        break;
+                                    case 1:
+                                        Season = (int)SeasonType.Winter;
+                                        break;
+                                    case 2:
+                                        Season = (int)SeasonType.Spring;
+                                        break;
+                                    case 3:
+                                        Season = (int)SeasonType.Summer;
+                                        break;
+                                    default:
+                                        Season = (int)SeasonType.Summer;
+                                        break;
+                                }
+                                break;
+                            case (int)SeasonType.Random:
+                                Season = MathHelper.Random(0, 3);
+                                break;
+                            case (int)SeasonType.Custom:
+                                Season = GetCustomSeason();
+                                break;
+                            default:
+                                Season = Core.Setting.Season;
+                                break;
                         }
+
+                        switch (Core.Setting.Weather)
+                        {
+                            case (int)WeatherType.DefaultWeather:
+                                int Random = MathHelper.Random(1, 100);
+                                switch (Season)
+                                {
+                                    case (int)SeasonType.Winter:
+                                        if (Random > 50)
+                                        {
+                                            Weather = (int)WeatherType.Snow;
+                                        }
+                                        else if (Random > 20)
+                                        {
+                                            Weather = (int)WeatherType.Clear;
+                                        }
+                                        else
+                                        {
+                                            Weather = (int)WeatherType.Rain;
+                                        }
+                                        break;
+                                    case (int)SeasonType.Spring:
+                                        if (Random > 40)
+                                        {
+                                            Weather = (int)WeatherType.Clear;
+                                        }
+                                        else if (Random > 5)
+                                        {
+                                            Weather = (int)WeatherType.Rain;
+                                        }
+                                        else
+                                        {
+                                            Weather = (int)WeatherType.Snow;
+                                        }
+                                        break;
+                                    case (int)SeasonType.Summer:
+                                        if (Random > 10)
+                                        {
+                                            Weather = (int)WeatherType.Clear;
+                                        }
+                                        else
+                                        {
+                                            Weather = (int)WeatherType.Rain;
+                                        }
+                                        break;
+                                    case (int)SeasonType.Fall:
+                                        if (Random > 80)
+                                        {
+                                            Weather = (int)WeatherType.Clear;
+                                        }
+                                        else if (Random > 5)
+                                        {
+                                            Weather = (int)WeatherType.Rain;
+                                        }
+                                        else
+                                        {
+                                            Weather = (int)WeatherType.Snow;
+                                        }
+                                        break;
+                                    default:
+                                        Weather = (int)WeatherType.Clear;
+                                        break;
+                                }
+                                break;
+                            case (int)WeatherType.Random:
+                                Weather = MathHelper.Random(0, 9);
+                                break;
+                            case (int)WeatherType.Custom:
+                                Weather = GetCustomWeather();
+                                break;
+                            default:
+                                Weather = Core.Setting.Weather;
+                                break;
+                        }
+
+                        LastWorldUpdate = DateTime.Now;
+                        Core.Logger.Log(string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
                     }
 
                     for (int i = 0; i < Core.Player.Count; i++)

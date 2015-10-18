@@ -12,7 +12,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
     /// <summary>
     /// Class containing Player infomation
     /// </summary>
-    public class Player : IDisposable
+    public class Player
     {
         /// <summary>
         /// Get/Set Player DataItem[0]
@@ -540,14 +540,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public override string ToString()
         {
             return isGameJoltPlayer ? string.Format("ID: {3} {0} ({1}) {2}", Name, GameJoltID.ToString(), GetPlayerBusyType(),ID.ToString()) : string.Format("ID: {2} {0} {1}", Name, GetPlayerBusyType(),ID.ToString());
-        }
-
-        /// <summary>
-        /// Dispose the player.
-        /// </summary>
-        public void Dispose()
-        {
-            Network.Dispose();
         }
     }
 }

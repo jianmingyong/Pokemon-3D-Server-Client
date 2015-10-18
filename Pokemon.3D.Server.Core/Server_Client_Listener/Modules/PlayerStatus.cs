@@ -280,20 +280,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="PlayerList">Player List.</param>
         public static MuteList GetMuteList(this Player Player, Player PlayerList = null)
         {
-            if (Player.isGameJoltPlayer)
+            if (PlayerList == null)
             {
-                if (PlayerList == null)
-                {
-                    return (from MuteList p in Core.Setting.MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                }
-                else
-                {
-                    return PlayerList.isGameJoltPlayer ? (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() : null;
-                }
+                // Take Global List Instead.
+                return Player.isGameJoltPlayer ?
+                    (from MuteList p in Core.Setting.MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() :
+                    (from MuteList p in Core.Setting.MuteListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
             }
             else
             {
-                return (from MuteList p in Core.Setting.MuteListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault();
+                // Take the MuteList from PlayerList.
+                return PlayerList.isGameJoltPlayer ?
+                    Player.isGameJoltPlayer ?
+                    (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault() :
+                    (from MuteList p in PlayerList.GetOnlineSetting().MuteListData where p.Name == Player.Name && p.GameJoltID == -1 select p).FirstOrDefault() :
+                    null;
             }
         }
 
@@ -304,13 +305,46 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="PlayerList">Player List to check. Null == Global.</param>
         public static bool IsMuteListed(this Player Player, Player PlayerList = null)
         {
-            if (Core.Setting.MuteList)
+            if (PlayerList == null)
             {
-                if (PlayerList != null && Core.Setting.OnlineSettingList)
+                // Use Global List
+                if (Core.Setting.MuteList)
+                {
+                    MuteList MuteList = Player.GetMuteList();
+                    if (MuteList == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        if (MuteList.Duration == -1 || DateTime.Now < MuteList.StartTime.AddSeconds(MuteList.Duration))
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            Core.Setting.MuteListData.Remove(MuteList);
+                            Core.Setting.Save();
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                // Use PlayerList
+                if (Core.Setting.OnlineSettingList)
                 {
                     MuteList MuteList = Player.GetMuteList(PlayerList);
-
-                    if (MuteList != null)
+                    if (MuteList == null)
+                    {
+                        return false;
+                    }
+                    else
                     {
                         if (MuteList.Duration == -1 || DateTime.Now < MuteList.StartTime.AddSeconds(MuteList.Duration))
                         {
@@ -324,41 +358,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
                             return false;
                         }
                     }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                else if (PlayerList == null)
-                {
-                    MuteList MuteList = Player.GetMuteList();
-
-                    if (MuteList != null)
-                    {
-                        if (MuteList.Duration == -1 || DateTime.Now < MuteList.StartTime.AddSeconds(MuteList.Duration))
-                        {
-                            return true;
-                        }
-                        else
-                        {
-                            Core.Setting.MuteListData.Remove(MuteList);
-                            Core.Setting.Save();
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
                 }
                 else
                 {
                     return false;
                 }
-            }
-            else
-            {
-                return false;
             }
         }
 

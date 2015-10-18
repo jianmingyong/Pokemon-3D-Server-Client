@@ -62,7 +62,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Player.Dispose();
             Core.Player.Remove(Player);
         }
 
@@ -98,7 +97,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Player.Dispose();
             Core.Player.Remove(Player);
         }
 
@@ -110,6 +108,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public void Remove(TcpClient Client, string Reason)
         {
             Player Player = GetPlayer(Client);
+            Player.Network.IsActive = false;
 
             if (Player.isGameJoltPlayer)
             {
@@ -133,7 +132,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Player.Dispose();
             Core.Player.Remove(Player);
         }
 
@@ -248,10 +246,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             if (Core.Player.HasPlayer(p.Client))
             {
                 Player Player = GetPlayer(p.Client);
-                if (Player.Network.IsActive)
-                {
-                    Player.Network.PackageToSend.Enqueue(p);
-                }
+                Player.Network.SentToPlayer(p);
             }
             else
             {
@@ -264,9 +259,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         Writer.Flush();
                         Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, p.Client);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        ex.CatchError();
+                        return;
                     }
                 }
             }
@@ -282,10 +277,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client != null && Core.Player[i].Network.Client != p.Client && (Core.Player[i].IsOperator() || Core.Player[i].GameJoltID == 116016 || Core.Player[i].GameJoltID == 222452))
                 {
-                    if (Core.Player[i].Network.IsActive)
-                    {
-                        Core.Player[i].Network.PackageToSend.Enqueue(p);
-                    }
+                    Core.Player[i].Network.SentToPlayer(p);
                 }
             }
         }
@@ -300,10 +292,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    if (Core.Player[i].Network.IsActive)
-                    {
-                        Core.Player[i].Network.PackageToSend.Enqueue(p);
-                    }
+                    Core.Player[i].Network.SentToPlayer(p);
                 }
             }
         }

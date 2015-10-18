@@ -36,7 +36,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         {
             // Start from the most inner depth Command.
             #region /Global.Season <id>
-
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
@@ -45,7 +44,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 {
                     Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
                     
-                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Season."));
+                    Player.CommandFeedback(Core.World.ToString(), "have changed the global season.");
                 }
                 else if (Player == null)
                 {
@@ -68,14 +67,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 default:
                     this.HelpPageGenerator(Player,
-                        string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Global.Season [ID]"),
-                        string.Format("-------------------------------------"),
-                        string.Format("ID: Season ID."),
-                        string.Format("Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Description: {0}", Description),
-                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        $"---------- Help: {Name} ----------",
+                        $"Usage: /Global.Season [ID]",
+                        $"-------------------------------------",
+                        $"ID: Season ID.",
+                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3",
+                        $"-------------------------------------",
+                        $"Description: {Description}",
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

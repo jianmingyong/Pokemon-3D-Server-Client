@@ -10,7 +10,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
     /// <summary>
     /// Class containing Weather Function.
     /// </summary>
-    public class Weather : ICommand
+    public class Global_Weather : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
@@ -36,7 +36,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         {
             // Start from the most inner depth Command.
             #region /Global.Weather <id>
-
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
@@ -45,7 +44,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 {
                     Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
                     
-                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the Global Weather."));
+                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the global weather."));
                 }
                 else if (Player == null)
                 {
@@ -68,14 +67,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 default:
                     this.HelpPageGenerator(Player,
-                        string.Format("---------- Help: {0} ----------", Name),
-                        string.Format("Usage: /Global.Weather [ID]"),
-                        string.Format("-------------------------------------"),
-                        string.Format("ID: Weather ID."),
-                        string.Format("Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4"),
-                        string.Format("-------------------------------------"),
-                        string.Format("Description: {0}", Description),
-                        string.Format("Required Permission: {0} and above.", RequiredPermission.ToString().Replace("Moderator", " Moderator"))
+                        $"---------- Help: {Name} ----------",
+                        $"Usage: /Global.Weather [ID]",
+                        $"-------------------------------------",
+                        $"ID: Weather ID.",
+                        $"Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4",
+                        $"-------------------------------------",
+                        $"Description: {Description}",
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }

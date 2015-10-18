@@ -63,11 +63,14 @@
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPClientWrapperInstance.cs" />
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Player_World.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Global_World.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Player_Weather.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Player_Season.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\About.cs" />
     <Compile Include="Server_Client_Listener\Commands\Functions.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Global_Season.cs" />
-    <Compile Include="Server_Client_Listener\Commands\Data\Weather.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Global_Weather.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Say.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Restart.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Stop.cs" />

@@ -129,7 +129,7 @@ namespace Pokemon_3D_Server_Client_GUI
             {
                 if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
                 {
-                    Core.Package.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    // Core.Package.HandleChatCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
                 }
                 Main_Command.Clear();
             }

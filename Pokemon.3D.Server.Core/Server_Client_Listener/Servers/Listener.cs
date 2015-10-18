@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -25,9 +24,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
         private StreamReader Reader { get; set; }
 
-        private ConcurrentQueue<string> PackageToReceive = new ConcurrentQueue<string>();
-
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
+
+        private static object Lock = new object();
 
         private bool IsActive { get; set; } = false;
 
@@ -56,10 +55,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
                     Thread.Start();
                     ThreadCollection.Add(Thread);
-
-                    Thread Thread1 = new Thread(new ThreadStart(ThreadHandlePackage)) { IsBackground = true };
-                    Thread1.Start();
-                    ThreadCollection.Add(Thread1);
 
                     if (Core.Setting.AutoRestartTime >= 10)
                     {
@@ -137,59 +132,37 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 {
                     Client = TcpListener.AcceptTcpClient();
                     Reader = new StreamReader(Client.GetStream());
-                    PackageToReceive.Enqueue(Reader.ReadLine());
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadHandlePackage), Reader.ReadLine());
                 }
-                catch (ThreadAbortException)
-                {
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    ex.CatchError();
-                }
+                catch (ThreadAbortException) { return; }
+                catch (Exception) { }
             } while (IsActive);
         }
 
-        private void ThreadHandlePackage()
+        private void ThreadHandlePackage(object obj)
         {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            do
+            lock (Lock)
             {
                 try
                 {
-                    string NewData;
-                    if (PackageToReceive.TryDequeue(out NewData))
-                    {
-                        if (!string.IsNullOrWhiteSpace(NewData))
-                        {
-                            Package Package = new Package(NewData, Client);
-                            Core.Logger.Log($"Receive: {NewData}", Logger.LogTypes.Debug, Client);
+                    string ReturnMessage = (string)obj;
 
-                            if (Package.IsValid)
-                            {
-                                Package.Handle();
-                            }
+                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                    {
+                        Package Package = new Package(ReturnMessage, Client);
+                        Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
+
+                        if (Package.IsValid)
+                        {
+                            Package.Handle();
                         }
                     }
                 }
-                catch (ThreadAbortException)
+                catch (Exception)
                 {
                     return;
                 }
-                catch (Exception ex)
-                {
-                    ex.CatchError();
-                }
-
-                sw.Stop();
-                if (sw.ElapsedMilliseconds < 10)
-                {
-                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
-                }
-                sw.Restart();
-            } while (IsActive);
+            }
         }
 
         private void ThreadAutoRestart()
