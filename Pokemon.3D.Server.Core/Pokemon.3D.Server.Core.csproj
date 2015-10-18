@@ -63,6 +63,8 @@
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPClientWrapperInstance.cs" />
     <Compile Include="SCON_Client_Listener\WrapperInstances\NetworkTCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Operator_Remove.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Operator_Add.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Player_World.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Global_World.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Player_Weather.cs" />

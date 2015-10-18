@@ -622,11 +622,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerInfoData, DataItems, p.Client));
         }
 
-        /// <summary>
-        /// Handle Chat Commands
-        /// </summary>
-        /// <param name="p">Package</param>
-        public void HandleChatCommand(Package p)
+        private void HandleChatCommand(Package p)
         {
             Core.Command.HandleAllCommand(p);
         }
