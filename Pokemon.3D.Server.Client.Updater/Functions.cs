@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
-using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
+namespace Pokemon.Server.Client.Updater
 {
     /// <summary>
     /// Class containing commonly used functions.
@@ -21,84 +17,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// Represents a newline character for print and display functions.
         /// </summary>
         public static readonly string vbNewLine = Environment.NewLine;
-
-        /// <summary>
-        /// Catch Ex Exception and create a crash log.
-        /// </summary>
-        /// <param name="ex">Ex Exception.</param>
-        public static void CatchError(this Exception ex)
-        {
-            try
-            {
-                SystemSounds.Asterisk.Play();
-
-                string ErrorLog = string.Format(@"[CODE]
-Pokémon 3D Server Client Crash Log v {0}
---------------------------------------------------
-
-System specifications:
-
-Operating system: {1} [{2}]
-Core architecture: {3}
-System time: {4}
-System language: {5}
-Physical memory: {6}
-Logical processors: {7}
-Runtime language: {13}
-
---------------------------------------------------
-
-Error information:
-
-Message: {8}
-InnerException: {9}
-HelpLink: {10}
-Source: {11}
-
---------------------------------------------------
-
-CallStack:
-
-{12}
-
---------------------------------------------------
-
-You should report this error if it is reproduceable or you could not solve it by yourself.
-
-Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.org/pokemon/forums/bug-reports.204/ to report this crash.
-[/CODE]",
-                Core.Setting.ApplicationVersion,
-                My.Computer.Info.OSFullName,
-                My.Computer.Info.OSVersion,
-                Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
-                DateTime.Now.ToString(),
-                CultureInfo.CurrentCulture.EnglishName.ToString(),
-                string.Format("{0} GB / {1} GB", Math.Round((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824, 2).ToString(), Math.Round((double)My.Computer.Info.TotalPhysicalMemory / 1073741824, 2).ToString()),
-                Environment.ProcessorCount.ToString(),
-                ex.Message,
-                ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
-                string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
-                ex.Source,
-                ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + vbNewLine + ex.StackTrace,
-                Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
-                );
-
-                if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
-                {
-                    Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\CrashLogs");
-                }
-
-                DateTime ErrorTime = DateTime.Now;
-                int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
-
-                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier.ToString("0000000000") + ".dat", ErrorLog, Encoding.Unicode);
-                Core.Logger.Log(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
-            }
-            catch (Exception exc)
-            {
-                Core.Logger.Log(exc.Message, Logger.LogTypes.Warning);
-            }
-        }
 
         /// <summary>
         /// Count the number of index after spliting "|" in the full string.
@@ -305,7 +223,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             return sb.ToString();
         }
 
-        public static void Run(this string File, string Argument = null, bool Close = false)
+        public static void Run(this string File, string Argument = null)
         {
             try
             {
@@ -316,11 +234,6 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
                 else
                 {
                     Process.Start(File, Argument);
-                }
-
-                if (Close)
-                {
-                    ClientEvent.Invoke(ClientEvent.Types.Stop, null);
                 }
             }
             catch (Exception)
