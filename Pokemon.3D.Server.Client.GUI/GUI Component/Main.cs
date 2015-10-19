@@ -5,7 +5,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
@@ -20,6 +19,7 @@ namespace Pokemon_3D_Server_Client_GUI
         private delegate void UpdatePlayerList_Safe(object myObject);
 
         private bool ApplicationRestart = false;
+        private bool ApplicationUpdate = false;
         private List<System.Threading.Timer> TimerCollection = new List<System.Threading.Timer>();
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             for (int i = 0; i < Core.Player.Count; i++)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
             }
 
             Core.Setting.Save();
@@ -56,6 +56,11 @@ namespace Pokemon_3D_Server_Client_GUI
             {
                 Application.Restart();
                 Application.ExitThread();
+            }
+
+            if (ApplicationUpdate)
+            {
+                
             }
         }
 
@@ -85,7 +90,11 @@ namespace Pokemon_3D_Server_Client_GUI
                     }
                     else if (Type == ClientEvent.Types.Stop)
                     {
-                        ApplicationRestart = false;
+                        Application.Exit();
+                    }
+                    else if (Type == ClientEvent.Types.Update)
+                    {
+                        ApplicationUpdate = true;
                         Application.Exit();
                     }
                 }

@@ -108,13 +108,12 @@
     <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
     <Compile Include="Server_Client_Listener\Worlds\World.cs" />
     <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="Updater\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Updater\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
       <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>

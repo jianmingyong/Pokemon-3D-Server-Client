@@ -39,6 +39,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
             Stop,
 
             /// <summary>
+            /// Update Client { Args = null }
+            /// </summary>
+            Update,
+
+            /// <summary>
             /// Add Player into the list { Args = Player }
             /// </summary>
             AddPlayer,
