@@ -15,7 +15,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
     /// </summary>
     public class SCONListener : IDisposable
     {
-        private INetworkTCPServer Listener { get; set; }
+        private ITCPListener Listener { get; set; }
 
         private bool IsActive { get; set; } = false;
 
@@ -26,7 +26,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
         public SCONListener()
         {
             AppDomainWrapper.Instance = new AppDomainWrapperInstance();
-            NetworkTCPServerWrapper.Instance = new NetworkTCPServerWrapperInstance();
+            TCPListenerWrapper.Instance = new TCPServerWrapperInstance();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                     UpdateCycle.Start();
                     ThreadCollection.Add(UpdateCycle);
 
-                    Listener = NetworkTCPServerWrapper.NewInstance(Core.Setting.SCONPort);
+                    Listener = TCPListenerWrapper.CreateTCPListener(Core.Setting.SCONPort);
                     Listener.Start();
 
                     IsActive = true;
