@@ -24,7 +24,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         bool IsInitialized { get; set; }
         bool IsDisposed { get; set; }
 
-        public INetworkTCPClient Client { get; }
+        public ITCPClient Client { get; }
         ProtobufStream Stream { get; }
 
         private readonly SCONListener _listener;
@@ -38,7 +38,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         // -- Debug -- //
 #endif
 
-        public SCONClient(INetworkTCPClient client, SCONListener sconListener)
+        public SCONClient(ITCPClient client, SCONListener sconListener)
         {
             Client = client;
             Stream = new ProtobufStream(Client);
