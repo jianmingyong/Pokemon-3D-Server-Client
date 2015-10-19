@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Pokemon._3D.Server.Client.Updater.Program</StartupObject>
+    <StartupObject>Pokemon.Server.Client.Updater.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
