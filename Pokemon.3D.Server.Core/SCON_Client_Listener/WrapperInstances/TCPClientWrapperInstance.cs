@@ -93,10 +93,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
                     {
                         var numberOfBytesRead = Stream.Read(buffer, 0, buffer.Length);
                         if (numberOfBytesRead == 0)
-                            while (DataAvailable <= 0)
-                            {
-                                Thread.Sleep(1);
-                            }
+                            break;
 
                         receivedData.Write(buffer, 0, buffer.Length); //Write to memory stream
                         totalNumberOfBytesRead += numberOfBytesRead;
