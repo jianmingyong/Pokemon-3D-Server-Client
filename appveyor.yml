@@ -1,4 +1,4 @@
-version: 0.54.0.{build}
+version: 0.54.1.{build}
 branches:
   only:
   - master
@@ -6,9 +6,14 @@ skip_tags: true
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
-shallow_clone: false
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
 install:
-- git submodule update --init
+- cmd: git submodule update --init
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client.sln
 build:
