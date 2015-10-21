@@ -99,6 +99,10 @@
     <Content Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AutoUpdater.NET\AutoUpdater.NET\AutoUpdater.NET.csproj">
+      <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
+      <Name>AutoUpdater.NET</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pokemon.3D.Server.Core\Pokemon.3D.Server.Core.csproj">
       <Project>{332aadb0-98ce-4fd6-a63a-577fdaa7c9ec}</Project>
       <Name>Pokemon.3D.Server.Core</Name>

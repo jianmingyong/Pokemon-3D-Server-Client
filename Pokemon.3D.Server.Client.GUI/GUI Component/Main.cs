@@ -6,6 +6,7 @@ using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using AutoUpdaterDotNET;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -34,8 +35,17 @@ namespace Pokemon_3D_Server_Client_GUI
             ClientEvent.Update += ClientEvent_Update;
             Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            AutoUpdater.CheckForUpdateEvent += new AutoUpdater.CheckForUpdateEventHandler(AutoUpdater_CheckForUpdateEvent);
 
             Core.Start(Environment.CurrentDirectory);
+        }
+
+        private void AutoUpdater_CheckForUpdateEvent(UpdateInfoEventArgs args)
+        {
+            if (args.IsUpdateAvailable)
+            {
+                ClientEvent.Invoke(ClientEvent.Types.Update, null);
+            }
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -50,13 +60,18 @@ namespace Pokemon_3D_Server_Client_GUI
 
             if (ApplicationRestart)
             {
+                while ((DateTime.Now - Core.Setting.StartTime).TotalSeconds < 30)
+                {
+                    Thread.Sleep(1000);
+                }
+
                 Application.Restart();
                 Application.ExitThread();
             }
 
             if (ApplicationUpdate)
             {
-                
+                AutoUpdater.DownloadUpdate();
             }
         }
 

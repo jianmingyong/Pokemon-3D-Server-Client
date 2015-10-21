@@ -3,11 +3,11 @@ using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using AutoUpdaterDotNET;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -77,7 +77,21 @@ namespace Pokemon_3D_Server_Core
                     return;
                 }
 
-                Setting.NoPingKickTime = 20;
+                Setting.NoPingKickTime = 30;
+
+                if (Setting.CheckForUpdate)
+                {
+                    Logger.Log("Checking for update.", Server_Client_Listener.Loggers.Logger.LogTypes.Info);
+
+                    try
+                    {
+                        AutoUpdater.Start("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Update.xml");
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+                }
 
                 // Initialize Listener.
                 Listener.Start();

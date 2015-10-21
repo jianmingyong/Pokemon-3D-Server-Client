@@ -220,7 +220,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public string DefaultWorldCountry { get; set; } = RegionInfo.CurrentRegion.EnglishName;
 
-        private int _NoPingKickTime = 20;
+        private int _NoPingKickTime = 30;
         /// <summary>
         /// Get/Set No Ping Kick Time
         /// </summary>

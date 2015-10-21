@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Pokemon.3D.Server.Client.GUI\bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,7 +32,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Pokemon.3D.Server.Client.GUI\bin\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -108,7 +108,6 @@
     <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
     <Compile Include="Server_Client_Listener\Worlds\World.cs" />
     <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="Updater\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -118,6 +117,10 @@
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
       <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>
       <Name>Aragas.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AutoUpdater.NET\AutoUpdater.NET\AutoUpdater.NET.csproj">
+      <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
+      <Name>AutoUpdater.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\PokeD.Core\PokeD.Core.csproj">
       <Project>{1cf84e56-3bbe-4a3a-9234-5951bf2558c3}</Project>
