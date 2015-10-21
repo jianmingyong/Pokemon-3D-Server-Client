@@ -110,7 +110,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 {
                     if (Listener.AvailableClients)
                     {
-                        SCONClients.Add(new SCONClient(Listener.AcceptNetworkTCPClient(), this));
+                        SCONClients.Add(new SCONClient(Listener.AcceptTCPClient(), this));
                         Core.Logger.Log("New SCON Player Added.", Logger.LogTypes.Debug);
                     }
                 }

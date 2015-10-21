@@ -4,26 +4,63 @@ using Aragas.Core.Wrappers;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
 {
-    public class TCPListenerClass : ITCPListener
+    public class TCPListenerImplementation : ITCPListener
     {
         public ushort Port { get; }
-        public bool AvailableClients => Listener.Pending();
+        public bool AvailableClients => Listener.Poll(0, SelectMode.SelectRead);
 
-        private TcpListener Listener { get; }
+        private bool IsDisposed { get; set; }
+
+        private Socket Listener { get; }
 
 
-        internal TCPListenerClass(ushort port) { Port = port; Listener = new TcpListener(new IPEndPoint(IPAddress.Any, Port)); }
+        internal TCPListenerImplementation(ushort port)
+        {
+            Port = port;
 
-        public void Start() { Listener.Start(); }
-        public void Stop() { Listener.Stop(); }
+            Listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Listener.NoDelay = true;
 
-        public ITCPClient AcceptNetworkTCPClient() { return new TCPClientClass(Listener.AcceptTcpClient()); }
+            Listener.Bind(new IPEndPoint(IPAddress.Any, Port));
+        }
 
-        public void Dispose() { Listener?.Stop(); }
+        public void Start()
+        {
+            if (IsDisposed)
+                return;
+
+            Listener.Listen(1000);
+        }
+
+        public void Stop()
+        {
+            if (IsDisposed)
+                return;
+
+            Listener.Close();
+        }
+
+        public ITCPClient AcceptTCPClient()
+        {
+            if (IsDisposed)
+                return null;
+
+            return new TCPClientImplementation(Listener.Accept());
+        }
+
+        public void Dispose()
+        {
+            if (IsDisposed)
+                return;
+
+            IsDisposed = true;
+
+            Listener?.Dispose();
+        }
     }
 
     public class TCPServerWrapperInstance : ITCPListenerWrapper
     {
-        public ITCPListener CreateTCPListener(ushort port) { return new TCPListenerClass(port); }
+        public ITCPListener CreateTCPListener(ushort port) { return new TCPListenerImplementation(port); }
     }
 }

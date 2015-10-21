@@ -1,33 +1,33 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using Aragas.Core.Wrappers;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
 {
-    public class TCPClientClass : ITCPClient
+    public class TCPClientImplementation : ITCPClient
     {
         public int RefreshConnectionInfoTime { get; set; }
 
-        public string IP => !IsDisposed && Client != null ? ((IPEndPoint) Client.Client.RemoteEndPoint).Address.ToString() : "";
-        public bool Connected => !IsDisposed && Client != null && Client.Client.Connected;
+        public string IP => !IsDisposed && Client != null ? (Client.RemoteEndPoint as IPEndPoint)?.Address.ToString() : "";
+        public bool Connected => !IsDisposed && Client != null && Client.Connected;
         public int DataAvailable => !IsDisposed && Client != null ? Client.Available : 0;
 
-        private TcpClient Client { get; set; }
+        private Socket Client { get; }
         private Stream Stream { get; set; }
 
         private bool IsDisposed { get; set; }
 
 
-        public TCPClientClass() { }
-        public TCPClientClass(TcpClient tcpClient)
+        public TCPClientImplementation()
         {
-            Client = tcpClient;
-            Client.SendTimeout = 5;
-            Client.ReceiveTimeout = 5;
-            Client.NoDelay = false;
-            Stream = Client.GetStream();
+            Client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Client.NoDelay = true;
+        }
+        internal TCPClientImplementation(Socket socket)
+        {
+            Client = socket;
+            Stream = new NetworkStream(Client);
 
         }
 
@@ -36,15 +36,15 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
             if (Connected)
                 Disconnect();
 
-            Client = new TcpClient(ip, port) { SendTimeout = 5, ReceiveTimeout = 5, NoDelay = false };
-            Stream = Client.GetStream();
+            Client.Connect(ip, port);
+            Stream = new NetworkStream(Client);
 
             return this;
         }
         public ITCPClient Disconnect()
         {
             if (Connected)
-                Client.Client.Disconnect(false);
+                Client.Disconnect(false);
 
             return this;
         }
@@ -57,20 +57,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
             try
             {
                 var length = array.Length;
-                var buffer = length < Client.SendBufferSize ?
-                    new byte[length] :
-                    new byte[Client.ReceiveBufferSize];
 
-                var totalWritedLength = 0;
-                using (var data = new MemoryStream(array))
-                {
-                    do
-                    {
-                        var writedLength = data.Read(buffer, 0, buffer.Length);
-                        Stream.Write(buffer, 0, buffer.Length);
-                        totalWritedLength += writedLength;
-                    } while (totalWritedLength < length);
-                }
+                var bytesSend = 0;
+                while (bytesSend < length)
+                    bytesSend += Client.Send(array, bytesSend, length - bytesSend, 0);
             }
             catch (IOException) { Dispose(); }
             catch (SocketException) { Dispose(); }
@@ -82,25 +72,13 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
 
             try
             {
-                var buffer = length < Client.ReceiveBufferSize ?
-                    new byte[length] :
-                    new byte[Client.ReceiveBufferSize];
+                var array = new byte[length];
 
-                var totalNumberOfBytesRead = 0;
-                using (var receivedData = new MemoryStream())
-                {
-                    do
-                    {
-                        var numberOfBytesRead = Stream.Read(buffer, 0, buffer.Length);
-                        if (numberOfBytesRead == 0)
-                            break;
+                var bytesReceive = 0;
+                while (bytesReceive < length)
+                    bytesReceive += Client.Receive(array, bytesReceive, length - bytesReceive, 0);
 
-                        receivedData.Write(buffer, 0, buffer.Length); //Write to memory stream
-                        totalNumberOfBytesRead += numberOfBytesRead;
-                    } while (totalNumberOfBytesRead < length);
-
-                    return receivedData.ToArray();
-                }
+                return array;
             }
             catch (IOException) { Dispose(); return new byte[0]; }
             catch (SocketException) { Dispose(); return new byte[0]; }
@@ -115,13 +93,13 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
 
             IsDisposed = true;
 
-            Client?.Close();
+            Client?.Dispose();
             Stream?.Dispose();
         }
     }
 
     public class TCPClientWrapperInstance : ITCPClientWrapper
     {
-        public ITCPClient CreateTCPClient() { return new TCPClientClass(); }
+        public ITCPClient CreateTCPClient() { return new TCPClientImplementation(); }
     }
 }
