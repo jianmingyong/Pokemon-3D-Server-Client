@@ -2,6 +2,6 @@
 <item>
 <title>Pokémon 3D Server Client v0.54.1.2</title>
 <version>0.54.1.2</version>
-<url>https://github-cloud.s3.amazonaws.com/releases/41758504/0d50dbd8-7852-11e5-9ceb-d1f4b840dd2b.exe?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAISTNZFOVBIJMK3TQ%2F20151021%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20151021T162004Z&X-Amz-Expires=300&X-Amz-Signature=c4711d387ddd34ca81216e285ea41fb00bcfd0dafca85b6b117aaac250442243&X-Amz-SignedHeaders=host&actor_id=0&response-content-disposition=attachment%3B%20filename%3DRelease.exe&response-content-type=application%2Foctet-stream</url>
+<url>https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Release.exe</url>
 <changelog>https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/UpdateNotes.html</changelog>
 </item>
