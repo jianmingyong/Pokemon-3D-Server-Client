@@ -237,15 +237,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public List<string> LastValidGameData { get; set; } = new List<string>();
 
-        /// <summary>
-        /// Get/Set Player Last Movement Position [Direction | Position Vector]
-        /// </summary>
-        public string LastMovementPosition { get; set; }
-
-        /// <summary>
-        /// Get/Set Player Last Pokemon Movement Position [Direction | Position Vector]
-        /// </summary>
-        public string LastPokemonMovementPosition { get; set; }
+        private static object Lock = new object();
 
         /// <summary>
         /// A Collection of Busy Type
@@ -379,87 +371,90 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="SentToServer">Sent data to server?</param>
         public void Update(Package p, bool SentToServer)
         {
-            if (Network != null)
+            lock (Lock)
             {
-                Network.LastValidMovement = DateTime.Now;
-            }
+                if (Network != null)
+                {
+                    Network.LastValidMovement = DateTime.Now;
+                }
 
-            if (p.IsFullPackageData())
-            {
-                GameMode = p.DataItems[0];
-                isGameJoltPlayer = p.DataItems[1].Toint().Tobool();
-                GameJoltID = isGameJoltPlayer ? p.DataItems[2].Toint() : -1;
-                DecimalSeparator = p.DataItems[3];
-                Name = p.DataItems[4];
-                LevelFile = p.DataItems[5];
-                Position = p.DataItems[6];
-                Facing = p.DataItems[7].Toint();
-                Moving = p.DataItems[8].Toint().Tobool();
-                Skin = p.DataItems[9];
-                BusyType = p.DataItems[10].Toint();
-                PokemonVisible = p.DataItems[11].Toint().Tobool();
-                PokemonPosition = p.DataItems[12];
-                PokemonSkin = p.DataItems[13];
-                PokemonFacing = p.DataItems[14].Toint();
-
-                LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
-            }
-            else
-            {
-                LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
-
-                if (!string.IsNullOrWhiteSpace(p.DataItems[5]) && p.DataItems[5].SplitCount() == 1)
-                {
-                    LevelFile = p.DataItems[5];
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[6]) && p.DataItems[6].SplitCount() == 3)
-                {
-                    Position = p.DataItems[6];
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[7]) && p.DataItems[7].SplitCount() == 1)
-                {
-                    Facing = p.DataItems[7].Toint();
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[8]) && p.DataItems[8].SplitCount() == 1)
-                {
-                    Moving = p.DataItems[8].Toint().Tobool();
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[9]) && p.DataItems[9].SplitCount() <= 2)
-                {
-                    Skin = p.DataItems[9];
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[10]) && p.DataItems[10].SplitCount() == 1)
-                {
-                    BusyType = p.DataItems[10].Toint();
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[11]) && p.DataItems[11].SplitCount() == 1)
-                {
-                    PokemonVisible = p.DataItems[11].Toint().Tobool();
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[12]) && p.DataItems[12].SplitCount() == 3)
-                {
-                    PokemonPosition = p.DataItems[12];
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[13]) && p.DataItems[13].SplitCount() <= 2)
-                {
-                    PokemonSkin = p.DataItems[13];
-                }
-                if (!string.IsNullOrWhiteSpace(p.DataItems[14]) && p.DataItems[14].SplitCount() == 1)
-                {
-                    PokemonFacing = p.DataItems[14].Toint();
-                }
-            }
-
-            // Sent To Server
-            if (SentToServer)
-            {
                 if (p.IsFullPackageData())
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+                    GameMode = p.DataItems[0];
+                    isGameJoltPlayer = p.DataItems[1].Toint().Tobool();
+                    GameJoltID = isGameJoltPlayer ? p.DataItems[2].Toint() : -1;
+                    DecimalSeparator = p.DataItems[3];
+                    Name = p.DataItems[4];
+                    LevelFile = p.DataItems[5];
+                    Position = p.DataItems[6];
+                    Facing = p.DataItems[7].Toint();
+                    Moving = p.DataItems[8].Toint().Tobool();
+                    Skin = p.DataItems[9];
+                    BusyType = p.DataItems[10].Toint();
+                    PokemonVisible = p.DataItems[11].Toint().Tobool();
+                    PokemonPosition = p.DataItems[12];
+                    PokemonSkin = p.DataItems[13];
+                    PokemonFacing = p.DataItems[14].Toint();
+
+                    LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
                 }
                 else
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
+
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[5]) && p.DataItems[5].SplitCount() == 1)
+                    {
+                        LevelFile = p.DataItems[5];
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[6]) && p.DataItems[6].SplitCount() == 3)
+                    {
+                        Position = p.DataItems[6];
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[7]) && p.DataItems[7].SplitCount() == 1)
+                    {
+                        Facing = p.DataItems[7].Toint();
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[8]) && p.DataItems[8].SplitCount() == 1)
+                    {
+                        Moving = p.DataItems[8].Toint().Tobool();
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[9]) && p.DataItems[9].SplitCount() <= 2)
+                    {
+                        Skin = p.DataItems[9];
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[10]) && p.DataItems[10].SplitCount() == 1)
+                    {
+                        BusyType = p.DataItems[10].Toint();
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[11]) && p.DataItems[11].SplitCount() == 1)
+                    {
+                        PokemonVisible = p.DataItems[11].Toint().Tobool();
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[12]) && p.DataItems[12].SplitCount() == 3)
+                    {
+                        PokemonPosition = p.DataItems[12];
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[13]) && p.DataItems[13].SplitCount() <= 2)
+                    {
+                        PokemonSkin = p.DataItems[13];
+                    }
+                    if (!string.IsNullOrWhiteSpace(p.DataItems[14]) && p.DataItems[14].SplitCount() == 1)
+                    {
+                        PokemonFacing = p.DataItems[14].Toint();
+                    }
+                }
+
+                // Sent To Server
+                if (SentToServer)
+                {
+                    if (p.IsFullPackageData())
+                    {
+                        Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+                    }
+                    else
+                    {
+                        Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    }
                 }
             }
         }

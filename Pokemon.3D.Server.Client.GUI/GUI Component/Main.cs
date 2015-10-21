@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -20,7 +19,6 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private bool ApplicationRestart = false;
         private bool ApplicationUpdate = false;
-        private List<System.Threading.Timer> TimerCollection = new List<System.Threading.Timer>();
 
         /// <summary>
         /// GUI Component Start Point
@@ -34,12 +32,10 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             // Add Handler
             ClientEvent.Update += ClientEvent_Update;
+            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
             Core.Start(Environment.CurrentDirectory);
-
-            // UpdatePlayerList
-            System.Threading.Timer Timer = new System.Threading.Timer(new TimerCallback(UpdatePlayerList), null, 0, 10);
-            TimerCollection.Add(Timer);
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
@@ -105,31 +101,16 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
-        private void UpdatePlayerList(object obj)
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs ex)
         {
-            try
-            {
-                if (Main_CurrentPlayerOnline.InvokeRequired)
-                {
-                    BeginInvoke(new UpdatePlayerList_Safe(UpdatePlayerList), "");
-                }
-                else
-                {
-                    List<string> ListOfPlayer = new List<string>();
+            ex.Exception.CatchError();
+            ClientEvent.Invoke(ClientEvent.Types.Restart, null);
+        }
 
-                    for (int i = 0; i < Core.Player.Count; i++)
-                    {
-                        ListOfPlayer.Add(Core.Player[i].ToString());
-                    }
-
-                    Main_CurrentPlayerOnline.DataSource = null;
-                    Main_CurrentPlayerOnline.DataSource = Core.Player.Count > 0 ? ListOfPlayer : null;
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.CatchError();
-            }
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs ex)
+        {
+            (ex.ExceptionObject as Exception).CatchError();
+            ClientEvent.Invoke(ClientEvent.Types.Restart, null);
         }
 
         private void Main_Command_KeyDown(object sender, KeyEventArgs e)
