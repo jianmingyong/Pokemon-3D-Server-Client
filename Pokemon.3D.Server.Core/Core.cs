@@ -7,7 +7,6 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
-using AutoUpdaterDotNET;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -51,6 +50,8 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static World World { get; } = new World();
 
+        public static Updater Updater { get; } = new Updater();
+
         /// <summary>
         /// Server Main Entry Point - Initialize as many things as possible here.
         /// </summary>
@@ -79,18 +80,10 @@ namespace Pokemon_3D_Server_Core
 
                 Setting.NoPingKickTime = 30;
 
+                // Initialize Updater
                 if (Setting.CheckForUpdate)
                 {
-                    Logger.Log("Checking for update.", Server_Client_Listener.Loggers.Logger.LogTypes.Info);
-
-                    try
-                    {
-                        AutoUpdater.Start("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Update.xml");
-                    }
-                    catch (Exception)
-                    {
-                        return;
-                    }
+                    Updater.Update();
                 }
 
                 // Initialize Listener.

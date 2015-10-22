@@ -49,7 +49,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
@@ -108,19 +107,16 @@
     <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
     <Compile Include="Server_Client_Listener\Worlds\World.cs" />
     <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Update.dat" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
       <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>
       <Name>Aragas.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AutoUpdater.NET\AutoUpdater.NET\AutoUpdater.NET.csproj">
-      <Project>{fb9e7e6b-b19f-4f37-a708-2996190cef13}</Project>
-      <Name>AutoUpdater.NET</Name>
     </ProjectReference>
     <ProjectReference Include="..\PokeD.Core\PokeD.Core.csproj">
       <Project>{1cf84e56-3bbe-4a3a-9234-5951bf2558c3}</Project>
