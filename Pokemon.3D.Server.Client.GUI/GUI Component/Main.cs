@@ -49,6 +49,9 @@ namespace Pokemon_3D_Server_Client_GUI
             Core.Setting.Save();
             Core.Dispose();
 
+            Application.ThreadException -= Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
+
             if (ApplicationRestart)
             {
                 while ((DateTime.Now - Core.Setting.StartTime).TotalSeconds < 30)
@@ -63,8 +66,7 @@ namespace Pokemon_3D_Server_Client_GUI
             if (ApplicationUpdate)
             {
                 ApplicationUpdate = false;
-
-                Application.ExitThread();
+                Functions.Run(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", Core.Setting.ApplicationDirectory.Replace(" ", "%20"), false);
             }
         }
 

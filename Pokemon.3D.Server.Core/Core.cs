@@ -80,12 +80,6 @@ namespace Pokemon_3D_Server_Core
 
                 Setting.NoPingKickTime = 30;
 
-                // Initialize Updater
-                if (Setting.CheckForUpdate)
-                {
-                    Updater.Update();
-                }
-
                 // Initialize Listener.
                 Listener.Start();
 
@@ -93,6 +87,12 @@ namespace Pokemon_3D_Server_Core
                 if (Setting.SCONEnable)
                 {
                     SCONListener.Start();
+                }
+
+                // Initialize Updater
+                if (Setting.CheckForUpdate)
+                {
+                    Updater.Update();
                 }
 
                 // Initialize Command.

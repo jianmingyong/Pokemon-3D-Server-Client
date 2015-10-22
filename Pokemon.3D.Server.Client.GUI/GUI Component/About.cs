@@ -96,5 +96,10 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
         #endregion
+
+        private void okButton_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

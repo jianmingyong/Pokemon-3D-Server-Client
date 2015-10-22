@@ -1,9 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Cache;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -29,8 +30,18 @@ namespace Pokemon_3D_Server_Core
 
             Core.Logger.Log("Checking for update...", Logger.LogTypes.Info);
 
+            UpdateFailed();
+
             Client.DownloadStringAsync(new Uri(UpdateURL));
             Client.DownloadStringCompleted += Client_DownloadStringCompleted;
+        }
+
+        public void UpdateFailed()
+        {
+            if (File.Exists(Core.Setting.ApplicationDirectory + "\\Release.zip"))
+            {
+                Core.Logger.Log("Update FAILED. Error have been logged into the logger.", Logger.LogTypes.Info);
+            }
         }
 
         private void Client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
@@ -48,6 +59,10 @@ namespace Pokemon_3D_Server_Core
 
                     Client.DownloadFileAsync(new Uri(ExpectFileURL), Core.Setting.ApplicationDirectory + "\\Release.zip");
                     Client.DownloadFileCompleted += Client_DownloadFileCompleted;
+                }
+                else
+                {
+                    Core.Logger.Log($"No update found. You are using the latest version.", Logger.LogTypes.Info);
                 }
             }
             else if (e.Error != null)
@@ -71,6 +86,10 @@ namespace Pokemon_3D_Server_Core
                 if (string.Equals(CurrentMD5Checksum, ExpectMD5Checksum, StringComparison.OrdinalIgnoreCase))
                 {
                     ClientEvent.Invoke(ClientEvent.Types.Update, null);
+                }
+                else
+                {
+                    Core.Logger.Log($"MD5 does not match. Update failed.", Logger.LogTypes.Info);
                 }
             }
             else if (e.Error != null)

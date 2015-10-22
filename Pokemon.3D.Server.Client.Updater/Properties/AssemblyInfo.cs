@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Resources;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -6,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Pokémon 3D Server Client Updater")]
-[assembly: AssemblyDescription("Pokémon 3D Server Client Updater")]
+[assembly: AssemblyDescription("Pokémon 3D Server Client is an unofficial server client that fixes bugs found on the official server client. The developer of this program do not claim full credits for this client.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Dialga Team")]
 [assembly: AssemblyProduct("Pokémon 3D Server Client Updater")]
@@ -20,7 +21,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("07ef5a41-fb27-45a7-a15b-1edfcdb79658")]
+[assembly: Guid("6b462f07-fb93-4abf-a7a3-454e570ae2b8")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +33,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.54.1.0")]
-[assembly: AssemblyFileVersion("0.54.1.0")]
+[assembly: AssemblyVersion("0.54.1.5")]
+[assembly: AssemblyFileVersion("0.54.1.5")]
+[assembly: NeutralResourcesLanguage("en")]
+
