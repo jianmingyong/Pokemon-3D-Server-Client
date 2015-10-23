@@ -1973,7 +1973,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 
         /* OfflineMode:  The ability for offline profile player to join the server.
 		   Syntax: Boolean: true, false */
-        ""OfflineMode"": {12},
+        ""OfflineMode"": {12}
     }},
 
     ""SCON Server Property"":

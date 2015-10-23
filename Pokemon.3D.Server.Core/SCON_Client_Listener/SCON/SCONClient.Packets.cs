@@ -157,9 +157,8 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             for (int i = 0; i < Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs").Length; i++)
             {
                 Logs.Add(new Log() { LogFileName = Path.GetFileName(Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs")[i]) });
+                SendPacket(new CrashLogListResponsePacket { CrashLogList = new LogList(Logs.ToArray()) });
             }
-
-            SendPacket(new CrashLogListResponsePacket { CrashLogList = new LogList(Logs.ToArray()) });
         }
         private void HandleCrashLogFileRequest(CrashLogFileRequestPacket packet)
         {

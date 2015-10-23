@@ -534,7 +534,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public override string ToString()
         {
-            return isGameJoltPlayer ? string.Format("ID: {3} {0} ({1}) {2}", Name, GameJoltID.ToString(), GetPlayerBusyType(),ID.ToString()) : string.Format("ID: {2} {0} {1}", Name, GetPlayerBusyType(),ID.ToString());
+            return isGameJoltPlayer ? string.Format("ID: {3} | {0} ({1}) {2}", Name, GameJoltID.ToString(), GetPlayerBusyType(),ID.ToString()) : string.Format("ID: {2} | {0} {1}", Name, GetPlayerBusyType(),ID.ToString());
         }
     }
 }
