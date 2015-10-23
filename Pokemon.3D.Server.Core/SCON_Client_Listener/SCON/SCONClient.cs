@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Threading;
 using Aragas.Core.Data;
 using Aragas.Core.Interfaces;
 using Aragas.Core.IO;
@@ -94,6 +94,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                             try
                             {
                                 HandlePacket(packet);
+                            }
+                            catch (ThreadAbortException)
+                            {
+                                return;
                             }
                             catch (Exception ex)
                             {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Aragas.Core.Wrappers;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.SCON;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using System.Diagnostics;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 {

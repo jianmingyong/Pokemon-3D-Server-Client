@@ -126,9 +126,8 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             for (int i = 0; i < Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger").Length; i++)
             {
                 Logs.Add(new Log() { LogFileName = Path.GetFileName(Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger")[i]) });
+                SendPacket(new LogListResponsePacket { LogList = new LogList(Logs.ToArray()) });
             }
-
-            SendPacket(new LogListResponsePacket { LogList = new LogList(Logs.ToArray()) });
         }
         private void HandleLogFileRequest(LogFileRequestPacket packet)
         {
