@@ -13,6 +13,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using System.Linq;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 {
@@ -162,7 +163,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
         }
 
-        private string _SCONPassword = "Password";
+        public string _SCONPassword = "Password";
         /// <summary>
         /// Get/Set SCON Port Password
         /// </summary>
@@ -403,7 +404,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
         }
 
-        private int _SpamResetDuration = 30;
+        /// <summary>
+        /// Get/Set Custom Chat Channels.
+        /// </summary>
+        public List<string> CustomChannels { get; set; } = new List<string> { "German Lounge" };
+
+        private int _SpamResetDuration = -1;
         /// <summary>
         /// Get/Set Spam Reset Duration
         /// </summary>
@@ -695,13 +701,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.String)
                                         {
-                                            for (int i = 0; i < Reader.Value.ToString().SplitCount(); i++)
-                                            {
-                                                if (!GameMode.Contains(Reader.Value.ToString()))
-                                                {
-                                                    GameMode.Add(Reader.Value.ToString().GetSplit(i, ","));
-                                                }
-                                            }
+                                            GameMode = Reader.Value.ToString().Split(',').ToList();
                                         }
                                         else
                                         {
@@ -1031,12 +1031,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Swear Infraction Feature
-                            #region Spam Feature
-                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Spam Feature", StringComparison.OrdinalIgnoreCase))
+                            #region Chat Feature
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Chat Feature", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
-                                    if (string.Equals(PropertyName, "SpamResetDuration", StringComparison.OrdinalIgnoreCase))
+                                    if (string.Equals(PropertyName, "CustomChannels", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            CustomChannels = Reader.Value.ToString().Split(',').ToList();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.Chat Feature.CustomChannels\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SpamResetDuration", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
@@ -1044,12 +1055,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Advanced Server Property.World.Spam Feature.SpamResetDuration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Advanced Server Property.World.Chat Feature.SpamResetDuration\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
                             }
-                            #endregion Spam Feature
+                            #endregion Chat Feature
                             #region Server Client Logger
                             else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Server Client Logger", StringComparison.OrdinalIgnoreCase))
                             {
@@ -2098,8 +2109,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 ""SwearInfractionReset"": {44}
             }},
 
-            ""Spam Feature"":
+            ""Chat Feature"":
             {{
+                /* CustomChannels:  List of custom channels for the server.
+                    Syntax: String: null for blank. */
+                ""CustomChannels"": ""{58}"",
+
                 /* SpamResetDuration:  Amount of seconds for the user to send the same word again.
 				    Syntax: Integer: -1 to disable. */
                 ""SpamResetDuration"": {45}
@@ -2156,7 +2171,7 @@ Port.ToString(), // Port
 ServerName, // ServerName
 string.IsNullOrWhiteSpace(ServerMessage) ? "null" : @"""" + ServerMessage + @"""", // ServerMessage
 string.IsNullOrWhiteSpace(WelcomeMessage) ? "null" : @"""" + WelcomeMessage + @"""", // WelcomeMessage
-GameMode[0].ToString(), // GameMode
+string.Join(",", GameMode), // GameMode
 MaxPlayers.ToString(), // MaxPlayers
 OfflineMode.ToString().ToLower(), // OfflineMode
 Season.ToString(), // Season
@@ -2203,7 +2218,8 @@ LoggerPvP.ToString().ToLower(), // LoggerPvP
 LoggerCommand.ToString().ToLower(), // LoggerCommand
 _SCONPassword, // SCONPassword
 SCONEnable.ToString().ToLower(), // SCONEnable
-SCONPort.ToString() // SCONPort
+SCONPort.ToString(), // SCONPort 57
+string.Join(",", CustomChannels) // CustomChannels 58
 ), Encoding.Unicode);
                 #endregion application_settings.json
 

@@ -5,7 +5,7 @@ using System.Threading;
 using SharpCompress.Common;
 using SharpCompress.Reader;
 
-namespace Pokémon_3D_Server_Client
+namespace Pokemon_3D_Server_Client_Updater
 {
     /// <summary>
     /// Class containing the Main Access point.

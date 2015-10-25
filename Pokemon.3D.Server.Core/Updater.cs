@@ -30,18 +30,8 @@ namespace Pokemon_3D_Server_Core
 
             Core.Logger.Log("Checking for update...", Logger.LogTypes.Info);
 
-            UpdateFailed();
-
             Client.DownloadStringAsync(new Uri(UpdateURL));
             Client.DownloadStringCompleted += Client_DownloadStringCompleted;
-        }
-
-        public void UpdateFailed()
-        {
-            if (File.Exists(Core.Setting.ApplicationDirectory + "\\Release.zip"))
-            {
-                Core.Logger.Log("Update FAILED. Error have been logged into the logger.", Logger.LogTypes.Info);
-            }
         }
 
         private void Client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)

@@ -51,6 +51,10 @@
     <StartupObject>Pokemon_3D_Server_Client_GUI.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\packages\ObjectListView.Official.2.8.1\lib\net20\ObjectListView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -69,6 +73,12 @@
     <Compile Include="GUI Component\About.Designer.cs">
       <DependentUpon>About.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI Component\ApplicationSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI Component\ApplicationSettings.Designer.cs">
+      <DependentUpon>ApplicationSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI Component\Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +89,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="GUI Component\About.resx">
       <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI Component\ApplicationSettings.resx">
+      <DependentUpon>ApplicationSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI Component\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
@@ -99,10 +112,17 @@
     <Content Include="Resources\Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
+      <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>
+      <Name>Aragas.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pokemon.3D.Server.Core\Pokemon.3D.Server.Core.csproj">
       <Project>{332aadb0-98ce-4fd6-a63a-577fdaa7c9ec}</Project>
       <Name>Pokemon.3D.Server.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

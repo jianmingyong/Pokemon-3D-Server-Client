@@ -316,17 +316,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             }
 
             // Spam?
-            if (Player.LastChatMessage != null && Player.LastChatMessage == p.DataItems[0])
-            {
-                if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
-                {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
-                    Core.Logger.Log(Player.isGameJoltPlayer ?
-                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
-                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
-                    return;
-                }
-            }
+            //if (Player.LastChatMessage != null && Player.LastChatMessage == p.DataItems[0])
+            //{
+            //    if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
+            //    {
+            //        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
+            //        Core.Logger.Log(Player.isGameJoltPlayer ?
+            //            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
+            //            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
+            //        return;
+            //    }
+            //}
 
             // Command?
             if (p.DataItems[0].StartsWith("/"))
@@ -363,8 +363,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                         Core.Setting.Token("SERVER_CHATGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
                         Core.Setting.Token("SERVER_CHATNOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Chat, p.Client);
 
-                Player.LastChatMessage = p.DataItems[0];
-                Player.LastChatTime = DateTime.Now;
+                //Player.LastChatMessage = p.DataItems[0];
+                //Player.LastChatTime = DateTime.Now;
             }
         }
 

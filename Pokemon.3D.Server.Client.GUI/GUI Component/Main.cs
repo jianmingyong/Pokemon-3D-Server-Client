@@ -138,5 +138,11 @@ namespace Pokemon_3D_Server_Client_GUI
             About About = new About();
             About.Show();
         }
+
+        private void applicationSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ApplicationSettings ApplicationSettings = new ApplicationSettings();
+            ApplicationSettings.Show();
+        }
     }
 }

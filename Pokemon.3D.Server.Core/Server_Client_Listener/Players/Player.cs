@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
+using System;
+using System.Collections.Generic;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -213,6 +211,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public int PokemonFacing { get; set; }
 
         /// <summary>
+        /// Get/Set Player Last Valid Game Data
+        /// </summary>
+        public List<string> LastValidGameData { get; set; } = new List<string>();
+
+        /// <summary>
         /// Get/Set Player ID
         /// </summary>
         public int ID { get; set; }
@@ -222,30 +225,45 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public Networking Network { get; set; }
 
+        /* 
+            Chat Channel System:
+            Default:
+            1. All
+            2. Server Chat
+            3. General Chat
+            4. Trade Chat
+            5. PvP Chat
+
+            Custom:
+            6. German Lounge
+        */
+        /// <summary>
+        /// Get/Set Player Current Chat Channel
+        /// </summary>
+        public string CC_CurrentChatChannel { get; set; } = "All";
+
         /// <summary>
         /// Get/Set Player Last Chat Message
         /// </summary>
-        public string LastChatMessage { get; set; }
+        public string CC_LastChatMessage { get; set; }
 
         /// <summary>
         /// Get/Set Player Last Chat Time
         /// </summary>
-        public DateTime LastChatTime { get; set; } = DateTime.Now;
+        public DateTime CC_LastChatTime { get; set; } = DateTime.Now;
 
+        /*
+            Player Status - For future usage.
+        */
         /// <summary>
         /// Get/Set Player PvP Status.
         /// </summary>
-        public bool IsInPvP { get; set; }
+        public bool IsInPvP { get; set; } = false;
 
         /// <summary>
         /// Get/Set Player Trade Status.
         /// </summary>
-        public bool IsInTrade { get; set; }
-
-        /// <summary>
-        /// Get/Set Player Last Valid Game Data
-        /// </summary>
-        public List<string> LastValidGameData { get; set; } = new List<string>();
+        public bool IsInTrade { get; set; } = false;
 
         private static object Lock = new object();
 

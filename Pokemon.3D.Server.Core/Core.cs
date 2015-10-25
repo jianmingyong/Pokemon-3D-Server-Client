@@ -101,11 +101,6 @@ namespace Pokemon_3D_Server_Core
 
                 // Initialize Command.
                 Command.AddCommand();
-
-                using (Lua Lua = new Lua())
-                {
-                    Lua.DoFile(Setting.ApplicationDirectory + "\\Commands\\Test.lua");
-                }
             }
             catch (Exception ex)
             {

@@ -44,11 +44,12 @@
   <PropertyGroup>
     <ApplicationIcon>Pokémon3D_32512.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <NoWin32Manifest>true</NoWin32Manifest>
+    <StartupObject>Pokemon_3D_Server_Client_Updater.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Pokémon_3D_Server_Client.Program</StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
@@ -69,7 +70,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
