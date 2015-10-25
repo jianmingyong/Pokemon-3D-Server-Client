@@ -81,10 +81,30 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 try
                 {
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadHandlePackage), Reader.ReadLine());
+                    string ReturnMessage = Reader.ReadLine();
+                    Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
+
+                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                    {
+                        Package Package = new Package(ReturnMessage, Client);
+                        if (Package.IsValid)
+                        {
+                            LastValidPing = DateTime.Now;
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadHandlePackage), Package);
+                        }
+                    }
+                    else
+                    {
+                        IsActive = false;
+                        Core.Player.Remove(Client, "You have left the game.");
+                        return;
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    IsActive = false;
+                    ex.CatchError();
+                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             } while (IsActive);
@@ -96,28 +116,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 try
                 {
-                    string ReturnMessage = (string)obj;
-
-                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
-                    {
-                        Package Package = new Package(ReturnMessage, Client);
-                        Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
-
-                        if (Package.IsValid)
-                        {
-                            LastValidPing = DateTime.Now;
-                            Package.Handle();
-                        }
-                    }
-                    else if (string.IsNullOrWhiteSpace(ReturnMessage) && IsActive)
-                    {
-                        IsActive = false;
-                        Core.Player.Remove(Client, "You have left the game.");
-                        return;
-                    }
+                    Package Package = (Package)obj;
+                    Package.Handle();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    IsActive = false;
+                    ex.CatchError();
+                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             }
@@ -188,8 +194,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     Writer.Flush();
                     Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, Client);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    IsActive = false;
+                    ex.CatchError();
+                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             }

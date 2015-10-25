@@ -233,6 +233,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public DateTime LastChatTime { get; set; } = DateTime.Now;
 
         /// <summary>
+        /// Get/Set Player PvP Status.
+        /// </summary>
+        public bool IsInPvP { get; set; }
+
+        /// <summary>
+        /// Get/Set Player Trade Status.
+        /// </summary>
+        public bool IsInTrade { get; set; }
+
+        /// <summary>
         /// Get/Set Player Last Valid Game Data
         /// </summary>
         public List<string> LastValidGameData { get; set; } = new List<string>();

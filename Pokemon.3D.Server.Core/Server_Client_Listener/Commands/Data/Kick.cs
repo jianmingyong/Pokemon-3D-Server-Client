@@ -55,7 +55,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", Group[1]), KickPlayer.Network.Client));
+                        KickPlayer.Network.IsActive = false;
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Player.CommandFeedback("You have successfully kicked " + KickPlayerName, $"have kick {KickPlayerName} with the following reason: {Group[1]}");
                     }
@@ -71,7 +72,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", Group[1]), KickPlayer.Network.Client));
+                        KickPlayer.Network.IsActive = false;
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Core.Logger.Log("You have successfully kicked " + KickPlayerName, Logger.LogTypes.Info);
                     }
@@ -99,7 +101,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
 
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", "No reason."), KickPlayer.Network.Client));
+                        KickPlayer.Network.IsActive = false;
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 
                         Player.CommandFeedback("You have successfully kicked " + KickPlayerName, string.Format("have kick {0} with the following reason: No reason.", KickPlayerName));
                     }
@@ -115,7 +118,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
 
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_KICKED", "No reason."), KickPlayer.Network.Client));
+                        KickPlayer.Network.IsActive = false;
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 
                         Core.Logger.Log("You have successfully kicked " + KickPlayerName, Logger.LogTypes.Info);
                     }

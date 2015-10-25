@@ -7,6 +7,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using NLua;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -50,6 +51,9 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static World World { get; } = new World();
 
+        /// <summary>
+        /// Get Updater.
+        /// </summary>
         public static Updater Updater { get; } = new Updater();
 
         /// <summary>
@@ -97,6 +101,11 @@ namespace Pokemon_3D_Server_Core
 
                 // Initialize Command.
                 Command.AddCommand();
+
+                using (Lua Lua = new Lua())
+                {
+                    Lua.DoFile(Setting.ApplicationDirectory + "\\Commands\\Test.lua");
+                }
             }
             catch (Exception ex)
             {
@@ -104,6 +113,9 @@ namespace Pokemon_3D_Server_Core
             }
         }
 
+        /// <summary>
+        /// Dispose all background worker for the thread to dispose.
+        /// </summary>
         public static void Dispose()
         {
             Listener.Dispose();

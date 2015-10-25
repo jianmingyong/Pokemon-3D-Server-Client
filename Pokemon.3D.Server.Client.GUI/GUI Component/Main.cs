@@ -114,13 +114,11 @@ namespace Pokemon_3D_Server_Client_GUI
         private void Application_ThreadException(object sender, ThreadExceptionEventArgs ex)
         {
             ex.Exception.CatchError();
-            ClientEvent.Invoke(ClientEvent.Types.Restart, null);
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {
             (ex.ExceptionObject as Exception).CatchError();
-            ClientEvent.Invoke(ClientEvent.Types.Restart, null);
         }
 
         private void Main_Command_KeyDown(object sender, KeyEventArgs e)
