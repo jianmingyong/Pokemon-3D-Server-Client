@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Reflection;
-using System.Text;
-using Aragas.Core.Data;
+﻿using Aragas.Core.Data;
 using Newtonsoft.Json;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Cache;
+using System.Reflection;
+using System.Text;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 {
@@ -1180,6 +1181,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                     return false;
                 }
                 #endregion application_settings.json
+
+                #region CLRPackage.lua
+                if (!File.Exists(ApplicationDirectory + "\\CLRPackage.lua"))
+                {
+                    using (WebClient Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
+                    {
+                        Client.DownloadFile("https://github.com/NLua/NLua/raw/master/Samples/CLRPackage.lua", ApplicationDirectory + "\\CLRPackage.lua");
+                    }
+                }
+                #endregion CLRPackage.lua
 
                 #region Data\BlackList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\BlackList.json"))

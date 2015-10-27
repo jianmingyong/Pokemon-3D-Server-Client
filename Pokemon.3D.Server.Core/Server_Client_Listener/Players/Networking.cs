@@ -100,11 +100,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         return;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    IsActive = false;
-                    ex.CatchError();
-                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             } while (IsActive);
@@ -119,11 +116,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     Package Package = (Package)obj;
                     Package.Handle();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    IsActive = false;
-                    ex.CatchError();
-                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             }
@@ -194,11 +188,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     Writer.Flush();
                     Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, Client);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    IsActive = false;
-                    ex.CatchError();
-                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
             }

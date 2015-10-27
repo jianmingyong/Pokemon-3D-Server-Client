@@ -47,7 +47,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    ReturnList.Add(WeatherData.GetSplit(DateTime.Now.Month - 1).Toint());
+                    ReturnList.Add(WeatherData.GetSplit(Core.World.Season).Toint());
                 }
                 catch (Exception)
                 {
@@ -58,7 +58,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    foreach (string Weather in WeatherData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
+                    foreach (string Weather in WeatherData.GetSplit(Core.World.Season).Split(",".ToCharArray()))
                     {
                         ReturnList.Add(Weather.Toint());
                     }
