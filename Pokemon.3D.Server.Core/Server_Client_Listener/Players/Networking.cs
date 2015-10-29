@@ -7,6 +7,7 @@ using System.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using Amib.Threading;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -23,6 +24,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         private static object Lock = new object();
         private static object Lock1 = new object();
         private static object Lock2 = new object();
+
+        private SmartThreadPool ThreadPool = new SmartThreadPool();
 
         private int LastHourCheck = 0;
 
@@ -82,13 +85,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 try
                 {
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadPreHandlePackage), Reader.ReadLine());
+                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadPreHandlePackage), Reader.ReadLine());
                 }
                 catch (Exception) { }
             } while (IsActive);
         }
 
-        private void ThreadPreHandlePackage(object p)
+        private object ThreadPreHandlePackage(object p)
         {
             lock (Lock2)
             {
@@ -106,19 +109,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     if (Package.IsValid)
                     {
                         LastValidPing = DateTime.Now;
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadHandlePackage), Package);
+
+                        ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Package);
+
                         Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
                     }
                 }
+                return null;
             }
         }
 
-        private void ThreadHandlePackage(object obj)
+        private object ThreadHandlePackage(object obj)
         {
             lock (Lock1)
             {
                 Package Package = (Package)obj;
                 Package.Handle();
+                return null;
             }
         }
 

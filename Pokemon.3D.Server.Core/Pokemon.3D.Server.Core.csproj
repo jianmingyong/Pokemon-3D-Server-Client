@@ -138,6 +138,10 @@
       <Project>{1cf84e56-3bbe-4a3a-9234-5951bf2558c3}</Project>
       <Name>PokeD.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartThreadPool\SmartThreadPool\SmartThreadPool.csproj">
+      <Project>{74d4c33f-7cc8-4b2a-a7df-d8b6e63b6ebd}</Project>
+      <Name>SmartThreadPool</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
