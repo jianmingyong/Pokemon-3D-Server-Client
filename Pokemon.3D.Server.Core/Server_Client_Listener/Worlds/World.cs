@@ -346,7 +346,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
 
                     for (int i = 0; i < Core.Player.Count; i++)
                     {
-                        if (Core.Player[i].Network.IsActive)
+                        if (Core.Player[i].Network.Client.Connected)
                         {
                             Core.Player.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Network.Client));
                         }

@@ -33,6 +33,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public DateTime StartTime { get; } = DateTime.Now;
 
+        private string TempApplicationVersion { get; set; }
         /// <summary>
         /// Get Application Version.
         /// </summary>
@@ -605,7 +606,18 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                             {
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
-                                    if (string.Equals(PropertyName, "CheckForUpdate", StringComparison.OrdinalIgnoreCase))
+                                    if (string.Equals(PropertyName, "ApplicationVersion", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            TempApplicationVersion = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Pokémon 3D Server Client Setting File.ApplicationVersion\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "CheckForUpdate", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (Reader.TokenType == JsonToken.Boolean)
                                         {

@@ -1,5 +1,4 @@
-﻿using System;
-using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
+﻿using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
@@ -7,7 +6,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
-using NLua;
+using System;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -17,14 +16,14 @@ namespace Pokemon_3D_Server_Core
     public class Core
     {
         /// <summary>
-        /// Get Pokemon 3D Listener
-        /// </summary>
-        public static Listener Listener { get; } = new Listener();
-
-        /// <summary>
         /// Get SCON Listener
         /// </summary>
         public static SCONListener SCONListener { get; } = new SCONListener();
+
+        /// <summary>
+        /// Get Comamnd List.
+        /// </summary>
+        public static CommandCollection Command { get; } = new CommandCollection();
 
         /// <summary>
         /// Get Logger.
@@ -32,19 +31,19 @@ namespace Pokemon_3D_Server_Core
         public static LoggerCollection Logger { get; } = new LoggerCollection();
 
         /// <summary>
-        /// Get Setting.
-        /// </summary>
-        public static Setting Setting { get; } = new Setting();
-
-        /// <summary>
         /// Get Player Collection.
         /// </summary>
         public static PlayerCollection Player { get; } = new PlayerCollection();
 
         /// <summary>
-        /// Get Comamnd List.
+        /// Get Pokemon 3D Listener
         /// </summary>
-        public static CommandCollection Command { get; } = new CommandCollection();
+        public static Listener Listener { get; } = new Listener();
+
+        /// <summary>
+        /// Get Setting.
+        /// </summary>
+        public static Setting Setting { get; } = new Setting();
 
         /// <summary>
         /// Get World.
@@ -58,6 +57,7 @@ namespace Pokemon_3D_Server_Core
 
         /// <summary>
         /// Server Main Entry Point - Initialize as many things as possible here.
+        /// Order is important here, any additional initialization should be place at the bottom.
         /// </summary>
         public static void Start(string Directory)
         {
@@ -81,8 +81,6 @@ namespace Pokemon_3D_Server_Core
                     Environment.Exit(0);
                     return;
                 }
-
-                Setting.NoPingKickTime = 30;
 
                 // Initialize Listener.
                 Listener.Start();

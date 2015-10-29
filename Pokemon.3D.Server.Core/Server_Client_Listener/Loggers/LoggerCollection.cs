@@ -60,10 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
                         ClientEvent.Invoke(ClientEvent.Types.Logger, Logger.ToString());
                     }
                 }
-                catch (Exception)
-                {
-                    return;
-                }
+                catch (Exception) { }
             }
         }   
     }

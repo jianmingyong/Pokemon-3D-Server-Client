@@ -259,10 +259,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         Writer.Flush();
                         Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, p.Client);
                     }
-                    catch (Exception)
-                    {
-                        return;
-                    }
+                    catch (Exception) { }
                 }
             }
         }
