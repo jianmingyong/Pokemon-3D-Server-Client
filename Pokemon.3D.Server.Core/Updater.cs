@@ -46,6 +46,7 @@ namespace Pokemon_3D_Server_Core
                     Core.Logger.Log($"Update found: Expect Version: {ExpectVersion}, Current Version: {Core.Setting.ApplicationVersion}.", Logger.LogTypes.Info);
                     Core.Logger.Log($"Downloading update.", Logger.LogTypes.Info);
 
+                    Client.DownloadFile(new Uri("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater.exe"), Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe");
                     Client.DownloadFileAsync(new Uri(ExpectFileURL), Core.Setting.ApplicationDirectory + "\\Release.zip");
                     Client.DownloadFileCompleted += Client_DownloadFileCompleted;
                 }

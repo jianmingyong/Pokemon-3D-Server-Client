@@ -217,3 +217,5 @@ ModelManifest.xml
 # SubModule Ignore.
 Aragas.Core/
 PokeD.Core/
+/Pokemon.3D.Server.Client.Updater/SharpCompress/AssemblyInfo.cs
+/Pokemon.3D.Server.Client.Updater/SharpCompress/VersionInfo.cs
