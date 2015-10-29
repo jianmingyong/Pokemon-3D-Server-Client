@@ -28,6 +28,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -88,6 +89,8 @@
     <Compile Include="Server_Client_Listener\Commands\Data\Restart.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Stop.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Kick.cs" />
+    <Compile Include="Server_Client_Listener\Events\PlayerEvent.cs" />
+    <Compile Include="Server_Client_Listener\Events\LoggerEvent.cs" />
     <Compile Include="Server_Client_Listener\Modules\Functions.cs" />
     <Compile Include="Server_Client_Listener\Modules\Math.cs" />
     <Compile Include="Server_Client_Listener\Modules\MathHelper.cs" />
@@ -123,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="SwearInfractionFilterListData.json" />
     <None Include="Update.dat" />
   </ItemGroup>
   <ItemGroup>

@@ -11,7 +11,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
         /// <summary>
         /// Delegate for Client Event Handler.
         /// </summary>
-        public delegate void ClientEventHandler(Types Type, object Args);
+        public delegate void ClientEventHandler(Types Type);
 
         /// <summary>
         /// Event to invoke for GUI element.
@@ -23,11 +23,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
         /// </summary>
         public enum Types
         {
-            /// <summary>
-            /// Update Logger { Args = Logger }
-            /// </summary>
-            Logger,
-
             /// <summary>
             /// Restart Client { Args = null }
             /// </summary>
@@ -41,22 +36,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
             /// <summary>
             /// Update Client { Args = null }
             /// </summary>
-            Update,
-
-            /// <summary>
-            /// Add Player into the list { Args = Player }
-            /// </summary>
-            AddPlayer,
-
-            /// <summary>
-            /// Remove Player in the list { Args = Player }
-            /// </summary>
-            RemovePlayer,
-
-            /// <summary>
-            /// Update Player in the list { Args = Player }
-            /// </summary>
-            UpdatePlayer,
+            Update
         }
 
         /// <summary>
@@ -64,11 +44,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
         /// </summary>
         /// <param name="Type">Type of event to invoke.</param>
         /// <param name="Args">Argument for the event.</param>
-        public static void Invoke(Types Type, object Args)
+        public static void Invoke(Types Type)
         {
             try
             {
-                Update(Type, Args);
+                Update(Type);
             }
             catch (Exception ex)
             {

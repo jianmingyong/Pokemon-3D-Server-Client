@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
-using System.Threading;
-using System.Diagnostics;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
 {
@@ -346,7 +346,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
 
                     for (int i = 0; i < Core.Player.Count; i++)
                     {
-                        if (Core.Player[i].Network.Client.Connected)
+                        if (Core.Player[i].Network.IsActive)
                         {
                             Core.Player.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Network.Client));
                         }

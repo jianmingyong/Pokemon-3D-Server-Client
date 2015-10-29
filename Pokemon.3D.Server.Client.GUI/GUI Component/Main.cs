@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -15,11 +15,15 @@ namespace Pokemon_3D_Server_Client_GUI
     /// </summary>
     public partial class Main : Form
     {
-        private delegate void ClientEvent_Safe(ClientEvent.Types Type, object Args);
-        private delegate void UpdatePlayerList_Safe(object myObject);
+        private delegate void LoggerEvent_Safe(string Args);
+        private delegate void ClientEvent_Safe(ClientEvent.Types Type);
+        private delegate void PlayerEvent_Safe(PlayerEvent.Types Type, string Args);
 
         private bool ApplicationRestart = false;
         private bool ApplicationUpdate = false;
+
+        private List<string> LoggerLog = new List<string>();
+        private bool ScrollTextBox = true;
 
         /// <summary>
         /// GUI Component Start Point
@@ -32,9 +36,11 @@ namespace Pokemon_3D_Server_Client_GUI
         private void Main_Load(object sender, EventArgs e)
         {
             // Add Handler
+            LoggerEvent.Update += LoggerEvent_Update;
             ClientEvent.Update += ClientEvent_Update;
-            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+            PlayerEvent.Update += PlayerEvent_Update;
+            Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             Core.Start(Environment.CurrentDirectory);
         }
@@ -48,9 +54,6 @@ namespace Pokemon_3D_Server_Client_GUI
 
             Core.Setting.Save();
             Core.Dispose();
-
-            Application.ThreadException -= Application_ThreadException;
-            AppDomain.CurrentDomain.UnhandledException -= CurrentDomain_UnhandledException;
 
             if (ApplicationRestart)
             {
@@ -70,26 +73,58 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
-        private void ClientEvent_Update(ClientEvent.Types Type, object Args)
+        #region Client Events
+        private void LoggerEvent_Update(string Args)
         {
             try
             {
                 if (Main_Logger.InvokeRequired)
                 {
-                    BeginInvoke(new ClientEvent_Safe(ClientEvent_Update), Type, Args);
+                    BeginInvoke(new LoggerEvent_Safe(LoggerEvent_Update), Args);
                 }
                 else
                 {
-                    if (Type == ClientEvent.Types.Logger)
+                    if (ScrollTextBox)
                     {
-                        Main_Logger.AppendText(Args + Functions.vbNewLine);
-
-                        if (Main_Logger.Lines.Length > 1000)
+                        if (LoggerLog.Count > 0)
                         {
-                            Main_Logger.Lines = Main_Logger.Lines.Skip(1).ToArray();
+                            for (int i = 0; i < LoggerLog.Count; i++)
+                            {
+                                Main_Logger.AppendText(LoggerLog[i] + Environment.NewLine);
+                            }
+                            LoggerLog.RemoveRange(0, LoggerLog.Count);
+                        }
+
+                        Main_Logger.AppendText(Args + Environment.NewLine);
+
+                        if (Main_Logger.Lines.Count() > 1000)
+                        {
+                            Main_Logger.Text.Remove(0, Main_Logger.Lines[0].Count());
                         }
                     }
-                    else if (Type == ClientEvent.Types.Restart)
+                    else
+                    {
+                        LoggerLog.Add(Args);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+
+        private void ClientEvent_Update(ClientEvent.Types Type)
+        {
+            try
+            {
+                if (Main_Logger.InvokeRequired)
+                {
+                    BeginInvoke(new ClientEvent_Safe(ClientEvent_Update), Type);
+                }
+                else
+                {
+                    if (Type == ClientEvent.Types.Restart)
                     {
                         ApplicationRestart = true;
                         Application.Exit();
@@ -111,6 +146,38 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
+        private void PlayerEvent_Update(PlayerEvent.Types Type, string Args)
+        {
+            try
+            {
+                if (Main_CurrentPlayerOnline.InvokeRequired)
+                {
+                    BeginInvoke(new PlayerEvent_Safe(PlayerEvent_Update), Type, Args);
+                }
+                else
+                {
+                    if (Type == PlayerEvent.Types.Add)
+                    {
+                        Main_CurrentPlayerOnline.Items.Insert(Args.GetSplit(0, ",").Toint(), Args.GetSplit(1, ","));
+                    }
+                    else if (Type == PlayerEvent.Types.Remove)
+                    {
+                        Main_CurrentPlayerOnline.Items.RemoveAt(Args.GetSplit(0, ",").Toint());
+                    }
+                    else if (Type == PlayerEvent.Types.Update)
+                    {
+                        Main_CurrentPlayerOnline.Items[Args.GetSplit(0, ",").Toint()] = Args.GetSplit(1, ",");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.CatchError();
+            }
+        }
+        #endregion Client Events
+
+        #region Unhandled Exception Catcher
         private void Application_ThreadException(object sender, ThreadExceptionEventArgs ex)
         {
             ex.Exception.CatchError();
@@ -118,8 +185,33 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {
-            (ex.ExceptionObject as Exception).CatchError();
+            ((Exception)ex.ExceptionObject).CatchError();
         }
+        #endregion Unhandled Exception Catcher
+
+        #region Logger Events
+        private void Main_Logger_TextChanged(object sender, EventArgs e)
+        {
+            if (ScrollTextBox)
+            {
+                Main_Logger.SelectionStart = Main_Logger.TextLength;
+                Main_Logger.ScrollToCaret();
+            }
+        }
+
+        private void Main_Logger_Leave(object sender, EventArgs e)
+        {
+            ScrollTextBox = true;
+
+            Main_Logger.SelectionStart = Main_Logger.TextLength;
+            Main_Logger.ScrollToCaret();
+        }
+
+        private void Main_Logger_Enter(object sender, EventArgs e)
+        {
+            ScrollTextBox = false;
+        }
+        #endregion Logger Events
 
         private void Main_Command_KeyDown(object sender, KeyEventArgs e)
         {

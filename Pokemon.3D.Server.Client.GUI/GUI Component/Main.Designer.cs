@@ -212,6 +212,9 @@
             this.Main_Logger.Size = new System.Drawing.Size(835, 505);
             this.Main_Logger.TabIndex = 0;
             this.Main_Logger.Text = "";
+            this.Main_Logger.TextChanged += new System.EventHandler(this.Main_Logger_TextChanged);
+            this.Main_Logger.Enter += new System.EventHandler(this.Main_Logger_Enter);
+            this.Main_Logger.Leave += new System.EventHandler(this.Main_Logger_Leave);
             // 
             // Main_Command
             // 

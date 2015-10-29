@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 {
@@ -158,10 +158,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                         }
                     }
                 }
-                catch (Exception)
-                {
-                    return;
-                }
+                catch (Exception) { }
             }
         }
 
@@ -182,7 +179,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     }
                     else if (TimeLeft.TotalSeconds < 1)
                     {
-                        ClientEvent.Invoke(ClientEvent.Types.Restart, null);
+                        ClientEvent.Invoke(ClientEvent.Types.Restart);
                     }
                 }
                 catch (ThreadAbortException)

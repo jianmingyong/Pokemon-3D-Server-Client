@@ -4,6 +4,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using System;
 using System.Collections.Generic;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -475,6 +476,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 // Sent To Server
                 if (SentToServer)
                 {
+                    PlayerEvent.Invoke(PlayerEvent.Types.Update, $"{ID},{ToString()}");
+
                     if (p.IsFullPackageData())
                     {
                         Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));

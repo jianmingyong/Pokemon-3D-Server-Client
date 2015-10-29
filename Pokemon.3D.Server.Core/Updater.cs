@@ -1,9 +1,9 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Cache;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -74,7 +74,7 @@ namespace Pokemon_3D_Server_Core
 
                 if (string.Equals(CurrentMD5Checksum, ExpectMD5Checksum, StringComparison.OrdinalIgnoreCase))
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Update, null);
+                    ClientEvent.Invoke(ClientEvent.Types.Update);
                 }
                 else
                 {

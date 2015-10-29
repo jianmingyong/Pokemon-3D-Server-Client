@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
@@ -27,6 +28,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 int ID = GetNextValidID();
                 Player Player = new Player(p, ID);
+                PlayerEvent.Invoke(PlayerEvent.Types.Add, $"{ID},{Player.ToString()}");
             }
         }
 
@@ -62,6 +64,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }
 
@@ -97,6 +100,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }
 
@@ -132,6 +136,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }
 

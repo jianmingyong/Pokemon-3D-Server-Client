@@ -320,7 +320,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
 
                 if (Close)
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Stop, null);
+                    ClientEvent.Invoke(ClientEvent.Types.Stop);
                 }
             }
             catch (Exception)

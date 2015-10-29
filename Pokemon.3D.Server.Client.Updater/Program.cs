@@ -1,9 +1,9 @@
-﻿using System;
+﻿using SharpCompress.Common;
+using SharpCompress.Reader;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using SharpCompress.Common;
-using SharpCompress.Reader;
 
 namespace Pokemon_3D_Server_Client_Updater
 {
@@ -29,10 +29,14 @@ namespace Pokemon_3D_Server_Client_Updater
                         var reader = ReaderFactory.Open(stream);
                         while (reader.MoveToNextEntry())
                         {
-                            if (!reader.Entry.IsDirectory)
+                            try
                             {
-                                reader.WriteEntryToDirectory(args[0].Replace("%20", " "), ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                                if (!reader.Entry.IsDirectory)
+                                {
+                                    reader.WriteEntryToDirectory(args[0].Replace("%20", " "), ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                                }
                             }
+                            catch (Exception) { }
                         }
                     }
 
@@ -41,15 +45,10 @@ namespace Pokemon_3D_Server_Client_Updater
                         File.Delete(args[0].Replace("%20", " ") + "\\Release.zip");
                     }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Console.ReadKey();
-                }
+                catch (Exception) { }
 
                 Process.Start(args[0].Replace("%20", " ") + "\\Pokemon.3D.Server.Client.GUI.exe");
             }
-
         }
     }
 }

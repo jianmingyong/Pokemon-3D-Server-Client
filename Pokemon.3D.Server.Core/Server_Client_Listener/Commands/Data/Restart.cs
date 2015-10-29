@@ -38,11 +38,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart, null);
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
                 else if (Player == null)
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart, null);
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
             }
             #endregion /Restart

@@ -1,11 +1,4 @@
-﻿using Aragas.Core.Data;
-using Newtonsoft.Json;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -15,6 +8,13 @@ using System.Net;
 using System.Net.Cache;
 using System.Reflection;
 using System.Text;
+using Aragas.Core.Data;
+using Newtonsoft.Json;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 {
@@ -183,7 +183,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
             set
             {
-                value.Clamp(-4, 3);
+                _Season = value.Clamp(-4, 3);
             }
         }
 
@@ -199,7 +199,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
             set
             {
-                value.Clamp(-5, 9);
+                _Weather = value.Clamp(-5, 9);
             }
         }
 
@@ -508,7 +508,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
             TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
             TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0}. We encourage your stay but also encourage to take a small break :)");
+            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)");
             TokenDefination.Add("SERVER_MUTED", "You have been muted in the server. Reason: {0} | Ban duration: {1}.");
             TokenDefination.Add("SERVER_MUTEDTEMP", "You have been muted by that player. Reason: {0} | Ban duration: {1}.");
             TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
@@ -1641,6 +1641,86 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #endregion Data\OperatorList.json
 
                 #region Data\SwearInfractionFilterList.json
+                if (!File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))
+                {
+                    using (WebClient Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
+                    {
+                        Client.DownloadFile("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/SwearInfractionFilterListData.json", ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json");
+                    }
+                }
+
+                if (File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))
+                {
+                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))))
+                    {
+                        Reader.DateParseHandling = DateParseHandling.DateTime;
+                        Reader.FloatParseHandling = FloatParseHandling.Double;
+
+                        int StartObjectDepth = -1;
+                        string PropertyName = null;
+                        string TempPropertyName = null;
+
+                        string Word = null;
+                        bool CaseSensitive = false;
+
+                        while (Reader.Read())
+                        {
+                            if (Reader.TokenType == JsonToken.StartObject)
+                            {
+                                StartObjectDepth++;
+                            }
+                            else if (Reader.TokenType == JsonToken.EndObject)
+                            {
+                                if (StartObjectDepth == 1)
+                                {
+                                    SwearInfractionFilterListData.Add(new SwearInfractionFilterList(Word, CaseSensitive));
+                                    Word = null;
+                                    CaseSensitive = false;
+                                }
+                                StartObjectDepth--;
+                            }
+
+                            if (Reader.TokenType == JsonToken.PropertyName)
+                            {
+                                TempPropertyName = Reader.Value.ToString();
+                            }
+                            else if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                            {
+                                PropertyName = TempPropertyName;
+                                TempPropertyName = null;
+                            }
+
+                            if (StartObjectDepth == 1)
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "Word", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            Word = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SwearInfractionFilterListData.Word\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "CaseSensitive", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            CaseSensitive = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SwearInfractionFilterListData.CaseSensitive\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
                 #endregion Data\SwearInfractionFilterList.json
 
                 #region Data\SwearInfractionList.json
@@ -1926,6 +2006,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                     }
                 }
                 #endregion Data\Token.json
+
+                #region Overwrite Setting Per Version
+                if (TempApplicationVersion == "0.54.1.13")
+                {
+                    TokenDefination["SERVER_LOGINTIME"] = "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)";
+                }
+                #endregion Overwrite Setting Per Version
 
                 Core.Logger.Log("Setting loaded.", Logger.LogTypes.Info);
                 return true;
@@ -2374,6 +2461,29 @@ OperatorListData[i].OperatorLevel.ToString());
                 #endregion Data\OperatorList.json
 
                 #region Data\SwearInfractionFilterList.json
+                List = null;
+                if (SwearInfractionFilterListData.Count > 0)
+                {
+                    for (int i = 0; i < SwearInfractionFilterListData.Count; i++)
+                    {
+                        List += string.Format(@"        {{
+            ""Word"": ""{0}"",
+            ""CaseSensitive"": {1}
+        }},
+",
+SwearInfractionFilterListData[i].Word,
+SwearInfractionFilterListData[i].CaseSensitive.ToString().ToLower());
+                    }
+
+                    List = List.Remove(List.LastIndexOf(","));
+                }
+
+                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionFilterList.json", string.Format(@"{{
+    ""SwearInfractionFilterListData"":
+    [
+{0}
+    ]
+}}", List), Encoding.Unicode);
                 #endregion Data\SwearInfractionFilterList.json
 
                 #region Data\SwearInfractionList.json
