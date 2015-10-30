@@ -1,0 +1,1401 @@
+﻿{
+    "SwearInfractionFilterListData":
+    [
+		{
+			"Word": "anus",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "arse",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "arsehole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ass-hat",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ass-jabber",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ass-pirate",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assbandit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assbanger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assbite",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assclown",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asscock",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asscracker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asses",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assgoblin",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asshat",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asshead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asshole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asshopper",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assjacker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asslick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asslicker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assmonkey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assmunch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assmuncher",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assnigger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asspirate",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "assshole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asssucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asswad",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "asswipe",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "axwound",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bampot",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bastard",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "beaner",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bitch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bitchass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bitches",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bitchtits",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bitchy",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "blow job",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "blowjob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bollocks",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bollox",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "boner",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "brotherfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bullshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "bumblefuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "butt plug",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "butt-pirate",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "buttfucka",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "buttfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "camel toe",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "carpetmuncher",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "chesticle",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "chinc",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "chink",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "choad",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "chode",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "clit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "clitface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "clitfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "clusterfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cock",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockbite",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockburger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockhead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockjockey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockknoker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockmaster",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockmongler",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockmongruel",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockmonkey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockmuncher",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocknose",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocknugget",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocksmith",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocksmoke",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocksmoker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocksniffer",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cocksucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cockwaffle",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "coochie",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "coochy",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "coon",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cooter",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cracker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cum",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumbubble",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumdumpster",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumguzzler",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumjockey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumslut",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cumtart",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cunnie",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cunnilingus",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cunt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cuntass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cuntface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cunthole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cuntlicker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cuntrag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "cuntslut",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dago",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "damn",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "deggo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dick-sneeze",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickbeaters",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickhead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickhole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickjuice",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickmilk",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickmonger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dicks",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickslap",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dicksucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dicksucking",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dicktickler",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickwad",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickweasel",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickweed",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dickwod",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dike",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dildo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dipshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "doochbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dookie",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "douche",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "douche-fag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "douchebag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "douchewaffle",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumb ass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumbass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumbfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumbshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dumshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "dyke",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fagbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fagfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "faggit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "faggot",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "faggotcock",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fagtard",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fatass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fellatio",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "feltch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "flamer",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckboy",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckbrain",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckbutt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckbutter",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucked",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckersucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckhead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckhole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckin",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucking",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucknut",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucknutt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckoff",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucks",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckstick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucktard",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fucktart",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckup",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckwad",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckwit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fuckwitt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "fudgepacker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gay",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gayass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gaybob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gaydo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gayfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gayfuckist",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gaylord",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gaytard",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gaywad",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "goddamn",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "goddamnit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gooch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gook",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "gringo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "guido",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "handjob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "hard on",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "heeb",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "hell",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ho",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "hoe",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "homo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "homodumbshit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "honkey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "humping",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jackass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jagoff",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jap",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jerk off",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jerkass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jigaboo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jizz",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "jungle bunny",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "junglebunny",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kike",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kooch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kootch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kraut",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kunt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "kyke",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "lameass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "lardass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "lesbian",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "lesbo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "lezzie",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "mcfagget",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "mick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "minge",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "mothafucka",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "mothafuckin\\'",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "motherfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "motherfucking",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "muff",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "muffdiver",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "munging",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "negro",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "nigaboo",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "nigga",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "nigger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "niggers",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "niglet",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "nut sack",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "nutsack",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "paki",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "panooch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pecker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "peckerhead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "penis",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "penisbanger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "penisfucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "penispuffer",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "piss",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pissed",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pissed off",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pissflaps",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "polesmoker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pollock",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "poon",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "poonani",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "poonany",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "poontang",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "porch monkey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "porchmonkey",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "prick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "punanny",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "punta",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pussies",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pussy",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "pussylicking",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "puto",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "queef",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "queer",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "queerbait",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "queerhole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "renob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "rimjob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "ruski",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "sand nigger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "sandnigger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "schlong",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "scrote",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitbagger",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitbrains",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitbreath",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitcanned",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitcunt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitdick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitfaced",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shithead",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shithole",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shithouse",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitspitter",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitstain",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitter",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shittiest",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitting",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shitty",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shiz",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "shiznit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "skank",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "skeet",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "skullfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "slut",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "slutbag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "smeg",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "snatch",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "spic",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "spick",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "splooge",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "spook",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "suckass",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "tard",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "testicle",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "thundercunt",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "tit",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "titfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "tits",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "tittyfuck",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "twat",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "twatlips",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "twats",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "twatwaffle",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "unclefucker",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "va-j-j",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "vag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "vagina",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "vajayjay",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "vjayjay",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "wank",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "wankjob",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "wetback",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "whore",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "whorebag",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "whoreface",
+			"CaseSensitive": false
+		},
+		{
+			"Word": "wop",
+			"CaseSensitive": false
+		}
+    ]
+}

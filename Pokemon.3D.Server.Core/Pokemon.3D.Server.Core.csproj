@@ -117,7 +117,11 @@
     <Compile Include="Updater.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resource\SwearInfractionFilterListData.json" />
+    <None Include="Resource\Update.dat" />
     <None Include="packages.config" />
+    <None Include="SwearInfractionFilterListData.json" />
+    <None Include="Update.dat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
