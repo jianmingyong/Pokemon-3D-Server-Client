@@ -15,6 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokeD.Core", "PokeD.Core\Po
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartThreadPool", "SmartThreadPool\SmartThreadPool\SmartThreadPool.csproj", "{74D4C33F-7CC8-4B2A-A7DF-D8B6E63B6EBD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resource", "Resource", "{9D1AD7CE-3190-4204-84AC-D2B040516CAB}"
+	ProjectSection(SolutionItems) = preProject
+		Pokemon.3D.Server.Core\Data Files\SwearInfractionFilterListData.json = Pokemon.3D.Server.Core\Data Files\SwearInfractionFilterListData.json
+		Pokemon.3D.Server.Core\Data Files\Update.dat = Pokemon.3D.Server.Core\Data Files\Update.dat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
