@@ -1,29 +1,29 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
 {
     /// <summary>
-    /// Class containing About Function.
+    /// Class containing Stop Function.
     /// </summary>
-    public class About : ICommand
+    public class Stop : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "About";
+        public string Name { get; } = "Stop";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Display server info.";
+        public string Description { get; } = "Stop the server from running.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Player;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
         /// <summary>
         /// Handle the Package data.
@@ -33,21 +33,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /About
-            if (this.MatchRequiredParam(p, Functions.CommandParamType.Nothing))
+            #region /stop
+            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, $"This server is created by jianmingyong.", Player.Network.Client));
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, $"It is running v{Core.Setting.ApplicationVersion}", Player.Network.Client));
+                    ClientEvent.Invoke(ClientEvent.Types.Stop);
                 }
                 else if (Player == null)
                 {
-                    Core.Logger.Log("This server is created by jianmingyong.", Logger.LogTypes.Info);
-                    Core.Logger.Log($"It is running v{Core.Setting.ApplicationVersion}", Logger.LogTypes.Info);
+                    ClientEvent.Invoke(ClientEvent.Types.Stop);
                 }
             }
-            #endregion /About
+            #endregion /stop
         }
 
         /// <summary>
@@ -62,7 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /About",
+                        $"Usage: /Stop",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

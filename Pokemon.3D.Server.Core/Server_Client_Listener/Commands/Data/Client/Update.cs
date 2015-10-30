@@ -1,30 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
 {
     /// <summary>
-    /// Class containing Say Function.
+    /// Class containing Update Function.
     /// </summary>
-    public class Say : ICommand
+    public class Update : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Say";
+        public string Name { get; } = "Update";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Chat globally to all player.";
+        public string Description { get; } = "Check for update and restart the server.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ChatModerator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
         /// <summary>
         /// Handle the Package data.
@@ -34,25 +33,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Say <Message>
-            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Any))
+            #region /Update
+            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
-
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
-
-                    Player.CommandFeedback(null, string.Format("have sent a server chat."));
+                    Core.Updater.Update();
                 }
                 else if (Player == null)
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
-
-                    Core.Logger.Log(Group[0], Logger.LogTypes.Server);
+                    Core.Updater.Update();
                 }
             }
-            #endregion /Say <Message>
+            #endregion /Update
         }
 
         /// <summary>
@@ -67,9 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Say <Message>",
-                        $"-------------------------------------",
-                        $"Message: Message.",
+                        $"Usage: /Update",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

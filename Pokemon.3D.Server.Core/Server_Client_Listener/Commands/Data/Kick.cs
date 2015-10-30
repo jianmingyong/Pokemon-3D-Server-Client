@@ -136,7 +136,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /kick [Name] [Optional:Reason]",
+                        $"Usage: /kick <Name> [Optional:Reason]",
                         $"-------------------------------------",
                         $"Name: Player Name.",
                         $"Reason: Reason to kick. [Default: No reason.]",

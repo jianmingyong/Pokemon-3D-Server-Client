@@ -1,29 +1,29 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
 {
     /// <summary>
-    /// Class containing Restart Function.
+    /// Class containing About Function.
     /// </summary>
-    public class Restart : ICommand
+    public class About : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Restart";
+        public string Name { get; } = "About";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Restart the server.";
+        public string Description { get; } = "Display server info.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Player;
 
         /// <summary>
         /// Handle the Package data.
@@ -33,19 +33,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Restart
+            #region /About
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart);
+                    Player.CommandFeedback($"This server is created by jianmingyong.", null);
+                    Player.CommandFeedback($"It is running v{Core.Setting.ApplicationVersion}", null);
                 }
                 else if (Player == null)
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Restart);
+                    Core.Logger.Log("This server is created by jianmingyong.", Logger.LogTypes.Info);
+                    Core.Logger.Log($"It is running v{Core.Setting.ApplicationVersion}", Logger.LogTypes.Info);
                 }
             }
-            #endregion /Restart
+            #endregion /About
         }
 
         /// <summary>
@@ -60,7 +62,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Restart",
+                        $"Usage: /About",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

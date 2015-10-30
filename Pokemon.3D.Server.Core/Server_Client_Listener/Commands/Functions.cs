@@ -135,7 +135,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         }
 
         /// <summary>
-        /// Create a comamnd feedback message.
+        /// Create a command feedback message.
         /// </summary>
         /// <param name="Player">Player who use the command.</param>
         /// <param name="Message">Message to feedback to the player who use the command.</param>
@@ -147,14 +147,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
             }
 
-            Core.Player.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+            if (Message2 != null)
+            {
+                Core.Player.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
-            Core.Logger.Log(Player.isGameJoltPlayer ?
-                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
-                Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, Message2)
-                , Logger.LogTypes.Command, Player.Network.Client);
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, Message2)
+                    , Logger.LogTypes.Command, Player.Network.Client);
+            }
         }
 
         /// <summary>

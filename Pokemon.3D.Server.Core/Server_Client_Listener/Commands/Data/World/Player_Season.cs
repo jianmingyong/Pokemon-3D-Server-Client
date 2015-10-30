@@ -6,22 +6,22 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 {
     /// <summary>
-    /// Class containing Weather Function.
+    /// Class containing Season Function.
     /// </summary>
-    public class Player_Weather : ICommand
+    public class Player_Season : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Player.Weather";
+        public string Name { get; } = "Player.Season";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the player weather.";
+        public string Description { get; } = "Change the player season.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
@@ -36,7 +36,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Player.Weather <id>
+            #region /Player.Season <id>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
@@ -44,14 +44,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
                     OnlineSetting Settings = Player.GetOnlineSetting();
-                    Settings.Weather = Group[0].Toint().RollOver(-5, 9);
-                    Settings.CurrentWorldWeather = Core.World.GenerateWeather(Settings.Weather, Settings.Season);
+                    Settings.Season = Group[0].Toint().RollOver(-4, 3);
+                    Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
                     Settings.LastWorldUpdate = DateTime.Now;
 
-                    Player.CommandFeedback(Core.World.ToString(Settings.CurrentWorldSeason, Settings.CurrentWorldWeather), $"have changed the player weather.");
+                    Player.CommandFeedback(Core.World.ToString(Settings.CurrentWorldSeason, Settings.CurrentWorldWeather), $"have changed the player season.");
                 }
             }
-            #endregion /Player.Weather <id>
+            #endregion /Player.Season <id>
         }
 
         /// <summary>
@@ -66,10 +66,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Player.Weather [ID]",
+                        $"Usage: /Player.Season [ID]",
                         $"-------------------------------------",
-                        $"ID: Weather ID.",
-                        $"Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4 | Server Default = -5",
+                        $"ID: Season ID.",
+                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3 | Server Default = -4",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: GameJolt Player."

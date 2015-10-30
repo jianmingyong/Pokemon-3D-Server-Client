@@ -3,18 +3,19 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
 {
     /// <summary>
     /// Class containing Operator Function.
     /// </summary>
-    public class Operator_Remove : ICommand
+    public class Remove : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Operator.Remove";
+        public string Name { get; } = "deop";
 
         /// <summary>
         /// Short Description of the command.
@@ -34,16 +35,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Operator.Remove [Name]
-            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any))
+            #region /deop <Name>
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any);
+                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PLAYERNOTEXIST"), p.Client));
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
                     else
                     {
@@ -52,13 +53,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                         if (Players.IsOperator())
                         {
-                            Players.RemoveOperator();
+                            if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
+                            {
+                                Player.CommandFeedback($"You are not allowed to change or remove {PlayerName} operator status.", null);
+                            }
+                            else
+                            {
+                                Players.RemoveOperator();
 
-                            Player.CommandFeedback($"You have successfully remove {PlayerName} as operator.", $"have remove {PlayerName} as operator.");
+                                Player.CommandFeedback($"You have successfully remove {PlayerName} as operator.", $"have remove {PlayerName} as operator.");
+                            }
                         }
                         else
                         {
-                            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOTOPERATOR"), p.Client));
+                            Player.CommandFeedback(Core.Setting.Token("SERVER_NOTOPERATOR"), null);
                         }
                     }
                 }
@@ -68,7 +76,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
-                        Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Loggers.Logger.LogTypes.Info);
+                        Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                     }
                     else
                     {
@@ -77,18 +85,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                         if (Players.IsOperator())
                         {
-                            Players.RemoveOperator();
+                            if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
+                            {
+                                Core.Logger.Log($"You are not allowed to change or remove {PlayerName} operator status.", Logger.LogTypes.Info);
+                            }
+                            else
+                            {
+                                Players.RemoveOperator();
 
-                            Core.Logger.Log($"You have successfully remove {PlayerName} as operator.", Loggers.Logger.LogTypes.Info);
+                                Core.Logger.Log($"You have successfully remove {PlayerName} as operator.", Logger.LogTypes.Info);
+                            }
                         }
                         else
                         {
-                            Core.Logger.Log(Core.Setting.Token("SERVER_NOTOPERATOR"), Loggers.Logger.LogTypes.Info);
+                            Core.Logger.Log(Core.Setting.Token("SERVER_NOTOPERATOR"), Logger.LogTypes.Info);
                         }
                     }
                 }
             }
-            #endregion /Operator.Remove [Name]
+            #endregion /deop <Name>
         }
 
         /// <summary>
@@ -103,7 +118,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Operator.Remove [Name]",
+                        $"Usage: /deop <Name>",
                         $"-------------------------------------",
                         $"Name: Player name.",
                         $"-------------------------------------",

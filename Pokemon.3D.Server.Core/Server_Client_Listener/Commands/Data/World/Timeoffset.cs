@@ -1,29 +1,31 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+﻿using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 {
     /// <summary>
-    /// Class containing Stop Function.
+    /// Class containing Timeoffset Function.
     /// </summary>
-    public class Stop : ICommand
+    public class Timeoffset : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Stop";
+        public string Name { get; } = "Timeoffset";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Stop the server from running.";
+        public string Description { get; } = "Change the time offset in seconds.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
 
         /// <summary>
         /// Handle the Package data.
@@ -33,19 +35,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /stop
-            if (this.MatchRequiredParam(p,  Functions.CommandParamType.Nothing))
+            #region /Timeoffset <Duration>
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
+                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
+
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Stop);
+                    Core.World.TimeOffset = Group[0].Toint();
+
+                    Player.CommandFeedback(Core.World.ToString(), $"have changed the world time offset.");
                 }
                 else if (Player == null)
                 {
-                    ClientEvent.Invoke(ClientEvent.Types.Stop);
+                    Core.World.TimeOffset = Group[0].Toint();
+
+                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /stop
+            #endregion /Timeoffset <Duration>
         }
 
         /// <summary>
@@ -60,7 +68,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Stop",
+                        $"Usage: /Timeoffset <Duration>",
+                        $"-------------------------------------",
+                        $"Duration: Amount of time offset in seconds.",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

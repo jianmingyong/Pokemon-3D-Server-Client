@@ -1,29 +1,29 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
 {
     /// <summary>
-    /// Class containing World Function.
+    /// Class containing Restart Function.
     /// </summary>
-    public class Global_World : ICommand
+    public class Restart : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Global.World";
+        public string Name { get; } = "Restart";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Display global world.";
+        public string Description { get; } = "Restart the server.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Player;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.Administrator;
 
         /// <summary>
         /// Handle the Package data.
@@ -33,19 +33,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Global.World
+            #region /Restart
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Nothing))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), Player.Network.Client));
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
                 else if (Player == null)
                 {
-                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
+                    ClientEvent.Invoke(ClientEvent.Types.Restart);
                 }
             }
-            #endregion /Global.World
+            #endregion /Restart
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Global.World",
+                        $"Usage: /Restart",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

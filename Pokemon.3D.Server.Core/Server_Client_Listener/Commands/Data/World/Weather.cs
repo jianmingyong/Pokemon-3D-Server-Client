@@ -5,22 +5,22 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 {
     /// <summary>
-    /// Class containing Season Function.
+    /// Class containing Weather Function.
     /// </summary>
-    public class Global_Season : ICommand
+    public class Weather : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Global.Season";
+        public string Name { get; } = "Weather";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the global season.";
+        public string Description { get; } = "Change the global weather.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
@@ -35,25 +35,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Global.Season <id>
+            #region /Weather <id>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
                     
-                    Player.CommandFeedback(Core.World.ToString(), "have changed the global season.");
+                    Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the global weather."));
                 }
                 else if (Player == null)
                 {
-                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
 
                     Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /Global.Season <id>
+            #endregion /Weather <id>
         }
 
         /// <summary>
@@ -68,10 +68,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Global.Season [ID]",
+                        $"Usage: /Weather [ID]",
                         $"-------------------------------------",
-                        $"ID: Season ID.",
-                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3",
+                        $"ID: Weather ID.",
+                        $"Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4",
                         $"-------------------------------------",
                         $"Description: {Description}",
                         $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."

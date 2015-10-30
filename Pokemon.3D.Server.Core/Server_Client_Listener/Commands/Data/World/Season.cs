@@ -1,32 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
-namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
+namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 {
     /// <summary>
     /// Class containing Season Function.
     /// </summary>
-    public class Player_Season : ICommand
+    public class Season : ICommand
     {
         /// <summary>
         /// Name of the command. [To use, add "/" before the name]
         /// </summary>
-        public string Name { get; } = "Player.Season";
+        public string Name { get; } = "Season";
 
         /// <summary>
         /// Short Description of the command.
         /// </summary>
-        public string Description { get; } = "Change the player season.";
+        public string Description { get; } = "Change the global season.";
 
         /// <summary>
         /// Minimum Permission require to use this command.
         /// </summary>
-        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.GameJoltPlayer;
+        public Player.OperatorTypes RequiredPermission { get; } = Player.OperatorTypes.ServerModerator;
 
         /// <summary>
         /// Handle the Package data.
@@ -36,22 +35,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
         public void Handle(Package p, Player Player = null)
         {
             // Start from the most inner depth Command.
-            #region /Player.Season <id>
+            #region /Season <id>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
                 List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    OnlineSetting Settings = Player.GetOnlineSetting();
-                    Settings.Season = Group[0].Toint().RollOver(-4, 3);
-                    Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
-                    Settings.LastWorldUpdate = DateTime.Now;
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
+                    
+                    Player.CommandFeedback(Core.World.ToString(), "have changed the global season.");
+                }
+                else if (Player == null)
+                {
+                    Core.World.Season = Core.World.GenerateSeason(Group[0].Toint());
 
-                    Player.CommandFeedback(Core.World.ToString(Settings.CurrentWorldSeason, Settings.CurrentWorldWeather), $"have changed the player season.");
+                    Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }
             }
-            #endregion /Player.Season <id>
+            #endregion /Global.Season <id>
         }
 
         /// <summary>
@@ -66,13 +68,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Player.Season [ID]",
+                        $"Usage: /Season [ID]",
                         $"-------------------------------------",
                         $"ID: Season ID.",
-                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3 | Server Default = -4",
+                        $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3",
                         $"-------------------------------------",
                         $"Description: {Description}",
-                        $"Required Permission: GameJolt Player."
+                        $"Required Permission: {RequiredPermission.ToString().Replace("Moderator", " Moderator")} and above."
                         );
                     break;
             }
