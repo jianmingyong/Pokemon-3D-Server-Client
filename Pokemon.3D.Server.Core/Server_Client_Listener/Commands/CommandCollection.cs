@@ -23,23 +23,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
                 RemoveRange(0, Count);
             }
 
-            if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\Plugins"))
-            {
-                Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Plugins");
-            }
-
-            string[] ListOfPlugins = Directory.GetFileSystemEntries(Core.Setting.ApplicationDirectory + "\\Plugins");
-
-            if (ListOfPlugins.Length > 0)
-            {
-                for (int i = 0; i < ListOfPlugins.Length; i++)
-                {
-                    AddRange(from t in Assembly.LoadFile(ListOfPlugins[i]).GetExportedTypes()
-                             where t.GetInterfaces().Contains(typeof(ICommand)) && t.GetConstructor(Type.EmptyTypes) != null
-                             select Activator.CreateInstance(t) as ICommand);
-                }
-            }
-
             AddRange(from t in Assembly.GetExecutingAssembly().GetTypes()
                      where t.GetInterfaces().Contains(typeof(ICommand)) && t.GetConstructor(Type.EmptyTypes) != null
                      select Activator.CreateInstance(t) as ICommand);

@@ -18,4 +18,4 @@ If there are any problems, do approach jianmingyong (http://pokemon3d.net/forum/
 Compatibility:
 
 1. Windows 7 / Vista / 8 / 8.1 / 10
-2. Linux (Mono Build - Source Code)
+2. Linux (Mono Build - Source Code) - Not Compatible without changes.

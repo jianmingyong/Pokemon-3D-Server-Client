@@ -25,7 +25,7 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public void Update()
         {
-            UpdateURL = "https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Update.dat";
+            UpdateURL = "https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/Update.dat";
 
             Core.Logger.Log("Checking for update...", Logger.LogTypes.Info);
 
@@ -46,8 +46,10 @@ namespace Pokemon_3D_Server_Core
                     Core.Logger.Log($"Update found: Expect Version: {ExpectVersion}, Current Version: {Core.Setting.ApplicationVersion}.", Logger.LogTypes.Info);
                     Core.Logger.Log($"Downloading update.", Logger.LogTypes.Info);
 
-                    Client.DownloadFile(new Uri("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater.exe"), Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe");
-                    Client.DownloadFileAsync(new Uri(ExpectFileURL), Core.Setting.ApplicationDirectory + "\\Release.zip");
+                    Client.DownloadFile(new Uri("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater/bin/Release/Pokemon.3D.Server.Client.Updater.exe"), Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe");
+                    Client.DownloadFile(new Uri("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater/bin/Release/SharpCompress.dll"), Core.Setting.ApplicationDirectory + "\\SharpCompress.dll");
+
+                    Client.DownloadFileAsync(new Uri(ExpectFileURL), Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip");
                     Client.DownloadFileCompleted += Client_DownloadFileCompleted;
                 }
                 else
@@ -71,7 +73,7 @@ namespace Pokemon_3D_Server_Core
             {
                 Core.Logger.Log($"Checking Md5 checksum.", Logger.LogTypes.Info);
 
-                string CurrentMD5Checksum = Functions.Md5HashGenerator(Core.Setting.ApplicationDirectory + "\\Release.zip", true);
+                string CurrentMD5Checksum = Functions.Md5HashGenerator(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip", true);
 
                 if (string.Equals(CurrentMD5Checksum, ExpectMD5Checksum, StringComparison.OrdinalIgnoreCase))
                 {

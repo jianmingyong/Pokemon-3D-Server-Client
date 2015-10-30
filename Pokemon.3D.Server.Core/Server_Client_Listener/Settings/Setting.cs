@@ -1645,7 +1645,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 {
                     using (WebClient Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
                     {
-                        Client.DownloadFile("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/SwearInfractionFilterListData.json", ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json");
+                        Client.DownloadFile("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/SwearInfractionFilterListData.json", ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json");
                     }
                 }
 
