@@ -576,7 +576,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         TempValue += item + "|";
                                     }
                                     TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
-                                    this.SeasonMonth.SeasonData = TempValue;
+                                    this.SeasonMonth = new SeasonMonth(TempValue);
                                 }
                                 else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
                                 {
@@ -586,7 +586,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         TempValue += item + "|";
                                     }
                                     TempValue = TempValue.Remove(TempValue.LastIndexOf("|"));
-                                    this.WeatherSeason.WeatherData = TempValue;
+                                    this.WeatherSeason = new WeatherSeason(TempValue);
                                 }
                                 StartObjectDepth--;
                             }

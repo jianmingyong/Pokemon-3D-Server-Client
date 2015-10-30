@@ -21,11 +21,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
-        private static object Lock = new object();
-        private static object Lock1 = new object();
-        private static object Lock2 = new object();
-
-        private SmartThreadPool ThreadPool = new SmartThreadPool();
+        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
+        private IWorkItemsGroup ThreadPool2 = new SmartThreadPool().CreateWorkItemsGroup(1);
+        private IWorkItemsGroup ThreadPool3 = new SmartThreadPool().CreateWorkItemsGroup(1);
 
         private int LastHourCheck = 0;
 
@@ -93,40 +91,34 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
         private object ThreadPreHandlePackage(object p)
         {
-            lock (Lock2)
+            if (string.IsNullOrEmpty((string)p))
             {
-                if (string.IsNullOrEmpty((string)p))
+                if (IsActive)
                 {
-                    if (IsActive)
-                    {
-                        IsActive = false;
-                        Core.Player.Remove(Client, "You have left the game.");
-                    }
+                    IsActive = false;
+                    Core.Player.Remove(Client, "You have left the game.");
                 }
-                else
-                {
-                    Package Package = new Package((string)p, Client);
-                    if (Package.IsValid)
-                    {
-                        LastValidPing = DateTime.Now;
-
-                        ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Package);
-
-                        Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
-                    }
-                }
-                return null;
             }
+            else
+            {
+                Package Package = new Package((string)p, Client);
+                if (Package.IsValid)
+                {
+                    LastValidPing = DateTime.Now;
+                    ThreadPool2.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Package);
+                    Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
+                }
+            }
+
+            return null;
         }
 
         private object ThreadHandlePackage(object obj)
         {
-            lock (Lock1)
-            {
-                Package Package = (Package)obj;
-                Package.Handle();
-                return null;
-            }
+            Package Package = (Package)obj;
+            Package.Handle();
+
+            return null;
         }
 
         private void ThreadStartPinging()
@@ -183,16 +175,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="p">Package to send.</param>
         public void SentToPlayer(Package p)
         {
-            lock (Lock)
+            ThreadPool3.QueueWorkItem(new WorkItemCallback(ThreadSentToPlayer), p);
+        }
+
+        private object ThreadSentToPlayer(object p)
+        {
+            try
             {
-                try
-                {
-                    Writer.WriteLine(p.ToString());
-                    Writer.Flush();
-                    Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, Client);
-                }
-                catch (Exception) { }
+                Writer.WriteLine(((Package)p).ToString());
+                Writer.Flush();
+                Core.Logger.Log($"Sent: {((Package)p).ToString()}", Logger.LogTypes.Debug, Client);
             }
+            catch (Exception) { }
+
+            return null;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Aragas.Core.Data;
 using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -249,7 +250,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "SeasonMonth":
                         try
                         {
-                            Core.Setting.SeasonMonth.SeasonData =  ((Settings)ObjectListView1.GetModelObject(i)).Value;
+                            Core.Setting.SeasonMonth = new SeasonMonth(((Settings)ObjectListView1.GetModelObject(i)).Value);
                         }
                         catch (Exception ex)
                         {
@@ -259,7 +260,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "WeatherSeason":
                         try
                         {
-                            Core.Setting.WeatherSeason.WeatherData = ((Settings)ObjectListView1.GetModelObject(i)).Value;
+                            Core.Setting.WeatherSeason = new WeatherSeason(((Settings)ObjectListView1.GetModelObject(i)).Value);
                         }
                         catch (Exception ex)
                         {

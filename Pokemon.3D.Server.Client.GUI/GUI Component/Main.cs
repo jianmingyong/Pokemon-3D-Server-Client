@@ -158,15 +158,27 @@ namespace Pokemon_3D_Server_Client_GUI
                 {
                     if (Type == PlayerEvent.Types.Add)
                     {
-                        Main_CurrentPlayerOnline.Items.Insert(Args.GetSplit(0, ",").Toint(), Args.GetSplit(1, ","));
+                        Main_CurrentPlayerOnline.Items.Add(Args.GetSplit(1, ","));
                     }
                     else if (Type == PlayerEvent.Types.Remove)
                     {
-                        Main_CurrentPlayerOnline.Items.RemoveAt(Args.GetSplit(0, ",").Toint());
+                        for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
+                        {
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").Toint()))
+                            {
+                                Main_CurrentPlayerOnline.Items.RemoveAt(i);
+                            }
+                        }
                     }
                     else if (Type == PlayerEvent.Types.Update)
                     {
-                        Main_CurrentPlayerOnline.Items[Args.GetSplit(0, ",").Toint()] = Args.GetSplit(1, ",");
+                        for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
+                        {
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").Toint()))
+                            {
+                                Main_CurrentPlayerOnline.Items[i] = Args.GetSplit(1, ",");
+                            }
+                        }
                     }
                 }
             }

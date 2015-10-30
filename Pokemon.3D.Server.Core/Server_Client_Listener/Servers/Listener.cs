@@ -9,6 +9,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Amib.Threading;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 {
@@ -26,7 +27,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
-        private static object Lock = new object();
+        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
 
         private bool IsActive { get; set; } = false;
 
@@ -132,34 +133,34 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 {
                     Client = TcpListener.AcceptTcpClient();
                     Reader = new StreamReader(Client.GetStream());
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadHandlePackage), Reader.ReadLine());
+
+                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Reader.ReadLine());
                 }
                 catch (ThreadAbortException) { return; }
                 catch (Exception) { }
             } while (IsActive);
         }
 
-        private void ThreadHandlePackage(object obj)
+        private object ThreadHandlePackage(object obj)
         {
-            lock (Lock)
+            try
             {
-                try
+                string ReturnMessage = (string)obj;
+
+                if (!string.IsNullOrWhiteSpace(ReturnMessage))
                 {
-                    string ReturnMessage = (string)obj;
+                    Package Package = new Package(ReturnMessage, Client);
+                    Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
 
-                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                    if (Package.IsValid)
                     {
-                        Package Package = new Package(ReturnMessage, Client);
-                        Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
-
-                        if (Package.IsValid)
-                        {
-                            Package.Handle();
-                        }
+                        Package.Handle();
                     }
                 }
-                catch (Exception) { }
             }
+            catch (Exception) { }
+
+            return null;
         }
 
         private void ThreadAutoRestart()
