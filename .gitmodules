@@ -4,3 +4,12 @@
 [submodule "PokeD.Core"]
 	path = PokeD.Core
 	url = https://github.com/PokeD/PokeD.Core.git
+[submodule "SmartThreadPool"]
+	path = SmartThreadPool
+	url = https://github.com/amibar/SmartThreadPool.git
+[submodule "sharpcompress"]
+	path = sharpcompress
+	url = https://github.com/adamhathcock/sharpcompress.git
+[submodule "NLua"]
+	path = NLua
+	url = https://github.com/NLua/NLua.git

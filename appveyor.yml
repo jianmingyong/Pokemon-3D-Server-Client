@@ -13,7 +13,7 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 install:
-- cmd: git submodule update --init
+- cmd: git submodule update --init --recursive
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client.sln
 build:

@@ -1,9 +1,9 @@
-﻿using SharpCompress.Common;
-using SharpCompress.Reader;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using SharpCompress.Common;
+using SharpCompress.Reader;
 
 namespace Pokemon_3D_Server_Client_Updater
 {

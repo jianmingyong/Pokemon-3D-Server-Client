@@ -3,6 +3,12 @@ mono:
   - latest
 
 solution: "Pokemon.3D.Server.Client.sln"
+
+git:
+  submodules: false
+  
+before_install:
+  - git submodule update --init --recursive
   
 install:
   - nuget restore "Pokemon.3D.Server.Client.sln"
