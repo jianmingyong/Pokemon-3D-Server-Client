@@ -48,6 +48,9 @@
   <PropertyGroup>
     <StartupObject>Pokemon_3D_Server_Client_GUI.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ObjectListView, Version=2.8.1.33936, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
       <HintPath>..\packages\ObjectListView.Official.2.8.1\lib\net20\ObjectListView.dll</HintPath>
@@ -111,7 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
-      <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>
+      <Project>{468d9d51-dfe7-47a8-b0d6-52d035fc714d}</Project>
       <Name>Aragas.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pokemon.3D.Server.Core\Pokemon.3D.Server.Core.csproj">
@@ -123,6 +126,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>IF $(ConfigurationName) == Release DEL /F /Q "$(TargetDir)*.pdb" "$(TargetDir)*.xml"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

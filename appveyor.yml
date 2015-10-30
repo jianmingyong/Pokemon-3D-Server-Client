@@ -22,13 +22,15 @@ build:
   verbosity: minimal
 artifacts:
 - path: Pokemon.3D.Server.Client.GUI/bin/Release
-  name: Release
+  name: Pokemon.3D.Server.Client.GUI
+- path: Pokemon.3D.Server.Client.Updater/bin/Release
+  name: Pokemon.3D.Server.Client.Updater
 deploy:
 - provider: GitHub
   tag: v$(appveyor_build_version)
   release: "Pokémon 3D Server Client v$(appveyor_build_version)"
   auth_token:
     secure: UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc
-  artifact: Release
+  artifact: Pokemon.3D.Server.Client.GUI, Pokemon.3D.Server.Client.Updater
   draft: false
   prerelease: true
