@@ -61,7 +61,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
                 }
                 else if (ParamType[i] == CommandParamType.Integer)
                 {
-                    RegexFilter += @"\s+(\d+)";
+                    RegexFilter += @"\s+(-\d+|\d+)";
                 }
             }
 
