@@ -153,6 +153,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
+
                 Core.Logger.Log(Player.isGameJoltPlayer ?
                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, Message2)

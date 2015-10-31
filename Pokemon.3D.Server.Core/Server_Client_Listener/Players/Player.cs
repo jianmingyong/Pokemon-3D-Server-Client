@@ -473,6 +473,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             // Sent To Server
             if (SentToServer)
             {
+                Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.UpdatePlayer, $"{ID},{ToString()}", null));
                 PlayerEvent.Invoke(PlayerEvent.Types.Update, $"{ID},{ToString()}");
 
                 if (p.IsFullPackageData())

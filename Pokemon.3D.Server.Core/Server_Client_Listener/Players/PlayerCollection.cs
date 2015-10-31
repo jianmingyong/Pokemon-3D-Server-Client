@@ -28,6 +28,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 int ID = GetNextValidID();
                 Player Player = new Player(p, ID);
+
+                Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.AddPlayer, $"{ID},{Player.ToString()}", null));
                 PlayerEvent.Invoke(PlayerEvent.Types.Add, $"{ID},{Player.ToString()}");
             }
         }
@@ -64,6 +66,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }
@@ -100,6 +103,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }
@@ -136,6 +140,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
             Core.Player.Remove(Player);
         }

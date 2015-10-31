@@ -41,7 +41,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
 
             for (int i = 0; i < Core.Player.Count; i++)
             {
-                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.AddPlayer, Core.Player[i].ID, Core.Player[i].ToString(), p.Client));
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.AddPlayer, $"{Core.Player[i].ID},{Core.Player[i].ToString()}", p.Client));
             }
         }
     }

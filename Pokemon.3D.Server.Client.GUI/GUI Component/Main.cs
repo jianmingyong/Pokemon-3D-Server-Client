@@ -236,14 +236,23 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
             {
-                if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
                 {
-                    Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, Main_Command.Text, null));
                 }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                    {
+                        Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    }
+                }
+                
                 Main_Command.Clear();
             }
         }
 
+        #region Menu Bar Buttons
         private void About_Button_Click(object sender, EventArgs e)
         {
             About About = new About();
@@ -275,5 +284,6 @@ namespace Pokemon_3D_Server_Client_GUI
                 }
             }
         }
+        #endregion Menu Bar Buttons
     }
 }

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Sockets;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.RCON_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
 {
@@ -57,6 +58,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
                     {
                         Writer.WriteLine(Logger.ToString());
                         Writer.Flush();
+
+                        Core.RCONPlayer.SendToAllPlayer(new Package(Package.PackageTypes.Logger, Logger.ToString(), null));
                         LoggerEvent.Invoke(Logger.ToString());
                     }
                 }
