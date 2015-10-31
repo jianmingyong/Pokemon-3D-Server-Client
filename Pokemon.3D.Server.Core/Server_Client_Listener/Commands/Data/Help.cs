@@ -45,7 +45,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> GetHelpContent = GenerateHelp(Group[0].Toint());
+                    List<string> GetHelpContent = GenerateHelp(Group[0].ToInt());
 
                     for (int i = 0; i < GetHelpContent.Count; i++)
                     {
@@ -54,7 +54,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 }
                 else if (Player == null)
                 {
-                    List<string> GetHelpContent = GenerateHelp(Group[0].Toint());
+                    List<string> GetHelpContent = GenerateHelp(Group[0].ToInt());
 
                     for (int i = 0; i < GetHelpContent.Count; i++)
                     {

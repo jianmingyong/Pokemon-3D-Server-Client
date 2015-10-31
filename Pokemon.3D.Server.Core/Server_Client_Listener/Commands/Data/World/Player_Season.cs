@@ -44,7 +44,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
                     OnlineSetting Settings = Player.GetOnlineSetting();
-                    Settings.Season = Group[0].Toint().RollOver(-4, 3);
+                    Settings.Season = Group[0].ToInt().RollOver(-4, 3);
                     Settings.CurrentWorldSeason = Core.World.GenerateSeason(Settings.Season);
                     Settings.LastWorldUpdate = DateTime.Now;
 

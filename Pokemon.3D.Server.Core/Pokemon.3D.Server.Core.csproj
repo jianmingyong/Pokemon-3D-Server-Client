@@ -46,18 +46,10 @@
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="KeraLua, Version=1.3.2.0, Culture=neutral, PublicKeyToken=04d04586786c6f34, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLua.1.3.2.1\lib\net45\KeraLua.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NLua, Version=1.3.2.0, Culture=neutral, PublicKeyToken=8df2ab518030ea95, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLua.1.3.2.1\lib\net45\NLua.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,6 +60,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
+    <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />
+    <Compile Include="RCON_Client_Listener\Players\Networking.cs" />
+    <Compile Include="RCON_Client_Listener\Players\Player.cs" />
+    <Compile Include="RCON_Client_Listener\Players\PlayerCollection.cs" />
+    <Compile Include="RCON_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="RCON_GUI_Client_Listener\Packages\Package.cs" />
+    <Compile Include="RCON_GUI_Client_Listener\Packages\PackageHandler.cs" />
+    <Compile Include="RCON_GUI_Client_Listener\Servers\Listener.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
     <Compile Include="SCON_Client_Listener\Servers\Listener.cs" />
@@ -131,7 +132,6 @@
     <None Include="Resource\SwearInfractionFilterListData.json" />
     <None Include="Resource\Update.dat" />
     <None Include="packages.config" />
-    <None Include="Update.dat" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
@@ -147,9 +147,11 @@
       <Name>SmartThreadPool</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /s /y "$(SolutionDir)packages\NLua.1.3.2.1\lib\native\x86\*.*" "$(SolutionDir)Pokemon.3D.Server.Client.GUI\$(OutDir)"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -42,13 +42,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].ToInt(), Core.World.Season);
                     
                     Player.CommandFeedback(Core.World.ToString(), string.Format("have changed the global weather."));
                 }
                 else if (Player == null)
                 {
-                    Core.World.Weather = Core.World.GenerateWeather(Group[0].Toint(), Core.World.Season);
+                    Core.World.Weather = Core.World.GenerateWeather(Group[0].ToInt(), Core.World.Season);
 
                     Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }

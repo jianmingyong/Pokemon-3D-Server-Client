@@ -47,6 +47,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         /// </summary>
         public TcpClient Client { get; set; }
 
+        /// <summary>
+        /// Get Package Handler Object.
+        /// </summary>
         public PackageHandler PackageHandler { get; } = new PackageHandler();
 
         /// <summary>
@@ -281,7 +284,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     int DataItemsCount = 0;
                     try
                     {
-                        DataItemsCount = bits[3].Toint();
+                        DataItemsCount = bits[3].ToInt();
                     }
                     catch (Exception)
                     {
@@ -297,7 +300,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     {
                         try
                         {
-                            OffsetList.Add(bits[i].Toint());
+                            OffsetList.Add(bits[i].ToInt());
                         }
                         catch (Exception)
                         {

@@ -1,8 +1,4 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,6 +6,10 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using Amib.Threading;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 {
@@ -32,7 +32,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
         private bool IsActive { get; set; } = false;
 
         /// <summary>
-        /// Start the Listener.
+        /// Starts listening for incoming connection requests.
         /// </summary>
         public void Start()
         {
@@ -71,9 +71,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     ThreadCollection.Add(Thread3);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex.CatchError();
                 Dispose();
             }
         }
@@ -195,7 +194,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 sw.Stop();
                 if (sw.ElapsedMilliseconds < 1000)
                 {
-                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().ToInt());
                 }
                 sw.Restart();
             }

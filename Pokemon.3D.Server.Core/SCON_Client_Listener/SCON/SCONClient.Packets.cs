@@ -102,7 +102,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                 Player.Add(new PlayerInfo()
                 {
                     Name = Core.Player[i].Name,
-                    GameJoltID = Core.Player[i].GameJoltID.ToString().Toulong(),
+                    GameJoltID = Core.Player[i].GameJoltID.ToString().ToUlong(),
                     IP = ((IPEndPoint)Core.Player[i].Network.Client.Client.RemoteEndPoint).Address.ToString(),
                     LevelFile = Core.Player[i].LevelFile,
                     Position = new Vector3(Core.Player[i].Position_X, Core.Player[i].Position_Y, Core.Player[i].Position_Z),

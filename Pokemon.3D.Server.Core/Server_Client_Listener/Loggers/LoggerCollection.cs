@@ -62,6 +62,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
                 }
                 catch (Exception) { }
             }
-        }   
+        }
+
+        /// Log the message.
+        /// </summary>
+        /// <param name="Message">Message to log.</param>
+        public void Log(string Message)
+        {
+            lock (Lock)
+            {
+                try
+                {
+                    Writer.WriteLine(Message);
+                    Writer.Flush();
+                    LoggerEvent.Invoke(Message);
+                }
+                catch (Exception) { }
+            }
+        }
     }
 }

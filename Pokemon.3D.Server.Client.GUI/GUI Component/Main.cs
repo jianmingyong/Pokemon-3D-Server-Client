@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
+using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
@@ -50,6 +52,11 @@ namespace Pokemon_3D_Server_Client_GUI
             for (int i = 0; i < Core.Player.Count; i++)
             {
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
+            }
+
+            if (Core.Setting.RCONEnable && Core.RCONGUIListener != null && Core.RCONGUIListener.IsActive)
+            {
+                Core.RCONGUIListener.Dispose();
             }
 
             Core.Setting.Save();
@@ -164,7 +171,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     {
                         for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
                         {
-                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").Toint()))
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").ToInt()))
                             {
                                 Main_CurrentPlayerOnline.Items.RemoveAt(i);
                             }
@@ -174,7 +181,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     {
                         for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
                         {
-                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").Toint()))
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").ToInt()))
                             {
                                 Main_CurrentPlayerOnline.Items[i] = Args.GetSplit(1, ",");
                             }
@@ -247,6 +254,26 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             ApplicationSettings ApplicationSettings = new ApplicationSettings();
             ApplicationSettings.Show();
+        }
+
+        private void RCON_Connect_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(RCON_IPAddress.Text) || string.IsNullOrEmpty(RCON_Password.Text) || string.IsNullOrEmpty(RCON_Port.Text))
+            {
+                Core.Logger.Log("Please make sure that the IP Address, Password and Port is not blank.", Logger.LogTypes.Info);
+            }
+            else
+            {
+                if (Core.RCONGUIListener != null)
+                {
+                    Core.RCONGUIListener.Dispose();
+                    Core.RCONGUIListener = new Listener(RCON_IPAddress.Text, RCON_Password.Text, RCON_Port.Text.ToInt());
+                }
+                else
+                {
+                    Core.RCONGUIListener = new Listener(RCON_IPAddress.Text, RCON_Password.Text, RCON_Port.Text.ToInt());
+                }
+            }
         }
     }
 }

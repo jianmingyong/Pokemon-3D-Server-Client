@@ -42,13 +42,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.World.TimeOffset = Group[0].Toint();
+                    Core.World.TimeOffset = Group[0].ToInt();
 
                     Player.CommandFeedback(Core.World.ToString(), $"have changed the world time offset.");
                 }
                 else if (Player == null)
                 {
-                    Core.World.TimeOffset = Group[0].Toint();
+                    Core.World.TimeOffset = Group[0].ToInt();
 
                     Core.Logger.Log(Core.World.ToString(), Logger.LogTypes.Info);
                 }

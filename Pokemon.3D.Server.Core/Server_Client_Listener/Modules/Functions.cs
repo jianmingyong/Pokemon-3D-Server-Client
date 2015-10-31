@@ -18,7 +18,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
     public static class Functions
     {
         /// <summary>
-        /// Represents a newline character for print and display functions.
+        /// Gets the newline string defined for this environment.
         /// </summary>
         public static readonly string vbNewLine = Environment.NewLine;
 
@@ -305,6 +305,13 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Starts a process resource by specifying the name of a document or application
+        /// file and associates the resource with a new <see cref="Process"/> component.
+        /// </summary>
+        /// <param name="File">The name of a document or application file to run in the process.</param>
+        /// <param name="Argument">Command-line arguments to pass when starting the process.</param>
+        /// <param name="Close">Close the current process?</param>
         public static void Run(this string File, string Argument = null, bool Close = false)
         {
             try

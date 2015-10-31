@@ -1,4 +1,7 @@
 ﻿using System;
+using Pokemon_3D_Server_Core.RCON_Client_Listener.Players;
+using Pokemon_3D_Server_Core.RCON_Client_Listener.Servers;
+using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
@@ -15,6 +18,21 @@ namespace Pokemon_3D_Server_Core
     /// </summary>
     public class Core
     {
+        /// <summary>
+        /// Get RCON Player Collection.
+        /// </summary>
+        public static RCON_Client_Listener.Players.PlayerCollection RCONPlayer { get; } = new RCON_Client_Listener.Players.PlayerCollection();
+
+        /// <summary>
+        /// Get RCON Listener
+        /// </summary>
+        public static RCON_Client_Listener.Servers.Listener RCONListener { get; } = new RCON_Client_Listener.Servers.Listener();
+
+        /// <summary>
+        /// Get RCON Listener
+        /// </summary>
+        public static RCON_GUI_Client_Listener.Servers.Listener RCONGUIListener { get; set; }
+
         /// <summary>
         /// Get SCON Listener
         /// </summary>
@@ -33,12 +51,12 @@ namespace Pokemon_3D_Server_Core
         /// <summary>
         /// Get Player Collection.
         /// </summary>
-        public static PlayerCollection Player { get; } = new PlayerCollection();
+        public static Server_Client_Listener.Players.PlayerCollection Player { get; } = new Server_Client_Listener.Players.PlayerCollection();
 
         /// <summary>
         /// Get Pokemon 3D Listener
         /// </summary>
-        public static Listener Listener { get; } = new Listener();
+        public static Server_Client_Listener.Servers.Listener Listener { get; } = new Server_Client_Listener.Servers.Listener();
 
         /// <summary>
         /// Get Setting.
@@ -85,6 +103,12 @@ namespace Pokemon_3D_Server_Core
                 // Initialize Listener.
                 Listener.Start();
 
+                // Initialize RCONListener.
+                if (Setting.RCONEnable)
+                {
+                    RCONListener.Start();
+                }
+
                 // Initialize SCONListener.
                 if (Setting.SCONEnable)
                 {
@@ -112,6 +136,7 @@ namespace Pokemon_3D_Server_Core
         public static void Dispose()
         {
             Listener.Dispose();
+            RCONListener.Dispose();
             SCONListener.Dispose();
             Logger.Dispose();
         }

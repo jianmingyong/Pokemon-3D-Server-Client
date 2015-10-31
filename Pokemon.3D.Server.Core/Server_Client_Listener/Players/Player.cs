@@ -1,10 +1,10 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+﻿using System;
+using System.Collections.Generic;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
-using System;
-using System.Collections.Generic;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -66,7 +66,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return Position.GetSplit(0).Todouble();
+                return Position.GetSplit(0).ToDouble();
             }
             set
             {
@@ -81,7 +81,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return Position.GetSplit(1).Todouble();
+                return Position.GetSplit(1).ToDouble();
             }
             set
             {
@@ -96,7 +96,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return Position.GetSplit(2).Todouble();
+                return Position.GetSplit(2).ToDouble();
             }
             set
             {
@@ -163,7 +163,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return PokemonPosition.GetSplit(0).Todouble();
+                return PokemonPosition.GetSplit(0).ToDouble();
             }
             set
             {
@@ -178,7 +178,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return PokemonPosition.GetSplit(1).Todouble();
+                return PokemonPosition.GetSplit(1).ToDouble();
             }
             set
             {
@@ -193,7 +193,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             get
             {
-                return PokemonPosition.GetSplit(2).Todouble();
+                return PokemonPosition.GetSplit(2).ToDouble();
             }
             set
             {
@@ -407,20 +407,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             if (p.IsFullPackageData())
             {
                 GameMode = p.DataItems[0];
-                isGameJoltPlayer = p.DataItems[1].Toint().Tobool();
-                GameJoltID = isGameJoltPlayer ? p.DataItems[2].Toint() : -1;
+                isGameJoltPlayer = p.DataItems[1].ToInt().Tobool();
+                GameJoltID = isGameJoltPlayer ? p.DataItems[2].ToInt() : -1;
                 DecimalSeparator = p.DataItems[3];
                 Name = p.DataItems[4];
                 LevelFile = p.DataItems[5];
                 Position = p.DataItems[6];
-                Facing = p.DataItems[7].Toint();
-                Moving = p.DataItems[8].Toint().Tobool();
+                Facing = p.DataItems[7].ToInt();
+                Moving = p.DataItems[8].ToInt().Tobool();
                 Skin = p.DataItems[9];
-                BusyType = p.DataItems[10].Toint();
-                PokemonVisible = p.DataItems[11].Toint().Tobool();
+                BusyType = p.DataItems[10].ToInt();
+                PokemonVisible = p.DataItems[11].ToInt().Tobool();
                 PokemonPosition = p.DataItems[12];
                 PokemonSkin = p.DataItems[13];
-                PokemonFacing = p.DataItems[14].Toint();
+                PokemonFacing = p.DataItems[14].ToInt();
 
                 LastValidGameData = new List<string> { LevelFile, Position, Facing.ToString(), Moving.ToString(), Skin, BusyType.ToString(), PokemonVisible.ToString(), PokemonPosition, PokemonSkin, PokemonFacing.ToString() };
             }
@@ -438,11 +438,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[7]) && p.DataItems[7].SplitCount() == 1)
                 {
-                    Facing = p.DataItems[7].Toint();
+                    Facing = p.DataItems[7].ToInt();
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[8]) && p.DataItems[8].SplitCount() == 1)
                 {
-                    Moving = p.DataItems[8].Toint().Tobool();
+                    Moving = p.DataItems[8].ToInt().Tobool();
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[9]) && p.DataItems[9].SplitCount() <= 2)
                 {
@@ -450,11 +450,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[10]) && p.DataItems[10].SplitCount() == 1)
                 {
-                    BusyType = p.DataItems[10].Toint();
+                    BusyType = p.DataItems[10].ToInt();
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[11]) && p.DataItems[11].SplitCount() == 1)
                 {
-                    PokemonVisible = p.DataItems[11].Toint().Tobool();
+                    PokemonVisible = p.DataItems[11].ToInt().Tobool();
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[12]) && p.DataItems[12].SplitCount() == 3)
                 {
@@ -466,7 +466,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
                 if (!string.IsNullOrWhiteSpace(p.DataItems[14]) && p.DataItems[14].SplitCount() == 1)
                 {
-                    PokemonFacing = p.DataItems[14].Toint();
+                    PokemonFacing = p.DataItems[14].ToInt();
                 }
             }
 

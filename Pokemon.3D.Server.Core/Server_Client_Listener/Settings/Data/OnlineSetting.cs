@@ -126,7 +126,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Season = Reader.Value.ToString().Toint();
+                                            Season = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -137,7 +137,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Weather = Reader.Value.ToString().Toint();
+                                            Weather = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -165,7 +165,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -198,7 +198,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Duration = Reader.Value.ToString().Toint();
+                                            Duration = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {

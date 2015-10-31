@@ -11,12 +11,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <summary>
         /// Represents the natural logarithmic base, specified by the constant, e.
         /// </summary>
-        public static readonly double E = "2.7182818284590452354".Todouble();
+        public static readonly double E = "2.7182818284590452354".ToDouble();
 
         /// <summary>
         /// Represents the natural logarithmic base, specified by the constant, e.
         /// </summary>
-        public static readonly double PI = "3.14159265358979323846".Todouble();
+        public static readonly double PI = "3.14159265358979323846".ToDouble();
 
         /// <summary>
         /// Returns the absolute value of a Decimal number.
@@ -24,7 +24,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than or equal to Decimal.MinValue, but less than or equal to Decimal.MaxValue.</param>
         public static decimal Abs(this decimal value)
         {
-            return System.Math.Abs(value.ToString().Todecimal());
+            return System.Math.Abs(value.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than or equal to Double.MinValue, but less than or equal to Double.MaxValue.</param>
         public static double Abs(this double value)
         {
-            return System.Math.Abs(value.ToString().Todouble());
+            return System.Math.Abs(value.ToString().ToDouble());
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than or equal to Single.MinValue, but less than or equal to Single.MaxValue.</param>
         public static float Abs(this float value)
         {
-            return System.Math.Abs(value.ToString().Tofloat());
+            return System.Math.Abs(value.ToString().ToFloat());
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than Int32.MinValue, but less than or equal to Int32.MaxValue.</param>
         public static int Abs(this int value)
         {
-            return System.Math.Abs(value.ToString().Toint());
+            return System.Math.Abs(value.ToString().ToInt());
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than Int64.MinValue, but less than or equal to Int64.MaxValue.</param>
         public static long Abs(this long value)
         {
-            return System.Math.Abs(value.ToString().Tolong());
+            return System.Math.Abs(value.ToString().ToLong());
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than SByte.MinValue, but less than or equal to SByte.MaxValue.</param>
         public static sbyte Abs(this sbyte value)
         {
-            return System.Math.Abs(value.ToString().Tosbyte());
+            return System.Math.Abs(value.ToString().ToSbyte());
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A number that is greater than Int16.MinValue, but less than or equal to Int16.MaxValue.</param>
         public static short Abs(this short value)
         {
-            return System.Math.Abs(value.ToString().Toshort());
+            return System.Math.Abs(value.ToString().ToShort());
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number representing a cosine, where d must be greater than or equal to -1, but less than or equal to 1.</param>
         public static double Acos(this double d)
         {
-            return System.Math.Acos(d.ToString().Todouble());
+            return System.Math.Acos(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number representing a sine, where d must be greater than or equal to -1, but less than or equal to 1.</param>
         public static double Asin(this double d)
         {
-            return System.Math.Asin(d.ToString().Todouble());
+            return System.Math.Asin(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number representing a tangent.</param>
         public static double Atan(this double d)
         {
-            return System.Math.Atan(d.ToString().Todouble());
+            return System.Math.Atan(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="x">The x coordinate of a point.</param>
         public static double Atan2(this double y, double x)
         {
-            return System.Math.Atan2(y.ToString().Todouble(), x.ToString().Todouble());
+            return System.Math.Atan2(y.ToString().ToDouble(), x.ToString().ToDouble());
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="b">The second number to multiply.</param>
         public static long BigMul(this int a, int b)
         {
-            return System.Math.BigMul(a.ToString().Toint(), b.ToString().Toint());
+            return System.Math.BigMul(a.ToString().ToInt(), b.ToString().ToInt());
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A decimal number.</param>
         public static decimal Ceiling(this decimal d)
         {
-            return System.Math.Ceiling(d.ToString().Todecimal());
+            return System.Math.Ceiling(d.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="a">A double-precision floating-point number.</param>
         public static double Ceiling(this double a)
         {
-            return System.Math.Ceiling(a.ToString().Todouble());
+            return System.Math.Ceiling(a.ToString().ToDouble());
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">An angle, measured in radians.</param>
         public static double Cos(this double d)
         {
-            return System.Math.Cos(d.ToString().Todouble());
+            return System.Math.Cos(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">An angle, measured in radians.</param>
         public static double Cosh(this double value)
         {
-            return System.Math.Cosh(value.ToString().Todouble());
+            return System.Math.Cosh(value.ToString().ToDouble());
         }
 
         /// <summary>
@@ -172,8 +172,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="result">The remainder.</param>
         public static int DivRem(this int a, int b, out int result)
         {
-            System.Math.DivRem(a.ToString().Toint(), b.ToString().Toint(), out result);
-            return result.ToString().Toint();
+            System.Math.DivRem(a.ToString().ToInt(), b.ToString().ToInt(), out result);
+            return result.ToString().ToInt();
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         public static long DivRem(this long a, long b, out long result)
         {
             System.Math.DivRem(long.Parse(a.ToString(), CultureInfo.InvariantCulture), long.Parse(b.ToString(), CultureInfo.InvariantCulture), out result);
-            return result.ToString().Tolong();
+            return result.ToString().ToLong();
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number specifying a power.</param>
         public static double Exp(this double d)
         {
-            return System.Math.Exp(d.ToString().Todouble());
+            return System.Math.Exp(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A decimal number.</param>
         public static decimal Floor(this decimal d)
         {
-            return System.Math.Floor(d.ToString().Todecimal());
+            return System.Math.Floor(d.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A double-precision floating-point number.</param>
         public static double Floor(this double d)
         {
-            return System.Math.Floor(d.ToString().Todouble());
+            return System.Math.Floor(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="y">A divisor.</param>
         public static double IEEERemainder(this double x, double y)
         {
-            return System.Math.IEEERemainder(x.ToString().Todouble(), y.ToString().Todouble());
+            return System.Math.IEEERemainder(x.ToString().ToDouble(), y.ToString().ToDouble());
         }
 
         /// <summary>
@@ -231,7 +231,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">The number whose logarithm is to be found.</param>
         public static double Log(this double d)
         {
-            return System.Math.Log(d.ToString().Todouble());
+            return System.Math.Log(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="newBase">The base of the logarithm.</param>
         public static double Log(this double a, double newBase)
         {
-            return System.Math.Log(a.ToString().Todouble(), newBase.ToString().Todouble());
+            return System.Math.Log(a.ToString().ToDouble(), newBase.ToString().ToDouble());
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">The number whose logarithm is to be found.</param>
         public static double Log10(this double d)
         {
-            return System.Math.Log10(d.ToString().Todouble());
+            return System.Math.Log10(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 8-bit unsigned integers to compare.</param>
         public static byte Max(this byte val1, byte val2)
         {
-            return System.Math.Max(val1.ToString().Tobyte(), val2.ToString().Tobyte());
+            return System.Math.Max(val1.ToString().ToByte(), val2.ToString().ToByte());
         }
 
         /// <summary>
@@ -270,7 +270,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two decimal numbers to compare.</param>
         public static decimal Max(this decimal val1, decimal val2)
         {
-            return System.Math.Max(val1.ToString().Todecimal(), val2.ToString().Todecimal());
+            return System.Math.Max(val1.ToString().ToDecimal(), val2.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two double-precision floating-point numbers to compare.</param>
         public static double Max(this double val1, double val2)
         {
-            return System.Math.Max(val1.ToString().Todouble(), val2.ToString().Todouble());
+            return System.Math.Max(val1.ToString().ToDouble(), val2.ToString().ToDouble());
         }
 
         /// <summary>
@@ -290,7 +290,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two single-precision floating-point numbers to compare.</param>
         public static float Max(this float val1, float val2)
         {
-            return System.Math.Max(val1.ToString().Tofloat(), val2.ToString().Tofloat());
+            return System.Math.Max(val1.ToString().ToFloat(), val2.ToString().ToFloat());
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 32-bit signed integers to compare.</param>
         public static int Max(this int val1, int val2)
         {
-            return System.Math.Max(val1.ToString().Toint(), val2.ToString().Toint());
+            return System.Math.Max(val1.ToString().ToInt(), val2.ToString().ToInt());
         }
 
         /// <summary>
@@ -310,7 +310,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 64-bit signed integers to compare.</param>
         public static long Max(this long val1, long val2)
         {
-            return System.Math.Max(val1.ToString().Tolong(), val2.ToString().Tolong());
+            return System.Math.Max(val1.ToString().ToLong(), val2.ToString().ToLong());
         }
 
         /// <summary>
@@ -320,7 +320,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 8-bit signed integers to compare.</param>
         public static sbyte Max(this sbyte val1, sbyte val2)
         {
-            return System.Math.Max(val1.ToString().Tosbyte(), val2.ToString().Tosbyte());
+            return System.Math.Max(val1.ToString().ToSbyte(), val2.ToString().ToSbyte());
         }
 
         /// <summary>
@@ -330,7 +330,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 16-bit signed integers to compare.</param>
         public static short Max(this short val1, short val2)
         {
-            return System.Math.Max(val1.ToString().Toshort(), val2.ToString().Toshort());
+            return System.Math.Max(val1.ToString().ToShort(), val2.ToString().ToShort());
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 32-bit unsigned integers to compare.</param>
         public static uint Max(this uint val1, uint val2)
         {
-            return System.Math.Max(val1.ToString().Touint(), val2.ToString().Touint());
+            return System.Math.Max(val1.ToString().ToUint(), val2.ToString().ToUint());
         }
 
         /// <summary>
@@ -350,7 +350,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 64-bit unsigned integers to compare.</param>
         public static ulong Max(this ulong val1, ulong val2)
         {
-            return System.Math.Max(val1.ToString().Toulong(), val2.ToString().Toulong());
+            return System.Math.Max(val1.ToString().ToUlong(), val2.ToString().ToUlong());
         }
 
         /// <summary>
@@ -360,7 +360,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 16-bit unsigned integers to compare.</param>
         public static ushort Max(this ushort val1, ushort val2)
         {
-            return System.Math.Max(val1.ToString().Toushort(), val2.ToString().Toushort());
+            return System.Math.Max(val1.ToString().ToUshort(), val2.ToString().ToUshort());
         }
 
         /// <summary>
@@ -370,7 +370,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 8-bit unsigned integers to compare.</param>
         public static byte Min(this byte val1, byte val2)
         {
-            return System.Math.Min(val1.ToString().Tobyte(), val2.ToString().Tobyte());
+            return System.Math.Min(val1.ToString().ToByte(), val2.ToString().ToByte());
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two decimal numbers to compare.</param>
         public static decimal Min(this decimal val1, decimal val2)
         {
-            return System.Math.Min(val1.ToString().Todecimal(), val2.ToString().Todecimal());
+            return System.Math.Min(val1.ToString().ToDecimal(), val2.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -390,7 +390,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two double-precision floating-point numbers to compare.</param>
         public static double Min(this double val1, double val2)
         {
-            return System.Math.Min(val1.ToString().Todouble(), val2.ToString().Todouble());
+            return System.Math.Min(val1.ToString().ToDouble(), val2.ToString().ToDouble());
         }
 
         /// <summary>
@@ -400,7 +400,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two single-precision floating-point numbers to compare.</param>
         public static float Min(this float val1, float val2)
         {
-            return System.Math.Min(val1.ToString().Tofloat(), val2.ToString().Tofloat());
+            return System.Math.Min(val1.ToString().ToFloat(), val2.ToString().ToFloat());
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 32-bit signed integers to compare.</param>
         public static int Min(this int val1, int val2)
         {
-            return System.Math.Min(val1.ToString().Toint(), val2.ToString().Toint());
+            return System.Math.Min(val1.ToString().ToInt(), val2.ToString().ToInt());
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 64-bit signed integers to compare.</param>
         public static long Min(this long val1, long val2)
         {
-            return System.Math.Min(val1.ToString().Tolong(), val2.ToString().Tolong());
+            return System.Math.Min(val1.ToString().ToLong(), val2.ToString().ToLong());
         }
 
         /// <summary>
@@ -430,7 +430,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 8-bit signed integers to compare.</param>
         public static sbyte Min(this sbyte val1, sbyte val2)
         {
-            return System.Math.Min(val1.ToString().Tosbyte(), val2.ToString().Tosbyte());
+            return System.Math.Min(val1.ToString().ToSbyte(), val2.ToString().ToSbyte());
         }
 
         /// <summary>
@@ -440,7 +440,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 16-bit signed integers to compare.</param>
         public static short Min(this short val1, short val2)
         {
-            return System.Math.Min(val1.ToString().Toshort(), val2.ToString().Toshort());
+            return System.Math.Min(val1.ToString().ToShort(), val2.ToString().ToShort());
         }
 
         /// <summary>
@@ -450,7 +450,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 32-bit unsigned integers to compare.</param>
         public static uint Min(this uint val1, uint val2)
         {
-            return System.Math.Min(val1.ToString().Touint(), val2.ToString().Touint());
+            return System.Math.Min(val1.ToString().ToUint(), val2.ToString().ToUint());
         }
 
         /// <summary>
@@ -460,7 +460,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 64-bit unsigned integers to compare.</param>
         public static ulong Min(this ulong val1, ulong val2)
         {
-            return System.Math.Min(val1.ToString().Toulong(), val2.ToString().Toulong());
+            return System.Math.Min(val1.ToString().ToUlong(), val2.ToString().ToUlong());
         }
 
         /// <summary>
@@ -470,7 +470,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="val2">The second of two 16-bit unsigned integers to compare.</param>
         public static ushort Min(this ushort val1, ushort val2)
         {
-            return System.Math.Min(val1.ToString().Toushort(), val2.ToString().Toushort());
+            return System.Math.Min(val1.ToString().ToUshort(), val2.ToString().ToUshort());
         }
 
         /// <summary>
@@ -480,7 +480,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="y">A double-precision floating-point number that specifies a power.</param>
         public static double Pow(this double x, double y)
         {
-            return System.Math.Pow(x.ToString().Todouble(), y.ToString().Todouble());
+            return System.Math.Pow(x.ToString().ToDouble(), y.ToString().ToDouble());
         }
 
         /// <summary>
@@ -489,7 +489,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A decimal number to be rounded.</param>
         public static decimal Round(this decimal d)
         {
-            return System.Math.Round(d.ToString().Todecimal());
+            return System.Math.Round(d.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -498,7 +498,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A double-precision floating-point number to be rounded.</param>
         public static double Round(this double d)
         {
-            return System.Math.Round(d.ToString().Todouble());
+            return System.Math.Round(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -508,7 +508,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="decimals">The number of decimal places in the return value.</param>
         public static decimal Round(this decimal d, int decimals)
         {
-            return System.Math.Round(d.ToString().Todecimal(), decimals.ToString().Toint());
+            return System.Math.Round(d.ToString().ToDecimal(), decimals.ToString().ToInt());
         }
 
         /// <summary>
@@ -518,7 +518,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="mode">Specification for how to round d if it is midway between two other numbers.</param>
         public static decimal Round(this decimal d, MidpointRounding mode)
         {
-            return System.Math.Round(d.ToString().Todecimal(), mode);
+            return System.Math.Round(d.ToString().ToDecimal(), mode);
         }
 
         /// <summary>
@@ -528,7 +528,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="digits">The number of decimal places in the return value.</param>
         public static double Round(this double value, int digits)
         {
-            return System.Math.Round(value.ToString().Todouble(), digits.ToString().Toint());
+            return System.Math.Round(value.ToString().ToDouble(), digits.ToString().ToInt());
         }
 
         /// <summary>
@@ -538,7 +538,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="mode">Specification for how to round d if it is midway between two other numbers.</param>
         public static double Round(this double value, MidpointRounding mode)
         {
-            return System.Math.Round(value.ToString().Todouble(), mode);
+            return System.Math.Round(value.ToString().ToDouble(), mode);
         }
 
         /// <summary>
@@ -549,7 +549,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="mode">Specification for how to round d if it is midway between two other numbers.</param>
         public static decimal Round(this decimal d, int decimals, MidpointRounding mode)
         {
-            return System.Math.Round(d.ToString().Todecimal(), decimals.ToString().Toint(), mode);
+            return System.Math.Round(d.ToString().ToDecimal(), decimals.ToString().ToInt(), mode);
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="mode">Specification for how to round d if it is midway between two other numbers.</param>
         public static double Round(this double value, int digits, MidpointRounding mode)
         {
-            return System.Math.Round(value.ToString().Todouble(), digits.ToString().Toint(), mode);
+            return System.Math.Round(value.ToString().ToDouble(), digits.ToString().ToInt(), mode);
         }
 
         /// <summary>
@@ -569,7 +569,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed decimal number.</param>
         public static int Sign(this decimal value)
         {
-            return System.Math.Sign(value.ToString().Todecimal());
+            return System.Math.Sign(value.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -578,7 +578,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this double value)
         {
-            return System.Math.Sign(value.ToString().Todouble());
+            return System.Math.Sign(value.ToString().ToDouble());
         }
 
         /// <summary>
@@ -587,7 +587,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this float value)
         {
-            return System.Math.Sign(value.ToString().Tofloat());
+            return System.Math.Sign(value.ToString().ToFloat());
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this int value)
         {
-            return System.Math.Sign(value.ToString().Toint());
+            return System.Math.Sign(value.ToString().ToInt());
         }
 
         /// <summary>
@@ -605,7 +605,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this long value)
         {
-            return System.Math.Sign(value.ToString().Tolong());
+            return System.Math.Sign(value.ToString().ToLong());
         }
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this sbyte value)
         {
-            return System.Math.Sign(value.ToString().Tosbyte());
+            return System.Math.Sign(value.ToString().ToSbyte());
         }
 
         /// <summary>
@@ -623,7 +623,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">A signed number.</param>
         public static int Sign(this short value)
         {
-            return System.Math.Sign(value.ToString().Toshort());
+            return System.Math.Sign(value.ToString().ToShort());
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="a">An angle, measured in radians.</param>
         public static double Sin(this double a)
         {
-            return System.Math.Sin(a.ToString().Todouble());
+            return System.Math.Sin(a.ToString().ToDouble());
         }
 
         /// <summary>
@@ -641,7 +641,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">An angle, measured in radians.</param>
         public static double Sinh(this double value)
         {
-            return System.Math.Sinh(value.ToString().Todouble());
+            return System.Math.Sinh(value.ToString().ToDouble());
         }
 
         /// <summary>
@@ -650,7 +650,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">The number whose square root is to be found.</param>
         public static double Sqrt(this double d)
         {
-            return System.Math.Sqrt(d.ToString().Todouble());
+            return System.Math.Sqrt(d.ToString().ToDouble());
         }
 
         /// <summary>
@@ -659,7 +659,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="a">An angle, measured in radians.</param>
         public static double Tan(this double a)
         {
-            return System.Math.Tan(a.ToString().Todouble());
+            return System.Math.Tan(a.ToString().ToDouble());
         }
 
         /// <summary>
@@ -668,7 +668,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="value">An angle, measured in radians.</param>
         public static double Tanh(this double value)
         {
-            return System.Math.Tanh(value.ToString().Todouble());
+            return System.Math.Tanh(value.ToString().ToDouble());
         }
 
         /// <summary>
@@ -677,7 +677,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number to truncate.</param>
         public static decimal Truncate(this decimal d)
         {
-            return System.Math.Truncate(d.ToString().Todecimal());
+            return System.Math.Truncate(d.ToString().ToDecimal());
         }
 
         /// <summary>
@@ -686,7 +686,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="d">A number to truncate.</param>
         public static double Truncate(this double d)
         {
-            return System.Math.Truncate(d.ToString().Todouble());
+            return System.Math.Truncate(d.ToString().ToDouble());
         }
     }
 }

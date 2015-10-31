@@ -145,6 +145,32 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public bool OfflineMode { get; set; } = false;
 
         /// <summary>
+        /// Get/Set RCON Enable?
+        /// </summary>
+        public bool RCONEnable { get; set; } = true;
+
+        private int _RCONPort = 15125;
+        /// <summary>
+        /// Get/Set RCON Port.
+        /// </summary>
+        public int RCONPort
+        {
+            get
+            {
+                return _RCONPort;
+            }
+            set
+            {
+                _RCONPort = value.Clamp(0, 65535);
+            }
+        }
+
+        /// <summary>
+        /// Get/Set RCON Password.
+        /// </summary>
+        public string RCONPassword { get; set; } = "Password";
+
+        /// <summary>
         /// Get/Set SCON Enable?
         /// </summary>
         public bool SCONEnable { get; set; } = true;
@@ -165,9 +191,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
         }
 
+        /// <summary>
+        /// Get/Set SCON Password.
+        /// </summary>
         public string _SCONPassword = "Password";
         /// <summary>
-        /// Get/Set SCON Port Password
+        /// Get/Set SCON Password
         /// </summary>
         public PasswordStorage SCONPassword { get; set; }
 
@@ -526,6 +555,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_KICKSELF", "You are trying to kick yourself. For your personal safety, we will not kick you :)");
             TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
             TokenDefination.Add("SERVER_NOTOPERATOR", "The requested player is not an operator.");
+            TokenDefination.Add("RCON_CONNECTFAILED", "Unable to connect to the requested server. Please try again.");
 
             OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
             OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));
@@ -662,7 +692,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Port = Reader.Value.ToString().Toint();
+                                            Port = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -725,7 +755,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            MaxPlayers = Reader.Value.ToString().Toint();
+                                            MaxPlayers = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -746,6 +776,47 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Main Server Property
+                            #region RCON Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "RCON Server Property", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "RCONEnable", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            RCONEnable = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "RCONPort", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            RCONPort = Reader.Value.ToString().ToUshort();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "RCONPassword", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            RCONPassword = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion RCON Server Property
                             #region SCON Server Property
                             else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "SCON Server Property", StringComparison.OrdinalIgnoreCase))
                             {
@@ -766,7 +837,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            SCONPort = Reader.Value.ToString().Toushort();
+                                            SCONPort = Reader.Value.ToString().ToUshort();
                                         }
                                         else
                                         {
@@ -797,7 +868,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Season = Reader.Value.ToString().Toint();
+                                            Season = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -808,7 +879,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Weather = Reader.Value.ToString().Toint();
+                                            Weather = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -897,7 +968,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            NoPingKickTime = Reader.Value.ToString().Toint();
+                                            NoPingKickTime = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -908,7 +979,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            AFKKickTime = Reader.Value.ToString().Toint();
+                                            AFKKickTime = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -919,7 +990,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            AutoRestartTime = Reader.Value.ToString().Toint();
+                                            AutoRestartTime = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1023,7 +1094,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            SwearInfractionCap = Reader.Value.ToString().Toint();
+                                            SwearInfractionCap = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1034,7 +1105,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            SwearInfractionReset = Reader.Value.ToString().Toint();
+                                            SwearInfractionReset = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1064,7 +1135,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            SpamResetDuration = Reader.Value.ToString().Toint();
+                                            SpamResetDuration = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1271,7 +1342,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1304,7 +1375,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Duration = Reader.Value.ToString().Toint();
+                                            Duration = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1405,7 +1476,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Duration = Reader.Value.ToString().Toint();
+                                            Duration = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1489,7 +1560,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1522,7 +1593,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Duration = Reader.Value.ToString().Toint();
+                                            Duration = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1604,7 +1675,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1626,7 +1697,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            OperatorLevel = Reader.Value.ToString().Toint();
+                                            OperatorLevel = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1790,7 +1861,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1801,7 +1872,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Points = Reader.Value.ToString().Toint();
+                                            Points = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1812,7 +1883,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            Muted = Reader.Value.ToString().Toint();
+                                            Muted = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -1900,7 +1971,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            GameJoltID = Reader.Value.ToString().Toint();
+                                            GameJoltID = Reader.Value.ToString().ToInt();
                                         }
                                         else
                                         {
@@ -2095,6 +2166,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /* OfflineMode:  The ability for offline profile player to join the server.
 		   Syntax: Boolean: true, false */
         ""OfflineMode"": {12}
+    }},
+
+    ""RCON Server Property"":
+    {{
+        /* RCONEnable:  Enable RCON
+		   Syntax: Boolean: true, false */
+        ""RCONEnable"": {59},
+
+        /* RCONPort:  The port for RCON Listener. Please be unique and don't be same as Pokemon Listener Port.
+		   Syntax: Integer: Between 0 to 65535 inclusive. */
+        ""RCONPort"": {60},
+
+        /* RCONPassword:  The password for the RCON to connect.
+		   Syntax: String. Please do not insert password that contains your personal infomation. */
+        ""RCONPassword"": ""{61}""
     }},
 
     ""SCON Server Property"":
@@ -2328,8 +2414,11 @@ LoggerPvP.ToString().ToLower(), // LoggerPvP
 LoggerCommand.ToString().ToLower(), // LoggerCommand
 _SCONPassword, // SCONPassword
 SCONEnable.ToString().ToLower(), // SCONEnable
-SCONPort.ToString(), // SCONPort 57
-string.Join(",", CustomChannels) // CustomChannels 58
+SCONPort.ToString(), // SCONPort
+string.Join(",", CustomChannels), // CustomChannels
+RCONEnable.ToString().ToLower(), //RCONEnable
+RCONPort.ToString(), //RCONPort
+RCONPassword // RCONPassword 61
 ), Encoding.Unicode);
                 #endregion application_settings.json
 

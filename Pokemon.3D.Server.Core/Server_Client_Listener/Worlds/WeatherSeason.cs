@@ -47,7 +47,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    ReturnList.Add(WeatherData.GetSplit(Core.World.Season).Toint());
+                    ReturnList.Add(WeatherData.GetSplit(Core.World.Season).ToInt());
                 }
                 catch (Exception)
                 {
@@ -60,7 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                 {
                     foreach (string Weather in WeatherData.GetSplit(Core.World.Season).Split(",".ToCharArray()))
                     {
-                        ReturnList.Add(Weather.Toint());
+                        ReturnList.Add(Weather.ToInt());
                     }
                 }
                 catch (Exception)

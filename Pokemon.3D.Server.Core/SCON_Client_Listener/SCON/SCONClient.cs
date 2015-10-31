@@ -18,13 +18,22 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 {
+    /// <summary>
+    /// Class containing SCONClient.
+    /// </summary>
     public partial class SCONClient
     {
+        /// <summary>
+        /// Get Client IP.
+        /// </summary>
         public string IP => Client.IP;
 
         bool IsInitialized { get; set; }
         bool IsDisposed { get; set; }
 
+        /// <summary>
+        /// Get the Client.
+        /// </summary>
         public ITCPClient Client { get; }
         ProtobufStream Stream { get; }
 
@@ -34,11 +43,19 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         // -- Debug -- //
         List<ProtobufPacket> Received { get; } = new List<ProtobufPacket>();
         List<ProtobufPacket> Sended { get; } = new List<ProtobufPacket>();
-        public bool ChatReceiving { get; set; }
 
+        /// <summary>
+        /// Get/Set Chat Receiving status.
+        /// </summary>
+        public bool ChatReceiving { get; set; }
         // -- Debug -- //
 #endif
-
+        
+        /// <summary>
+        /// New SCONClient
+        /// </summary>
+        /// <param name="client">Client.</param>
+        /// <param name="sconListener">SCONListener.</param>
         public SCONClient(ITCPClient client, SCONListener sconListener)
         {
             Client = client;
@@ -49,6 +66,9 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             AuthorizationStatus = AuthorizationStatus.RemoteClientEnabled;
         }
 
+        /// <summary>
+        /// Update the client.
+        /// </summary>
         public void Update()
         {
             if (Stream.Connected)
@@ -190,7 +210,6 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             }
         }
 
-
         private void SendPacket(ProtobufPacket packet, int originID = 0)
         {
             if (Stream.Connected)
@@ -203,7 +222,6 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             }
         }
 
-
         private void DisconnectAndDispose()
         {
             if (IsDisposed)
@@ -214,6 +232,10 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 
             Stream.Dispose();
         }
+
+        /// <summary>
+        /// Dispose the Client object.
+        /// </summary>
         public void Dispose()
         {
             if (IsDisposed)

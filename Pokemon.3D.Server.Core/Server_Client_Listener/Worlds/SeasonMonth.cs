@@ -48,7 +48,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    ReturnList.Add(SeasonData.GetSplit(DateTime.Now.Month - 1).Toint());
+                    ReturnList.Add(SeasonData.GetSplit(DateTime.Now.Month - 1).ToInt());
                 }
                 catch (Exception)
                 {
@@ -61,7 +61,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                 {
                     foreach (string Season in SeasonData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
                     {
-                        ReturnList.Add(Season.Toint());
+                        ReturnList.Add(Season.ToInt());
                     }
                 }
                 catch (Exception)

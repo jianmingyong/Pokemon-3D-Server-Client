@@ -63,7 +63,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    _CurrentTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, value.GetSplit(0, ",").Toint(), value.GetSplit(1, ",").Toint(), value.GetSplit(2, ",").Toint());
+                    _CurrentTime = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, value.GetSplit(0, ",").ToInt(), value.GetSplit(1, ",").ToInt(), value.GetSplit(2, ",").ToInt());
                 }
                 catch (Exception)
                 {
@@ -219,7 +219,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
         /// <summary>
         /// Update World
         /// </summary>
-        /// <param name="obj">Nothing.</param>
         public void Update()
         {
             Stopwatch sw = new Stopwatch();
@@ -364,7 +363,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                 sw.Stop();
                 if (sw.ElapsedMilliseconds < 1000)
                 {
-                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(1000 - sw.ElapsedMilliseconds.ToString().ToInt());
                 }
                 sw.Restart();
             }

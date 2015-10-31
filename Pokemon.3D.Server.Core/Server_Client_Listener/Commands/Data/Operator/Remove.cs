@@ -72,7 +72,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 }
                 else if (Player == null)
                 {
-                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any);
+                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
                     if (!Core.Player.HasPlayer(Group[0]))
                     {

@@ -18,13 +18,13 @@ namespace Pokemon_3D_Server_Client_Updater
         /// <param name="args">Program Start Argument.</param>
         public static void Main(string[] args)
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
 
             if (args.GetLength(0) > 0 && Directory.Exists(args[0].Replace("%20", " ")))
             {
                 try
                 {
-                    using (Stream stream = File.OpenRead(args[0].Replace("%20", " ") + "\\Release.zip"))
+                    using (Stream stream = File.OpenRead(args[0].Replace("%20", " ") + "\\Pokemon.3D.Server.Client.GUI.zip"))
                     {
                         var reader = ReaderFactory.Open(stream);
                         while (reader.MoveToNextEntry())
@@ -40,9 +40,9 @@ namespace Pokemon_3D_Server_Client_Updater
                         }
                     }
 
-                    if (File.Exists(args[0].Replace("%20", " ") + "\\Release.zip"))
+                    if (File.Exists(args[0].Replace("%20", " ") + "\\Pokemon.3D.Server.Client.GUI.zip"))
                     {
-                        File.Delete(args[0].Replace("%20", " ") + "\\Release.zip");
+                        File.Delete(args[0].Replace("%20", " ") + "\\Pokemon.3D.Server.Client.GUI.zip");
                     }
                 }
                 catch (Exception) { }

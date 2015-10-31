@@ -388,7 +388,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleTradeRequest(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
@@ -425,7 +425,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleTradeJoin(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
@@ -450,7 +450,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleTradeQuit(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
@@ -463,7 +463,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleTradeOffer(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.TradeOffer, Player.ID, p.DataItems[1], TradePlayer.Network.Client));
         }
@@ -471,7 +471,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleTradeStart(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
@@ -484,7 +484,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleRequest(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
@@ -521,7 +521,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleJoin(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PvPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
@@ -546,7 +546,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleQuit(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string PVPPlayerName = PVPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PVPPlayer.Name, PVPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PVPPlayer.Name, "");
 
@@ -559,7 +559,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleOffer(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
@@ -567,7 +567,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleStart(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             string PVPPlayerName = PVPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PVPPlayer.Name, PVPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PVPPlayer.Name, "");
 
@@ -580,7 +580,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleClientData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattleClientData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
@@ -588,7 +588,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattleHostData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattleHostData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }
@@ -596,7 +596,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         private void HandleBattlePokemonData(Package p)
         {
             Player Player = Core.Player.GetPlayer(p.Client);
-            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].Toint());
+            Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattlePokemonData, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
         }

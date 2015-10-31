@@ -119,7 +119,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "Port":
                         try
                         {
-                            Core.Setting.Port = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.Port = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -169,7 +169,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "MaxPlayers":
                         try
                         {
-                            Core.Setting.MaxPlayers = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.MaxPlayers = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -199,7 +199,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "SCONPort":
                         try
                         {
-                            Core.Setting.SCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toushort();
+                            Core.Setting.SCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToUshort();
                         }
                         catch (Exception ex)
                         {
@@ -220,7 +220,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "Season":
                         try
                         {
-                            Core.Setting.Season = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.Season = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -230,7 +230,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "Weather":
                         try
                         {
-                            Core.Setting.Weather = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.Weather = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -280,7 +280,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "NoPingKickTime":
                         try
                         {
-                            Core.Setting.NoPingKickTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.NoPingKickTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -290,7 +290,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "AFKKickTime":
                         try
                         {
-                            Core.Setting.AFKKickTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.AFKKickTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -300,7 +300,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "AutoRestartTime":
                         try
                         {
-                            Core.Setting.AutoRestartTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.AutoRestartTime = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -380,7 +380,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "SwearInfractionCap":
                         try
                         {
-                            Core.Setting.SwearInfractionCap = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.SwearInfractionCap = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -390,7 +390,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "SwearInfractionReset":
                         try
                         {
-                            Core.Setting.SwearInfractionReset = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.SwearInfractionReset = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -410,7 +410,7 @@ namespace Pokemon_3D_Server_Client_GUI
                     case "SpamResetDuration":
                         try
                         {
-                            Core.Setting.SpamResetDuration = ((Settings)ObjectListView1.GetModelObject(i)).Value.Toint();
+                            Core.Setting.SpamResetDuration = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {

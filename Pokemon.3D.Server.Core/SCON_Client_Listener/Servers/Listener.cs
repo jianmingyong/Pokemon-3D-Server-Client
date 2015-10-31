@@ -23,6 +23,9 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
         private List<SCONClient> SCONClients { get; set; } = new List<SCONClient>();
 
+        /// <summary>
+        /// New SCON Listener.
+        /// </summary>
         public SCONListener()
         {
             AppDomainWrapper.Instance = new AppDomainWrapperInstance();
@@ -59,9 +62,8 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                     IsActive = true;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ex.CatchError();
                 Dispose();
             }
         }
@@ -89,7 +91,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
         private void ThreadStartListening()
         {
-            if (Functions.CheckPortOpen(Core.Setting.SCONPort.ToString().Toint()))
+            if (Functions.CheckPortOpen(Core.Setting.SCONPort.ToString().ToInt()))
             {
                 Core.Logger.Log($"SCON started. SCON clients can join using the following address: {Core.Setting.IPAddress}:{Core.Setting.SCONPort.ToString()} (Global), {Functions.GetPrivateIP()}:{Core.Setting.SCONPort.ToString()} (Local).", Logger.LogTypes.Info);
             }
@@ -126,7 +128,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 sw.Stop();
                 if (sw.ElapsedMilliseconds < 10)
                 {
-                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().ToInt());
                 }
                 sw.Restart();
             } while (IsActive);
@@ -163,12 +165,16 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                 sw.Stop();
                 if (sw.ElapsedMilliseconds < 10)
                 {
-                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().Toint());
+                    Thread.Sleep(10 - sw.ElapsedMilliseconds.ToString().ToInt());
                 }
                 sw.Restart();
             } while (IsActive);
         }
 
+        /// <summary>
+        /// Remove SCON Player.
+        /// </summary>
+        /// <param name="sconClient"></param>
         public void RemovePlayer(SCONClient sconClient)
         {
             SCONClients.Remove(sconClient);

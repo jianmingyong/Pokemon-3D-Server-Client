@@ -57,7 +57,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                         }
                         else
                         {
-                            Players.AddOperator(Group[2], Group[1].Toint().Clamp(2, 5));
+                            Players.AddOperator(Group[2], Group[1].ToInt().Clamp(2, 5));
 
                             Player.CommandFeedback($"You have successfully added {PlayerName} as operator.", $"have added {PlayerName} as operator with the following reason: {Group[2]}");
                         }
@@ -82,7 +82,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                         }
                         else
                         {
-                            Players.AddOperator(Group[2], Group[1].Toint().Clamp(2, 5));
+                            Players.AddOperator(Group[2], Group[1].ToInt().Clamp(2, 5));
 
                             Core.Logger.Log($"You have successfully added {PlayerName} as operator.", Logger.LogTypes.Info);
                         }
@@ -92,11 +92,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
             #endregion /Operator.Add <Name> [OperatorLevel] [Reason]
 
             #region /op <Name> [OperatorLevel]
-            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any))
+            if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer))
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any);
+                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer);
 
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
@@ -113,7 +113,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                         }
                         else
                         {
-                            Players.AddOperator("No reason.", Group[1].Toint().Clamp(2, 5));
+                            Players.AddOperator("No reason.", Group[1].ToInt().Clamp(2, 5));
 
                             Player.CommandFeedback($"You have successfully added {PlayerName} as operator.", $"have added {PlayerName} as operator with the following reason: No reason.");
                         }
@@ -138,7 +138,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                         }
                         else
                         {
-                            Players.AddOperator("No reason.", Group[1].Toint().Clamp(2, 5));
+                            Players.AddOperator("No reason.", Group[1].ToInt().Clamp(2, 5));
 
                             Core.Logger.Log($"You have successfully added {PlayerName} as operator.", Logger.LogTypes.Info);
                         }

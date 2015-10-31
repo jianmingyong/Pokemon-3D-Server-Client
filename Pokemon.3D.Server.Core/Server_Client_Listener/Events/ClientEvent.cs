@@ -43,7 +43,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
         /// Invoke Event.
         /// </summary>
         /// <param name="Type">Type of event to invoke.</param>
-        /// <param name="Args">Argument for the event.</param>
         public static void Invoke(Types Type)
         {
             try
