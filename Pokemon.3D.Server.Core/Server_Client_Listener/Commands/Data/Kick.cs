@@ -44,11 +44,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 {
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PLAYERNOTEXIST"), p.Client));
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
+                        return;
                     }
                     else if (Player != null && string.Equals(Player.Name, Group[0], StringComparison.Ordinal))
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_KICKSELF"), p.Client));
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_KICKSELF"), null);
+                        return;
                     }
                     else
                     {
@@ -58,6 +60,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Player.CommandFeedback("You have successfully kicked " + KickPlayerName, $"have kick {KickPlayerName} with the following reason: {Group[1]}");
+                        return;
                     }
                 }
                 else if (Player == null)
@@ -65,6 +68,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
+                        return;
                     }
                     else
                     {
@@ -74,6 +78,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Core.Logger.Log("You have successfully kicked " + KickPlayerName, Logger.LogTypes.Info);
+                        return;
                     }
                 }
             }
@@ -88,11 +93,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 {
                     if (!Core.Player.HasPlayer(Group[0]))
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PLAYERNOTEXIST"), p.Client));
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
                     else if (Player != null && string.Equals(Player.Name, Group[0], StringComparison.Ordinal))
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_KICKSELF"), p.Client));
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_KICKSELF"), null);
                     }
                     else
                     {

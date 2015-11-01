@@ -48,6 +48,16 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
                         HandleRemovePlayer(p);
                         break;
 
+                    case (int)Package.PackageTypes.Logger:
+                        HandleLogger(p);
+                        break;
+
+                    case (int)Package.PackageTypes.CreateFile:
+                    case (int)Package.PackageTypes.DownloadContent:
+                    case (int)Package.PackageTypes.EndCreateFile:
+                        Core.RCONGUIDownloadQueue.HandlePackage(p);
+                        break;
+
                     default:
                         Core.Logger.Log("Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                         break;
@@ -83,6 +93,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
         private void HandleRemovePlayer(Package p)
         {
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, p.DataItems[0]);
+        }
+
+        private void HandleLogger(Package p)
+        {
+            LoggerEvent.Invoke(p.DataItems[0]);
         }
     }
 }

@@ -178,7 +178,6 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
                     {
                         SentToServer(new Package(Package.PackageTypes.Ping, "", null));
                         LastValidPing = DateTime.Now;
-                        return;
                     }
                 }
                 catch (Exception ex)

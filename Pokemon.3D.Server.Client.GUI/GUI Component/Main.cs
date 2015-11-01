@@ -9,6 +9,8 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -80,6 +82,26 @@ namespace Pokemon_3D_Server_Client_GUI
             }
         }
 
+        private void Main_Command_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
+            {
+                if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                {
+                    Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, Main_Command.Text, null));
+                }
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                    {
+                        Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    }
+                }
+
+                Main_Command.Clear();
+            }
+        }
+
         #region Client Events
         private void LoggerEvent_Update(string Args)
         {
@@ -93,15 +115,6 @@ namespace Pokemon_3D_Server_Client_GUI
                 {
                     if (ScrollTextBox)
                     {
-                        if (LoggerLog.Count > 0)
-                        {
-                            for (int i = 0; i < LoggerLog.Count; i++)
-                            {
-                                Main_Logger.AppendText(LoggerLog[i] + Environment.NewLine);
-                            }
-                            LoggerLog.RemoveRange(0, LoggerLog.Count);
-                        }
-
                         Main_Logger.AppendText(Args + Environment.NewLine);
 
                         if (Main_Logger.Lines.Count() > 1000)
@@ -222,6 +235,15 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             ScrollTextBox = true;
 
+            if (LoggerLog.Count > 0)
+            {
+                for (int i = 0; i < LoggerLog.Count; i++)
+                {
+                    Main_Logger.AppendText(LoggerLog[i] + Environment.NewLine);
+                }
+                LoggerLog.RemoveRange(0, LoggerLog.Count);
+            }
+
             Main_Logger.SelectionStart = Main_Logger.TextLength;
             Main_Logger.ScrollToCaret();
         }
@@ -231,26 +253,6 @@ namespace Pokemon_3D_Server_Client_GUI
             ScrollTextBox = false;
         }
         #endregion Logger Events
-
-        private void Main_Command_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
-            {
-                if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
-                {
-                    Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, Main_Command.Text, null));
-                }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
-                    {
-                        Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
-                    }
-                }
-                
-                Main_Command.Clear();
-            }
-        }
 
         #region Menu Bar Buttons
         private void About_Button_Click(object sender, EventArgs e)
@@ -284,6 +286,62 @@ namespace Pokemon_3D_Server_Client_GUI
                 }
             }
         }
+
+        // Get All Logs
+        private void getLogsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Downloader Downloader = new Downloader();
+            Downloader.Show();
+
+            Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.GetAllLogs, "", null));
+        }
         #endregion Menu Bar Buttons
+
+        #region Context Menu for Logger
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Main_Logger.Copy();
+        }
+
+        private void copyAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Main_Logger.SelectAll();
+            Main_Logger.Copy();
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Main_Logger.SelectAll();
+        }
+        #endregion Context Menu for Logger
+
+        #region Context Menu for Player List
+        private void Main_CurrentPlayerOnlineRC_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (Main_CurrentPlayerOnline.Items.Count == 0)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void Main_CurrentPlayerOnline_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (Main_CurrentPlayerOnline.IndexFromPoint(e.X,e.Y) < 0)
+            {
+                Main_CurrentPlayerOnline.SelectedIndex = Main_CurrentPlayerOnline.Items.Count - 1;
+            }
+            else
+            {
+                Main_CurrentPlayerOnline.SelectedIndex = Main_CurrentPlayerOnline.IndexFromPoint(e.X, e.Y);
+            }
+        }
+
+        private void KickToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Player Player = Core.Player.GetPlayer(Regex.Match(Main_CurrentPlayerOnline.Items[Main_CurrentPlayerOnline.SelectedIndex].ToString(), @"ID: (\d+) \|.+").Groups[1].Value.ToInt());
+
+            Main_Command.Text = $"/kick {Player.Name} <Insert Reason here>";
+        }
+        #endregion Context Menu for Player List
     }
 }

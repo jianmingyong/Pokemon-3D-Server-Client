@@ -115,6 +115,41 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
             /// </summary>
             Logger,
             #endregion
+
+            /// <summary>
+            /// Get All Crash Log
+            /// <para>Set: DataItems[0] = null</para>
+            /// </summary>
+            GetAllCrashLog,
+
+            /// <summary>
+            /// Get All Crash Log
+            /// <para>Set: DataItems[0] = null</para>
+            /// </summary>
+            GetAllLogs,
+
+            #region RCON Files
+            /// <summary>
+            /// Create File Package
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
+            /// <para>Set: DataItems[0] = File ID, DataItems[1] = File Name, DataItems[2] = Expect File Size in bytes., DataItems[3] = File Type</para>
+            /// </summary>
+            CreateFile,
+
+            /// <summary>
+            /// Download File Content
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
+            /// <para>Set: DataItems[0] = File ID, DataItems[1] = Content Per Line.</para>
+            /// </summary>
+            DownloadContent,
+
+            /// <summary>
+            /// End Create File Package
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
+            /// <para>Set: DataItems[0] = File ID</para>
+            /// </summary>
+            EndCreateFile,
+            #endregion
         }
 
         /// <summary>

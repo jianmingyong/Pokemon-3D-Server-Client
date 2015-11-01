@@ -1,6 +1,8 @@
 ﻿using System;
 using Pokemon_3D_Server_Core.RCON_Client_Listener.Players;
 using Pokemon_3D_Server_Core.RCON_Client_Listener.Servers;
+using Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader;
+using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader;
 using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
@@ -24,17 +26,27 @@ namespace Pokemon_3D_Server_Core
         public static RCON_Client_Listener.Players.PlayerCollection RCONPlayer { get; } = new RCON_Client_Listener.Players.PlayerCollection();
 
         /// <summary>
-        /// Get RCON Listener
+        /// Get RCON Listener.
         /// </summary>
         public static RCON_Client_Listener.Servers.Listener RCONListener { get; } = new RCON_Client_Listener.Servers.Listener();
 
         /// <summary>
-        /// Get RCON Listener
+        /// Get RCON Upload Queue.
+        /// </summary>
+        public static UploaderQueue RCONUploadQueue { get; } = new UploaderQueue();
+
+        /// <summary>
+        /// Get RCON GUI Download Queue.
+        /// </summary>
+        public static DownloaderQueue RCONGUIDownloadQueue { get; } = new DownloaderQueue();
+
+        /// <summary>
+        /// Get RCON Listener.
         /// </summary>
         public static RCON_GUI_Client_Listener.Servers.Listener RCONGUIListener { get; set; }
 
         /// <summary>
-        /// Get SCON Listener
+        /// Get SCON Listener.
         /// </summary>
         public static SCONListener SCONListener { get; } = new SCONListener();
 
@@ -54,7 +66,7 @@ namespace Pokemon_3D_Server_Core
         public static Server_Client_Listener.Players.PlayerCollection Player { get; } = new Server_Client_Listener.Players.PlayerCollection();
 
         /// <summary>
-        /// Get Pokemon 3D Listener
+        /// Get Pokemon 3D Listener.
         /// </summary>
         public static Server_Client_Listener.Servers.Listener Listener { get; } = new Server_Client_Listener.Servers.Listener();
 

@@ -66,6 +66,10 @@
     <Compile Include="RCON_Client_Listener\Players\Player.cs" />
     <Compile Include="RCON_Client_Listener\Players\PlayerCollection.cs" />
     <Compile Include="RCON_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="RCON_Client_Listener\Uploader\UploadFile.cs" />
+    <Compile Include="RCON_Client_Listener\Uploader\UploaderQueue.cs" />
+    <Compile Include="RCON_GUI_Client_Listener\Downloader\DownloaderQueue.cs" />
+    <Compile Include="RCON_GUI_Client_Listener\Downloader\DownloadFile.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Packages\PackageHandler.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Servers\Listener.cs" />

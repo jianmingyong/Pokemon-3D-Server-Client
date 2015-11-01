@@ -37,6 +37,16 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                         break;
 
                     case (int)Package.PackageTypes.Logger:
+                        HandleLogger(p);
+                        break;
+
+                    case (int)Package.PackageTypes.GetAllCrashLog:
+                    case (int)Package.PackageTypes.GetAllLogs:
+                    case (int)Package.PackageTypes.CreateFile:
+                    case (int)Package.PackageTypes.DownloadContent:
+                    case (int)Package.PackageTypes.EndCreateFile:
+                        Core.RCONUploadQueue.HandlePackage(p);
+                        break;
 
                     default:
                         Core.Logger.Log("Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
