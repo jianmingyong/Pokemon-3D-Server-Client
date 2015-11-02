@@ -81,28 +81,22 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
             /// </summary>
             Kicked,
 
-            /// <summary>
-            /// ID Package
-            /// <para>Set: DataItems[0] = Player ID</para>
-            /// </summary>
-            ID,
-
             #region Client Event Player Data
             /// <summary>
             /// Add Player
-            /// <para>Get: DataItems[] = Player Data.</para>
+            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
             /// </summary>
             AddPlayer,
 
             /// <summary>
             /// Update Player
-            /// <para>Get: DataItems[] = Player Data.</para>
+            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
             /// </summary>
             UpdatePlayer,
 
             /// <summary>
             /// Remove Player
-            /// <para>Get: DataItems[] = Player Data.</para>
+            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
             /// </summary>
             RemovePlayer,
             #endregion Client Event Player Data
@@ -111,24 +105,26 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
             /// <summary>
             /// Logger Message
             /// <para>Get: DataItems[0] = Command.</para>
-            /// <para>Set: DataItems[0] = Message.</para>
+            /// <para>Set: DataItems[0] = Logger Output.</para>
             /// </summary>
             Logger,
-            #endregion
+            #endregion Client Event Logger
 
+            #region File Request Package
             /// <summary>
             /// Get All Crash Logs
-            /// <para>Set: DataItems[0] = null</para>
+            /// <para>Get: DataItems[0] = null</para>
             /// </summary>
             GetAllCrashLog,
 
             /// <summary>
             /// Get All Crash Log
-            /// <para>Set: DataItems[0] = null</para>
+            /// <para>Get: DataItems[0] = null</para>
             /// </summary>
             GetAllLogs,
+            #endregion File Request Package
 
-            #region RCON Files
+            #region Downloader/Uploader
             /// <summary>
             /// Create File Package
             /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
