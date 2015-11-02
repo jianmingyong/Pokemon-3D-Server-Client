@@ -13,30 +13,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
     /// </summary>
     public class DownloaderQueue : List<DownloadFile>
     {
-        /// <summary>
-        /// Check if the Download File Queue Exist.
-        /// </summary>
-        /// <param name="ID">ID</param>
-        public bool DownloadFileExist(int ID)
-        {
-            if (GetDownloadFile(ID) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get the Download File Object
-        /// </summary>
-        /// <param name="ID">ID</param>
-        public DownloadFile GetDownloadFile(int ID)
-        {
-            return (from DownloadFile p in Core.RCONGUIDownloadQueue where p.ID == ID select p).FirstOrDefault();
-        }
+        public DownloadFile.FileType DownloadType { get; set; }
 
         /// <summary>
         /// HandlePackage
@@ -44,29 +21,28 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// <param name="p">Package Data</param>
         public void HandlePackage(Package p)
         {
-            if (p.PackageType == (int)Package.PackageTypes.DownloadContent)
+            if (p.PackageType == (int)Package.PackageTypes.GetAllCrashLogs || p.PackageType == (int)Package.PackageTypes.GetAllLogs)
             {
-                if (DownloadFileExist(p.DataItems[0].ToInt()))
+                if (p.DataItems[0] == Package.FileRequestStatus.Success.ToString())
                 {
-                    GetDownloadFile(p.DataItems[0].ToInt()).WriteData(p);
+
+                }
+                else if (p.DataItems[0] == Package.FileRequestStatus.Failed.ToString())
+                {
+
                 }
             }
-            else if (p.PackageType == (int)Package.PackageTypes.CreateFile)
+            else if (p.PackageType == (int)Package.PackageTypes.BeginCreateFile)
             {
-                if (p.DataItems[3].ToInt() == (int)DownloadFile.FileType.CrashLog)
-                {
-                    this.Add(new DownloadFile(p, DownloadFile.FileType.CrashLog));
-                }
-                else if (p.DataItems[3].ToInt() == (int)DownloadFile.FileType.Logger )
-                {
-                    this.Add(new DownloadFile(p, DownloadFile.FileType.Logger));
-                }
+                Add(new DownloadFile(p, DownloadType));
             }
-            else if (p.PackageType == (int)Package.PackageTypes.EndCreateFile)
+            else if (p.PackageType == (int)Package.PackageTypes.BeginDownloadFile || p.PackageType == (int)Package.PackageTypes.EndDownloadFile || p.PackageType == (int)Package.PackageTypes.EndCreateFile)
             {
-                if (DownloadFileExist(p.DataItems[0].ToInt()))
+                DownloadFile File = (from DownloadFile u in Core.RCONGUIDownloadQueue where p.DataItems[0].ToInt() == u.ID select u).FirstOrDefault();
+
+                if (File != null)
                 {
-                    GetDownloadFile(p.DataItems[0].ToInt()).Dispose();
+                    File.HandlePackage(p);
                 }
             }
         }

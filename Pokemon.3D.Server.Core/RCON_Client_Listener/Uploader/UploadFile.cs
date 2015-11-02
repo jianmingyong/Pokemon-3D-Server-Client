@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using Pokemon_3D_Server_Core.RCON_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
@@ -15,12 +12,17 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
     /// <summary>
     /// Class containing File to Upload.
     /// </summary>
-    public class UploadFile
+    public class UploadFile : IDisposable
     {
         /// <summary>
-        /// Get/Set File ID
+        /// Get/Set Upload ID
         /// </summary>
         public int ID { get; set; }
+
+        /// <summary>
+        /// Get/Set Upload File ID
+        /// </summary>
+        public int FileID { get; set; }
 
         /// <summary>
         /// Get/Set File Name
@@ -28,106 +30,144 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
         public string Name { get; set; }
 
         /// <summary>
-        /// File Type
+        /// Get/Set File Type
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Get/Set TcpClient
+        /// </summary>
+        public TcpClient Client { get; set; }
+
+        /// <summary>
+        /// File Types
         /// </summary>
         public enum FileType
         {
             /// <summary>
-            /// Logger
-            /// </summary>
-            Logger,
-
-            /// <summary>
-            /// Crash Log
+            /// File Types: Crash Log
             /// </summary>
             CrashLog,
+
+            /// <summary>
+            /// File Types: Logger
+            /// </summary>
+            Logger,
         }
 
         private FileStream Stream { get; set; }
         private StreamReader Reader { get; set; }
-        private TcpClient Client { get; set; }
 
-        private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
+        private long CurrentLineID { get; set; } = 0;
 
         /// <summary>
         /// New Upload File
         /// </summary>
-        /// <param name="ID">ID</param>
+        /// <param name="ID">Upload ID</param>
+        /// <param name="FileID">File ID</param>
         /// <param name="Name">File Name</param>
-        /// <param name="Type">File Type</param>
-        public UploadFile(int ID, string Name, FileType Type, TcpClient Client)
+        /// <param name="FileType">File Type</param>
+        /// <param name="Client">TcpClient.</param>
+        public UploadFile(int ID, int FileID, string Name, FileType FileType, TcpClient Client)
         {
             this.ID = ID;
+            this.FileID = FileID;
             this.Name = Name;
+            this.Type = FileType.ToString();
             this.Client = Client;
 
-            try
+            if (FileType == FileType.CrashLog)
             {
-                if (Type == FileType.CrashLog)
-                {
-                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\CrashLogs\\" + Name, FileMode.Open, FileAccess.ReadWrite);
-                    Stream.Seek(0, SeekOrigin.Begin);
-                    Reader = new StreamReader(Stream);
-
-                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), Name, Stream.Length.ToString(), ((int)FileType.CrashLog).ToString()}, Client));
-                }
-                else if (Type == FileType.Logger)
-                {
-                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Logger\\" + Name, FileMode.Open, FileAccess.ReadWrite);
-                    Stream.Seek(0, SeekOrigin.Begin);
-                    Reader = new StreamReader(Stream);
-
-                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), Name, Stream.Length.ToString(), ((int)FileType.Logger).ToString() }, Client));
-                }
+                Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\CrashLogs\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                Stream.Seek(0, SeekOrigin.Begin);
             }
-            catch (Exception)
+            else if (FileType == FileType.Logger)
             {
-                Dispose();
+                Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Logger\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                Stream.Seek(0, SeekOrigin.Begin);
             }
+
+            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { FileID.ToString(), Name, Stream.Length.ToString() }, Client));
         }
 
         /// <summary>
-        /// Write the Data into the RCON.
+        /// Handle Package
         /// </summary>
-        /// <param name="p">Package Data</param>
-        public void UploadData(Package p)
+        /// <param name="p">Package</param>
+        public void HandlePackage(Package p)
         {
-            if (p.PackageType == (int)Package.PackageTypes.CreateFile)
+            if (p.PackageType == (int)Package.PackageTypes.BeginCreateFile)
             {
-                if (p.DataItems[1] == "1")
+                if (p.DataItems[1] == Package.BeginCreateFileStatus.FileCreated.ToString())
                 {
-                    string ReturnMessage = Reader.ReadLine();
-                    
-                    if (string.IsNullOrWhiteSpace(ReturnMessage))
-                    {
-                        Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndCreateFile, ID.ToString(), Client));
-                    }
-                    else
-                    {
-                        Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.DownloadContent, new List<string> { ID.ToString(), ReturnMessage }, Client));
-                    }
+                    Reader = new StreamReader(Stream);
+                    Upload();
                 }
-                else
+                else if (p.DataItems[1] == Package.BeginCreateFileStatus.FileExisted.ToString())
                 {
-                    Dispose();
+                    Stream.Dispose();
+
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndCreateFile, FileID.ToString(), Client));
+                }
+                else if (p.DataItems[1] == Package.BeginCreateFileStatus.Failed.ToString())
+                {
+                    Stream.Dispose();
+
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndCreateFile, FileID.ToString(), Client));
                 }
             }
-            else if (p.PackageType == (int)Package.PackageTypes.DownloadContent)
+            else if (p.PackageType == (int)Package.PackageTypes.BeginDownloadFile)
             {
-                string ReturnMessage = Reader.ReadLine();
-                if (string.IsNullOrWhiteSpace(ReturnMessage))
+                if (p.DataItems[1] == Package.BeginDownloadFileStatus.RequestNextLine.ToString())
                 {
-                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndCreateFile, ID.ToString(), Client));
+                    Upload();
                 }
-                else
+                else if (p.DataItems[1] == Package.BeginDownloadFileStatus.Pause.ToString())
                 {
-                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.DownloadContent, new List<string> { ID.ToString(), ReturnMessage }, Client));
+                    // Do nothing, just pause here.
+                }
+                else if (p.DataItems[1] == Package.BeginDownloadFileStatus.Cancel.ToString())
+                {
+                    Reader.Dispose();
+
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndDownloadFile, FileID.ToString(), Client));
+                }
+            }
+            else if (p.PackageType == (int)Package.PackageTypes.EndDownloadFile)
+            {
+                if (p.DataItems[1] == Package.EndDownloadFileStatus.DownloadStreamDisposed.ToString())
+                {
+                    Stream.Dispose();
+
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndCreateFile, FileID.ToString(), Client));
+                }
+            }
+            else if (p.PackageType == (int)Package.PackageTypes.EndCreateFile)
+            {
+                if (p.DataItems[1] == Package.EndCreateFileStatus.FileStreamDisposed.ToString())
+                {
+                    Core.RCONUploadQueue.Remove(this);
                 }
             }
         }
 
+        private void Upload()
+        {
+            if (Reader.Peek() > -1)
+            {
+                CurrentLineID += 1;
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.BeginDownloadFile, new List<string> { FileID.ToString(), CurrentLineID.ToString(), Reader.ReadLine() }, Client));
+            }
+            else
+            {
+                Reader.Dispose();
+
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndDownloadFile, FileID.ToString(), Client));
+            }
+        }
+
         /// <summary>
-        /// Upload completed
+        /// Dispose if this object is still there.
         /// </summary>
         public void Dispose()
         {

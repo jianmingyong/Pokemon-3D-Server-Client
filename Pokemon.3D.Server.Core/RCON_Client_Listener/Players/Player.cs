@@ -34,8 +34,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
             Network = new Networking(p.Client);
 
             Core.RCONPlayer.Add(this);
-            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Authentication, "1", p.Client));
-            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
+            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Authentication, Package.AuthenticationStatus.AccessGranted.ToString(), p.Client));
 
             Core.Logger.Log($"RCON Player (ID: {ID.ToString()}) have connected.", Logger.LogTypes.Info, p.Client);
 

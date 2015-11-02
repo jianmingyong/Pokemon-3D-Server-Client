@@ -38,8 +38,6 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
         private string Password { get; set; }
         private int Port { get; set; }
 
-        public int ID { get; set; }
-
         /// <summary>
         /// Get/Set Is Active Status.
         /// </summary>
@@ -62,7 +60,6 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
 
         private void ThreadStartListening()
         {
-            // Try Connect to the server :)
             try
             {
                 Core.Logger.Log($"Connecting to the specified server... Please wait.", Logger.LogTypes.Info);
@@ -94,12 +91,12 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
                     {
                         Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
 
-                        if (Package.DataItems[0] == "1")
+                        if (Package.DataItems[0] == Package.AuthenticationStatus.AccessGranted.ToString())
                         {
                             Core.Logger.Log($"You are now connected to the server.", Logger.LogTypes.Info);
                             IsActive = true;
                         }
-                        else
+                        else if (Package.DataItems[0] == Package.AuthenticationStatus.AccessDenied.ToString())
                         {
                             Core.Logger.Log(Core.Setting.Token("RCON_CONNECTFAILED"), Logger.LogTypes.Info);
                             return;

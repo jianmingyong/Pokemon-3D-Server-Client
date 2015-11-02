@@ -58,95 +58,213 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
         public enum PackageTypes
         {
             /// <summary>
-            /// Unknown Data
+            /// Package Data: Unknown
+            /// <para>Get: </para>
+            /// <para>Set: </para>
             /// </summary>
             Unknown = -1,
 
+            #region Authentication Package
             /// <summary>
-            /// Authentication Package
+            /// Package Data: Authentication
             /// <para>Get: DataItems[0] = MD5Hash | DataItems[1] = SHA1Hash | DataItems[2] = SHA256Hash</para>
-            /// <para>Set: DataItems[0] = Result.ToBool</para>
+            /// <para>Set: DataItems[0] = AuthenticationStatus</para>
             /// </summary>
             Authentication,
+            #endregion Authentication Package
 
+            #region Connection Package
             /// <summary>
-            /// Ping Package
-            /// <para>Get: DataItems[0] = Null</para>
+            /// Package Data: Ping
+            /// <para>Get: DataItems[0] = null</para>
+            /// <para>Set: </para>
             /// </summary>
             Ping,
 
             /// <summary>
-            /// Kick Package
+            /// Package Data: Kick
+            /// <para>Get: </para>
             /// <para>Set: DataItems[0] = Reason</para>
             /// </summary>
-            Kicked,
+            Kick,
+            #endregion Connection Package
 
             #region Client Event Player Data
             /// <summary>
-            /// Add Player
-            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
+            /// Package Data: Add Player
+            /// <para>Get: </para>
+            /// <para>Set: DataItems[0] = Player Data</para>
             /// </summary>
             AddPlayer,
 
             /// <summary>
-            /// Update Player
-            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
+            /// Package Data: Update Player
+            /// <para>Get: </para>
+            /// <para>Set: DataItems[0] = Player Data</para>
             /// </summary>
             UpdatePlayer,
 
             /// <summary>
-            /// Remove Player
-            /// <para>Set: DataItems[0] = "ID,Player Data"</para>
+            /// Package Data: Remove Player
+            /// <para>Get: </para>
+            /// <para>Set: DataItems[0] = Player Data</para>
             /// </summary>
             RemovePlayer,
             #endregion Client Event Player Data
 
             #region Client Event Logger
             /// <summary>
-            /// Logger Message
-            /// <para>Get: DataItems[0] = Command.</para>
-            /// <para>Set: DataItems[0] = Logger Output.</para>
+            /// Package Data: Logger
+            /// <para>Get: DataItems[0] = Command</para>
+            /// <para>Set: DataItems[0] = Logger Message</para>
             /// </summary>
             Logger,
             #endregion Client Event Logger
 
             #region File Request Package
             /// <summary>
-            /// Get All Crash Logs
+            /// Package Data: Get All Crash Logs
             /// <para>Get: DataItems[0] = null</para>
+            /// <para>Set: DataItems[0] = FileRequestStatus</para>
             /// </summary>
-            GetAllCrashLog,
+            GetAllCrashLogs,
 
             /// <summary>
-            /// Get All Crash Log
+            /// Package Data: Get All Logs
             /// <para>Get: DataItems[0] = null</para>
+            /// <para>Set: DataItems[0] = FileRequestStatus</para>
             /// </summary>
             GetAllLogs,
             #endregion File Request Package
 
-            #region Downloader/Uploader
+            #region Downloader/Uploader Package
             /// <summary>
-            /// Create File Package
-            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
-            /// <para>Set: DataItems[0] = File ID, DataItems[1] = File Name, DataItems[2] = Expect File Size in bytes., DataItems[3] = File Type</para>
+            /// Package Data: Begin Create File
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = BeginCreateFileStatus</para>
+            /// <para>Set: DataItems[0] = File ID, DataItems[1] = File Name, DataItems[2] = File Size</para>
             /// </summary>
-            CreateFile,
+            BeginCreateFile,
 
             /// <summary>
-            /// Download File Content
-            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
-            /// <para>Set: DataItems[0] = File ID, DataItems[1] = Content Per Line.</para>
+            /// Package Data: Begin Download File
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = BeginDownloadFileStatus</para>
+            /// <para>Set: DataItems[0] = File ID, DataItems[1] = Line ID, DataItems[2] = Content</para>
             /// </summary>
-            DownloadContent,
+            BeginDownloadFile,
 
             /// <summary>
-            /// End Create File Package
-            /// <para>Get: DataItems[0] = File ID, DataItems[1] = Status</para>
+            /// Package Data: End Download File
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = EndDownloadFileStatus</para>
+            /// <para>Set: DataItems[0] = File ID</para>
+            /// </summary>
+            EndDownloadFile,
+
+            /// <summary>
+            /// Package Data: End Create File
+            /// <para>Get: DataItems[0] = File ID, DataItems[1] = EndCreateFileStatus</para>
             /// <para>Set: DataItems[0] = File ID</para>
             /// </summary>
             EndCreateFile,
             #endregion
         }
+
+        #region Enum Status
+        /// <summary>
+        /// Authentication Status
+        /// </summary>
+        public enum AuthenticationStatus
+        {
+            /// <summary>
+            /// Authentication Status: Access Granted
+            /// </summary>
+            AccessGranted,
+
+            /// <summary>
+            /// Authentication Status: Access Denied
+            /// </summary>
+            AccessDenied,
+        }
+
+        /// <summary>
+        /// File Request Status
+        /// </summary>
+        public enum FileRequestStatus
+        {
+            /// <summary>
+            /// File Request Status: Success
+            /// </summary>
+            Success,
+
+            /// <summary>
+            /// File Request Status: Failed
+            /// </summary>
+            Failed,
+        }
+
+        /// <summary>
+        /// Begin Create File Status
+        /// </summary>
+        public enum BeginCreateFileStatus
+        {
+            /// <summary>
+            /// Begin Create File Status: File Created
+            /// </summary>
+            FileCreated,
+
+            /// <summary>
+            /// Begin Create File Status: File Existed
+            /// </summary>
+            FileExisted,
+
+            /// <summary>
+            /// Begin Create File Status: Failed
+            /// </summary>
+            Failed,
+        }
+
+        /// <summary>
+        /// Begin Download File Status
+        /// </summary>
+        public enum BeginDownloadFileStatus
+        {
+            /// <summary>
+            /// Begin Download File Status: Request Next Line
+            /// </summary>
+            RequestNextLine,
+
+            /// <summary>
+            /// Begin Download File Status: Pause
+            /// </summary>
+            Pause,
+
+            /// <summary>
+            /// Begin Download File Status: Cancel
+            /// </summary>
+            Cancel,
+        }
+
+        /// <summary>
+        /// End Download File Status
+        /// </summary>
+        public enum EndDownloadFileStatus
+        {
+            /// <summary>
+            /// End Download File Status: Download Stream Disposed
+            /// </summary>
+            DownloadStreamDisposed,
+        }
+
+        /// <summary>
+        /// End Create File Status
+        /// </summary>
+        public enum EndCreateFileStatus
+        {
+            /// <summary>
+            /// End Create File Status: File Stream Disposed
+            /// </summary>
+            FileStreamDisposed,
+        }
+        #endregion Enum Status
 
         /// <summary>
         /// Full Package Data

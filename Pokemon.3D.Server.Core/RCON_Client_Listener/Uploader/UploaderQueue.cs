@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Pokemon_3D_Server_Core.RCON_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using System.IO;
 
 namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
 {
@@ -15,77 +13,56 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
     public class UploaderQueue : List<UploadFile>
     {
         /// <summary>
-        /// Check if the Upload File Queue Exist.
-        /// </summary>
-        /// <param name="ID">ID</param>
-        public bool UploadFileExist(int ID)
-        {
-            if (GetUploadFile(ID) != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Get the Upload File Object
-        /// </summary>
-        /// <param name="ID">ID</param>
-        public UploadFile GetUploadFile(int ID)
-        {
-            return (from UploadFile p in Core.RCONUploadQueue where p.ID == ID select p).FirstOrDefault();
-        }
-
-        /// <summary>
         /// HandlePackage
         /// </summary>
         /// <param name="p">Package Data</param>
         public void HandlePackage(Package p)
         {
-            try
+            if (p.PackageType == (int)Package.PackageTypes.GetAllCrashLogs)
             {
-                if (p.PackageType == (int)Package.PackageTypes.GetAllCrashLog)
-                {
-                    if (Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
-                    {
-                        List<string> CrashLogs = Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs").ToList();
+                int NumberofFiles = 0;
 
-                        for (int i = 0; i < CrashLogs.Count; i++)
-                        {
-                            Core.RCONUploadQueue.Add(new UploadFile(GetNextValidID(), Path.GetFileName(CrashLogs[i]), UploadFile.FileType.CrashLog, p.Client));
-                        }
-                    }
-                }
-                else if (p.PackageType == (int)Package.PackageTypes.GetAllLogs)
+                foreach (string File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
                 {
-                    if (Directory.Exists(Core.Setting.ApplicationDirectory + "\\Logger"))
-                    {
-                        List<string> Logger = Directory.GetFiles(Core.Setting.ApplicationDirectory + "\\Logger").ToList();
+                    Add(new UploadFile(GetNextValidID(), NumberofFiles, Path.GetFileName(File), UploadFile.FileType.CrashLog, p.Client));
+                    NumberofFiles += 1;
+                }
 
-                        for (int i = 0; i < Logger.Count; i++)
-                        {
-                            Core.RCONUploadQueue.Add(new UploadFile(GetNextValidID(), Path.GetFileName(Logger[i]), UploadFile.FileType.Logger, p.Client));
-                        }
-                    }
-                }
-                else if (p.PackageType == (int)Package.PackageTypes.CreateFile || p.PackageType == (int)Package.PackageTypes.DownloadContent)
+                if (NumberofFiles == 0)
                 {
-                    if (UploadFileExist(p.DataItems[0].ToInt()))
-                    {
-                        GetUploadFile(p.DataItems[0].ToInt()).UploadData(p);
-                    }
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.GetAllCrashLogs, Package.FileRequestStatus.Failed.ToString(), p.Client));
                 }
-                else if (p.PackageType == (int)Package.PackageTypes.EndCreateFile)
+                else
                 {
-                    GetUploadFile(p.DataItems[0].ToInt()).Dispose();
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.GetAllCrashLogs, Package.FileRequestStatus.Success.ToString(), p.Client));
                 }
             }
-            catch (Exception ex)
+            else if (p.PackageType == (int)Package.PackageTypes.GetAllLogs)
             {
-                ex.CatchError();
+                int NumberofFiles = 0;
+
+                foreach (string File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\Logger"))
+                {
+                    Add(new UploadFile(GetNextValidID(), NumberofFiles, Path.GetFileName(File), UploadFile.FileType.Logger, p.Client));
+                    NumberofFiles += 1;
+                }
+
+                if (NumberofFiles == 0)
+                {
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.GetAllLogs, Package.FileRequestStatus.Failed.ToString(), p.Client));
+                }
+                else
+                {
+                    Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.GetAllLogs, Package.FileRequestStatus.Success.ToString(), p.Client));
+                }
+            }
+            else if (p.PackageType == (int)Package.PackageTypes.BeginCreateFile || p.PackageType == (int)Package.PackageTypes.BeginDownloadFile || p.PackageType == (int)Package.PackageTypes.EndDownloadFile || p.PackageType == (int)Package.PackageTypes.EndCreateFile)
+            {
+                UploadFile File = (from UploadFile u in Core.RCONUploadQueue where p.Client == u.Client && p.DataItems[0].ToInt() == u.FileID select u).FirstOrDefault();
+                if (File != null)
+                {
+                    File.HandlePackage(p);
+                }
             }
         }
 

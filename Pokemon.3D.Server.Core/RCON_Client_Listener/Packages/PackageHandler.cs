@@ -36,14 +36,22 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                         HandlePing(p);
                         break;
 
+                    case (int)Package.PackageTypes.Kick:
+                    case (int)Package.PackageTypes.AddPlayer:
+                    case (int)Package.PackageTypes.UpdatePlayer:
+                    case (int)Package.PackageTypes.RemovePlayer:
+                        Core.Logger.Log("Unable to handle this package as it is not getable.", Logger.LogTypes.Debug, p.Client);
+                        break;
+
                     case (int)Package.PackageTypes.Logger:
                         HandleLogger(p);
                         break;
 
-                    case (int)Package.PackageTypes.GetAllCrashLog:
+                    case (int)Package.PackageTypes.GetAllCrashLogs:
                     case (int)Package.PackageTypes.GetAllLogs:
-                    case (int)Package.PackageTypes.CreateFile:
-                    case (int)Package.PackageTypes.DownloadContent:
+                    case (int)Package.PackageTypes.BeginCreateFile:
+                    case (int)Package.PackageTypes.BeginDownloadFile:
+                    case (int)Package.PackageTypes.EndDownloadFile:
                     case (int)Package.PackageTypes.EndCreateFile:
                         Core.RCONUploadQueue.HandlePackage(p);
                         break;
@@ -61,13 +69,13 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
 
         private void HandleAuthentication(Package p)
         {
-            if (p.DataItems[0] == Core.Setting.RCONPassword.Md5HashGenerator() && p.DataItems[1] == Core.Setting.RCONPassword.SHA1HashGenerator() && p.DataItems[2] == Core.Setting.RCONPassword.SHA256HashGenerator())
+            if (string.Equals(p.DataItems[0], Core.Setting.RCONPassword.Md5HashGenerator(), StringComparison.OrdinalIgnoreCase) && string.Equals(p.DataItems[1], Core.Setting.RCONPassword.SHA1HashGenerator(), StringComparison.OrdinalIgnoreCase) && string.Equals(p.DataItems[2], Core.Setting.RCONPassword.SHA256HashGenerator(), StringComparison.OrdinalIgnoreCase))
             {
                 Core.RCONPlayer.Add(p);
             }
             else
             {
-                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Authentication, "0", p.Client));
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Authentication, Package.AuthenticationStatus.AccessDenied.ToString(), p.Client));
             }
         }
 

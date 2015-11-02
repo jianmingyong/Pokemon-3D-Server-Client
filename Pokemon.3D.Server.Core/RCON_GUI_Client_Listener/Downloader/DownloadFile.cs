@@ -26,6 +26,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         public string Name { get; set; }
 
         /// <summary>
+        /// Get/Set File Type
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
         /// Get/Set Current Bytes
         /// </summary>
         public long CurrentBytes { get; set; } = 0;
@@ -48,45 +53,50 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         public enum DownloadStatus
         {
             /// <summary>
-            /// Before Downloading Package
+            /// Download Status: Initializing
             /// </summary>
             Initializing,
 
             /// <summary>
-            /// Retriving the File Content
+            /// Download Status: Downloading
             /// </summary>
             Downloading,
 
             /// <summary>
-            /// Download is completed.
+            /// Download Status: Completed
             /// </summary>
             Completed,
 
             /// <summary>
-            /// Download failed.
+            /// Download Status: Paused
             /// </summary>
-            Error,
+            Paused,
 
             /// <summary>
-            /// File is skipped.
+            /// Download Status: Skipped
             /// </summary>
             Skipped,
+
+            /// <summary>
+            /// Download Status: Canceled
+            /// </summary>
+            Canceled,
         }
 
         /// <summary>
-        /// File Type
+        /// File Types
         /// </summary>
         public enum FileType
         {
             /// <summary>
-            /// Logger
-            /// </summary>
-            Logger,
-
-            /// <summary>
-            /// Crash Log
+            /// File Types: Crash Log
             /// </summary>
             CrashLog,
+
+            /// <summary>
+            /// File Types: Logger
+            /// </summary>
+            Logger,
         }
 
         private FileStream Stream { get; set; }
@@ -95,6 +105,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
         private long LastDownloadSize { get; set; } = 0;
+        private long CurrentLineID { get; set; } = 0;
 
         /// <summary>
         /// New Download File
@@ -103,8 +114,6 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// <param name="Type">File Type</param>
         public DownloadFile(Package p, FileType Type)
         {
-            // DataItems[0] = File ID, DataItems[1] = File Name, DataItems[2] = Expect File Size in bytes.
-
             ID = p.DataItems[0].ToInt();
             Name = p.DataItems[1];
             TotalBytes = p.DataItems[2].ToLong();
@@ -118,31 +127,28 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                     Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs");
                 }
 
-                if (File.Exists(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\"+ Name))
+                if (File.Exists(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name))
                 {
-                    if (File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name).Length * 2 == TotalBytes)
+                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+
+                    if (Stream.Length == TotalBytes)
                     {
                         Status = DownloadStatus.Skipped.ToString();
-                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "0" }, null));
+
+                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileExisted.ToString() }, null));
                     }
                     else
                     {
-                        File.Delete(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name);
+                        Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                        Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Create, FileAccess.ReadWrite);
-                        Writer = new StreamWriter(Stream);
-
-                        Status = DownloadStatus.Downloading.ToString();
-                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "1" }, null));
+                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileCreated.ToString() }, null));
                     }
                 }
                 else
                 {
-                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Create, FileAccess.ReadWrite);
-                    Writer = new StreamWriter(Stream);
+                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    Status = DownloadStatus.Downloading.ToString();
-                    Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "1" }, null));
+                    Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileCreated.ToString() }, null));
                 }
             }
             else if (Type == FileType.Logger)
@@ -154,59 +160,104 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
 
                 if (File.Exists(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name))
                 {
-                    if (File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name).Length * 2 == TotalBytes)
+                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+
+                    if (Stream.Length == TotalBytes)
                     {
                         Status = DownloadStatus.Skipped.ToString();
-                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "0" }, null));
+
+                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileExisted.ToString() }, null));
                     }
                     else
                     {
-                        File.Delete(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name);
+                        Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                        Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Create, FileAccess.ReadWrite);
-                        Writer = new StreamWriter(Stream);
-
-                        Status = DownloadStatus.Downloading.ToString();
-                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "1" }, null));
+                        Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileCreated.ToString() }, null));
                     }
                 }
                 else
                 {
-                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Create, FileAccess.ReadWrite);
-                    Writer = new StreamWriter(Stream);
+                    Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    Status = DownloadStatus.Downloading.ToString();
-                    Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.CreateFile, new List<string> { ID.ToString(), "1" }, null));
+                    Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginCreateFile, new List<string> { ID.ToString(), Package.BeginCreateFileStatus.FileCreated.ToString() }, null));
                 }
-            }
-
-            if (Status == DownloadStatus.Downloading.ToString())
-            {
-                Thread Thread = new Thread(new ThreadStart(GetDownloadSpeed)) { IsBackground = true };
-                Thread.Start();
-                ThreadCollection.Add(Thread);
             }
         }
 
         /// <summary>
-        /// Write the Data into the file.
+        /// Handle Package
         /// </summary>
-        /// <param name="p">Package Data</param>
-        public void WriteData(Package p)
+        /// <param name="p">Package</param>
+        public void HandlePackage(Package p)
         {
-            if (p.IsValid)
+            if (p.PackageType == (int)Package.PackageTypes.BeginDownloadFile)
             {
-                string TextToAdd = p.DataItems[1] + Environment.NewLine;
-                CurrentBytes += System.Text.ASCIIEncoding.UTF8.GetByteCount(TextToAdd.ToCharArray());
+                if (p.DataItems[1].ToInt() == 1)
+                {
+                    Writer = new StreamWriter(Stream);
 
-                Writer.WriteLine(p.DataItems[1]);
+                    Thread Thread = new Thread(new ThreadStart(GetDownloadSpeed)) { IsBackground = true };
+                    Thread.Start();
+                    ThreadCollection.Add(Thread);
+                }
+
+                Download(p);
+            }
+            else if (p.PackageType == (int)Package.PackageTypes.EndDownloadFile)
+            {
+                if (CurrentBytes == TotalBytes)
+                {
+                    Status = DownloadStatus.Completed.ToString();
+                }
+                else
+                {
+                    Status = DownloadStatus.Canceled.ToString();
+                }
+
+                Writer.Dispose();
+
+                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.EndDownloadFile, new List<string> { ID.ToString(), Package.EndDownloadFileStatus.DownloadStreamDisposed.ToString() }, null));
+            }
+            else if (p.PackageType == (int)Package.PackageTypes.EndCreateFile)
+            {
+                Stream.Dispose();
+
+                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.EndCreateFile, new List<string> { ID.ToString(), Package.EndCreateFileStatus.FileStreamDisposed.ToString() }, null));
+            }
+        }
+
+        private void Download(Package p)
+        {
+            CurrentLineID += 1;
+
+            if (Status == DownloadStatus.Initializing.ToString())
+            {
+                Status = DownloadStatus.Downloading.ToString();
+            }
+
+            if (p.DataItems[1].ToInt() == CurrentLineID)
+            {
+                CurrentBytes += System.Text.ASCIIEncoding.UTF8.GetByteCount((p.DataItems[2] + Environment.NewLine).ToCharArray());
+
+                Writer.WriteLine(p.DataItems[2]);
                 Writer.Flush();
-
-                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.DownloadContent, new List<string> { ID.ToString(), "1" }, null));
             }
             else
             {
-                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.DownloadContent, new List<string> { ID.ToString(), "0" }, null));
+                Status = DownloadStatus.Canceled.ToString();
+            }
+
+            if (Status == DownloadStatus.Canceled.ToString())
+            {
+                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginDownloadFile, new List<string> { ID.ToString(), Package.BeginDownloadFileStatus.Cancel.ToString() }, null));
+            }
+            else if (Status == DownloadStatus.Downloading.ToString())
+            {
+                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginDownloadFile, new List<string> { ID.ToString(), Package.BeginDownloadFileStatus.RequestNextLine.ToString() }, null));
+            }
+            else if (Status == DownloadStatus.Paused.ToString())
+            {
+                Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.BeginDownloadFile, new List<string> { ID.ToString(), Package.BeginDownloadFileStatus.Pause.ToString() }, null));
             }
         }
 
@@ -246,13 +297,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// </summary>
         public void Dispose()
         {
-            Writer.Dispose();
-            Stream.Dispose();
+            if (Writer != null) Writer.Dispose();
+            if (Stream != null) Stream.Dispose();
 
             Status = DownloadStatus.Completed.ToString();
             Speed = 0;
-
-            Core.RCONGUIListener.SentToServer(new Package(Package.PackageTypes.EndCreateFile, new List<string> { ID.ToString(), "1" }, null));
         }
     }
 }

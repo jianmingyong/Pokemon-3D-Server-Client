@@ -28,12 +28,13 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
                         Core.Logger.Log("Unable to handle the package due to unknown type.", Logger.LogTypes.Debug, p.Client);
                         break;
 
-                    case (int)Package.PackageTypes.ID:
-                        HandleID(p);
+                    case (int)Package.PackageTypes.Authentication:
+                    case (int)Package.PackageTypes.Ping:
+                        Core.Logger.Log("Unable to handle this package as it is not getable.", Logger.LogTypes.Debug, p.Client);
                         break;
 
-                    case (int)Package.PackageTypes.Kicked:
-                        HandleKicked(p);
+                    case (int)Package.PackageTypes.Kick:
+                        HandleKick(p);
                         break;
 
                     case (int)Package.PackageTypes.AddPlayer:
@@ -52,8 +53,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
                         HandleLogger(p);
                         break;
 
-                    case (int)Package.PackageTypes.CreateFile:
-                    case (int)Package.PackageTypes.DownloadContent:
+                    case (int)Package.PackageTypes.GetAllCrashLogs:
+                    case (int)Package.PackageTypes.GetAllLogs:
+                    case (int)Package.PackageTypes.BeginCreateFile:
+                    case (int)Package.PackageTypes.BeginDownloadFile:
+                    case (int)Package.PackageTypes.EndDownloadFile:
                     case (int)Package.PackageTypes.EndCreateFile:
                         Core.RCONGUIDownloadQueue.HandlePackage(p);
                         break;
@@ -69,12 +73,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages
             }
         }
 
-        private void HandleID(Package p)
-        {
-            Core.RCONGUIListener.ID = p.DataItems[0].ToInt();
-        }
-
-        private void HandleKicked(Package p)
+        private void HandleKick(Package p)
         {
             Core.Logger.Log($"You have been kicked with the following reason: {p.DataItems[0]}", Logger.LogTypes.Info);
             Core.RCONGUIListener.Dispose();

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using Pokemon_3D_Server_Core;
+using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader;
 using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -293,6 +294,7 @@ namespace Pokemon_3D_Server_Client_GUI
             Downloader Downloader = new Downloader();
             Downloader.Show();
 
+            Core.RCONGUIDownloadQueue.DownloadType = DownloadFile.FileType.Logger;
             Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.GetAllLogs, "", null));
         }
         #endregion Menu Bar Buttons

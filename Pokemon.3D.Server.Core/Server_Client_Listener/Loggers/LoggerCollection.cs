@@ -25,7 +25,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
                 Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Logger");
             }
 
-            FileStream = new FileStream(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            FileStream = new FileStream(Core.Setting.ApplicationDirectory + "\\Logger\\Logger_" + Core.Setting.StartTime.ToString("dd-MM-yyyy_HH.mm.ss") + ".dat", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
             Writer = new StreamWriter(FileStream) { AutoFlush = true };
 
             Log("Logger initialized.", Logger.LogTypes.Info);

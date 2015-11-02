@@ -39,7 +39,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Kick, Reason, Player.Network.Client));
             }
 
             Core.Logger.Log($"RCON Player (ID: {ID.ToString()}) have disconnected due to the following reason: {Reason}", Logger.LogTypes.Info);
@@ -57,7 +57,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
             Player Player = GetPlayer(Client);
             Player.Network.IsActive = false;
 
-            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
+            Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Kick, Reason, Player.Network.Client));
 
             Core.Logger.Log($"RCON Player (ID: {Player.ID.ToString()}) have disconnected due to the following reason: {Reason}", Logger.LogTypes.Info);
 
