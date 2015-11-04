@@ -46,5 +46,15 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 }
             }
         }
+
+        public void Dispose()
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                this[i].Dispose();
+            }
+
+            this.RemoveRange(0, Count);
+        }
     }
 }

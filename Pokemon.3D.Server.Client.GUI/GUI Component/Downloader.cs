@@ -62,5 +62,13 @@ namespace Pokemon_3D_Server_Client_GUI
                 objectListView1.UpdateObjects(Core.RCONGUIDownloadQueue);
             }
         }
+
+        private void Downloader_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            for (int i = 0; i < Core.RCONGUIDownloadQueue.Count; i++)
+            {
+                Core.RCONGUIDownloadQueue.Dispose();
+            }
+        }
     }
 }

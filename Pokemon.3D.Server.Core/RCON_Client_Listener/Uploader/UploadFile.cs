@@ -153,15 +153,32 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
 
         private void Upload()
         {
-            if (Reader.Peek() > -1)
+            List<string> ContentToWrite = new List<string> { FileID.ToString() };
+            string TempReader;
+            long ContentBuffer = 0;
+
+            do
             {
-                CurrentLineID += 1;
-                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.BeginDownloadFile, new List<string> { FileID.ToString(), CurrentLineID.ToString(), Reader.ReadLine() }, Client));
+                if (Reader.Peek() > -1)
+                {
+                    CurrentLineID += 1;
+                    TempReader = Reader.ReadLine();
+                    ContentBuffer += System.Text.Encoding.UTF8.GetByteCount(TempReader.ToCharArray());
+                    ContentToWrite.AddRange(new List<string> { CurrentLineID.ToString(), TempReader });
+                }
+                else
+                {
+                    break;
+                }
+            } while (ContentBuffer < 8192);
+
+            if (ContentBuffer > 0)
+            {
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.BeginDownloadFile, ContentToWrite, Client));
             }
             else
             {
                 Reader.Dispose();
-
                 Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.EndDownloadFile, FileID.ToString(), Client));
             }
         }

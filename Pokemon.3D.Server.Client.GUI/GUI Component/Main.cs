@@ -297,6 +297,15 @@ namespace Pokemon_3D_Server_Client_GUI
             Core.RCONGUIDownloadQueue.DownloadType = DownloadFile.FileType.Logger;
             Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.GetAllLogs, "", null));
         }
+
+        private void getCrashLogsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Downloader Downloader = new Downloader();
+            Downloader.Show();
+
+            Core.RCONGUIDownloadQueue.DownloadType = DownloadFile.FileType.CrashLog;
+            Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.GetAllCrashLogs, "", null));
+        }
         #endregion Menu Bar Buttons
 
         #region Context Menu for Logger

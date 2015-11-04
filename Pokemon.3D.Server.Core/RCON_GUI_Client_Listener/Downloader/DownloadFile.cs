@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -7,6 +6,7 @@ using System.Threading;
 using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using System.Diagnostics;
+using System;
 
 namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
 {
@@ -33,14 +33,29 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// <summary>
         /// Get/Set Current Bytes
         /// </summary>
-        public long CurrentBytes { get; set; } = 0;
+        public string CurrentBytes { get; set; }
+
+        /// <summary>
+        /// Get/Set Current Bytes
+        /// </summary>
+        public double CurrentBytes_L { get; set; } = 0;
 
         /// <summary>
         /// Get/Set Total Bytes
         /// </summary>
-        public long TotalBytes { get; set; } = 0;
+        public string TotalBytes { get; set; }
 
-        public long Speed { get; set; } = 0;
+        /// <summary>
+        /// Get/Set Total Bytes
+        /// </summary>
+        public double TotalBytes_L { get; set; } = 0;
+
+        /// <summary>
+        /// Get/Set Speed.
+        /// </summary>
+        public string Speed { get; set; }
+
+        public double Speed_L { get; set; } = 0;
 
         /// <summary>
         /// Get/Set Status
@@ -104,7 +119,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
 
         private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
 
-        private long LastDownloadSize { get; set; } = 0;
+        private double LastDownloadSize { get; set; } = 0;
         private long CurrentLineID { get; set; } = 0;
 
         /// <summary>
@@ -116,7 +131,20 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         {
             ID = p.DataItems[0].ToInt();
             Name = p.DataItems[1];
-            TotalBytes = p.DataItems[2].ToLong();
+            TotalBytes_L = p.DataItems[2].ToLong();
+
+            if (TotalBytes_L < 1024)
+            {
+                TotalBytes = TotalBytes_L.ToString("F2") + " B";
+            }
+            else if (TotalBytes_L < 1024 * 1024)
+            {
+                TotalBytes = Server_Client_Listener.Modules.Math.Round(TotalBytes_L / 1024, 2).ToString("F2") + " KB";
+            }
+            else if (TotalBytes_L < 1024 * 1024 * 1024)
+            {
+                TotalBytes = Server_Client_Listener.Modules.Math.Round(TotalBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
+            }
 
             Status = DownloadStatus.Initializing.ToString();
 
@@ -131,7 +159,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 {
                     Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    if (Stream.Length == TotalBytes)
+                    if (Stream.Length == TotalBytes_L || Stream.Length - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
                     {
                         Status = DownloadStatus.Skipped.ToString();
 
@@ -162,7 +190,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 {
                     Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    if (Stream.Length == TotalBytes)
+                    if (Stream.Length == TotalBytes_L || Stream.Length - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
                     {
                         Status = DownloadStatus.Skipped.ToString();
 
@@ -205,9 +233,15 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             }
             else if (p.PackageType == (int)Package.PackageTypes.EndDownloadFile)
             {
-                if (CurrentBytes == TotalBytes)
+                if (CurrentBytes_L == TotalBytes_L)
                 {
                     Status = DownloadStatus.Completed.ToString();
+                    Speed = "0 B/s";
+                }
+                else if (CurrentBytes_L - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
+                {
+                    Status = DownloadStatus.Completed.ToString();
+                    Speed = "0 B/s";
                 }
                 else
                 {
@@ -228,23 +262,40 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
 
         private void Download(Package p)
         {
-            CurrentLineID += 1;
-
             if (Status == DownloadStatus.Initializing.ToString())
             {
                 Status = DownloadStatus.Downloading.ToString();
             }
 
-            if (p.DataItems[1].ToInt() == CurrentLineID)
+            for (int i = 1; i < p.DataItemsCount; i += 2)
             {
-                CurrentBytes += System.Text.ASCIIEncoding.UTF8.GetByteCount((p.DataItems[2] + Environment.NewLine).ToCharArray());
+                CurrentLineID += 1;
 
-                Writer.WriteLine(p.DataItems[2]);
-                Writer.Flush();
-            }
-            else
-            {
-                Status = DownloadStatus.Canceled.ToString();
+                if (p.DataItems[i].ToInt() == CurrentLineID)
+                {
+                    CurrentBytes_L += Encoding.UTF8.GetByteCount((p.DataItems[i + 1] + Environment.NewLine).ToCharArray());
+
+                    if (CurrentBytes_L < 1024)
+                    {
+                        CurrentBytes = CurrentBytes_L.ToString("F2") + " B";
+                    }
+                    else if (CurrentBytes_L < 1024 * 1024)
+                    {
+                        CurrentBytes = Server_Client_Listener.Modules.Math.Round(CurrentBytes_L / 1024, 2).ToString("F2") + " KB";
+                    }
+                    else if (CurrentBytes_L < 1024 * 1024 * 1024)
+                    {
+                        CurrentBytes = Server_Client_Listener.Modules.Math.Round(CurrentBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
+                    }
+
+                    Writer.WriteLine(p.DataItems[i + 1]);
+                    Writer.Flush();
+                }
+                else
+                {
+                    Status = DownloadStatus.Canceled.ToString();
+                    break;
+                }
             }
 
             if (Status == DownloadStatus.Canceled.ToString())
@@ -273,14 +324,27 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             {
                 try
                 {
-                    long CurrentDownloadSize = CurrentBytes;
+                    double CurrentDownloadSize = CurrentBytes_L;
 
-                    Speed = CurrentDownloadSize - LastDownloadSize;
+                    Speed_L = CurrentDownloadSize - LastDownloadSize;
                     LastDownloadSize = CurrentDownloadSize;
                 }
                 catch (Exception)
                 {
-                    Speed = 0;
+                    Speed_L = 0;
+                }
+
+                if (Speed_L < 1024)
+                {
+                    Speed = Speed_L.ToString("F2") + " B/s";
+                }
+                else if (Speed_L < 1024 * 1024)
+                {
+                    Speed = Server_Client_Listener.Modules.Math.Round(Speed_L / 1024, 2).ToString("F2") + " KB/s";
+                }
+                else if (Speed_L < 1024 * 1024 * 1024)
+                {
+                    Speed = Server_Client_Listener.Modules.Math.Round(Speed_L / 1024 / 1024,2).ToString("f2") + " MB/s";
                 }
 
                 sw.Stop();
@@ -300,8 +364,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             if (Writer != null) Writer.Dispose();
             if (Stream != null) Stream.Dispose();
 
-            Status = DownloadStatus.Completed.ToString();
-            Speed = 0;
+            Core.RCONGUIDownloadQueue.Remove(this);
         }
     }
 }

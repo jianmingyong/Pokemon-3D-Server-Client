@@ -82,21 +82,21 @@
             // olvColumn3
             // 
             this.olvColumn3.AspectName = "CurrentBytes";
-            this.olvColumn3.AspectToStringFormat = "{0:N0} B";
+            this.olvColumn3.AspectToStringFormat = "";
             this.olvColumn3.Text = "Current Bytes";
             this.olvColumn3.Width = 100;
             // 
             // olvColumn4
             // 
             this.olvColumn4.AspectName = "TotalBytes";
-            this.olvColumn4.AspectToStringFormat = "{0:N0} B";
+            this.olvColumn4.AspectToStringFormat = "";
             this.olvColumn4.Text = "Total Bytes";
             this.olvColumn4.Width = 100;
             // 
             // olvColumn6
             // 
             this.olvColumn6.AspectName = "Speed";
-            this.olvColumn6.AspectToStringFormat = "{0:N0} b/s";
+            this.olvColumn6.AspectToStringFormat = "";
             this.olvColumn6.Text = "Speed";
             this.olvColumn6.Width = 100;
             // 
@@ -134,6 +134,7 @@
             this.Controls.Add(this.objectListView1);
             this.Name = "Downloader";
             this.Text = "Downloader";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Downloader_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
 

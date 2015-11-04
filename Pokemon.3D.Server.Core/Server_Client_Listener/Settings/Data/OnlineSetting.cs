@@ -273,7 +273,7 @@ GameJoltID.ToString(),
 LastUpdated.ToString("yyyy-MM-ddTHH\\:mm\\:ss.fffffffK"),
 Season.ToString(),
 Weather.ToString(),
-ReturnString), Encoding.Unicode);
+ReturnString), Encoding.UTF8);
             }
             catch (Exception ex)
             {

@@ -91,7 +91,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
                 DateTime ErrorTime = DateTime.Now;
                 int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
 
-                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier.ToString("0000000000") + ".dat", ErrorLog, Encoding.Unicode);
+                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier.ToString("0000000000") + ".dat", ErrorLog, Encoding.UTF8);
                 Core.Logger.Log(ex.Message + vbNewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
             }
             catch (Exception exc)

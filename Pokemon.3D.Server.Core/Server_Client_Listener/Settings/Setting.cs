@@ -2419,7 +2419,7 @@ string.Join(",", CustomChannels), // CustomChannels
 RCONEnable.ToString().ToLower(), //RCONEnable
 RCONPort.ToString(), //RCONPort
 RCONPassword // RCONPassword 61
-), Encoding.Unicode);
+), Encoding.UTF8);
                 #endregion application_settings.json
 
                 #region Data\BlackList.json
@@ -2451,7 +2451,7 @@ BlackListData[i].Duration.ToString());
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\BlackList.json
 
                 #region Data\IPBlackList.json
@@ -2481,7 +2481,7 @@ IPBlackListData[i].Duration.ToString());
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\IPBlackList.json
 
                 #region Data\MapFileList.json
@@ -2516,7 +2516,7 @@ MuteListData[i].Duration.ToString());
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\MuteList.json
 
                 #region Data\OperatorList.json
@@ -2546,7 +2546,7 @@ OperatorListData[i].OperatorLevel.ToString());
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\OperatorList.json
 
                 #region Data\SwearInfractionFilterList.json
@@ -2572,7 +2572,7 @@ SwearInfractionFilterListData[i].CaseSensitive.ToString().ToLower());
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\SwearInfractionFilterList.json
 
                 #region Data\SwearInfractionList.json
@@ -2604,7 +2604,7 @@ SwearInfractionListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK")
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\SwearInfractionList.json
 
                 #region Data\WhiteList.json
@@ -2632,7 +2632,7 @@ WhiteListData[i].Reason);
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\WhiteList.json
 
                 #region Data\Token.json
@@ -2658,7 +2658,7 @@ Data.Value);
     [
 {0}
     ]
-}}", List), Encoding.Unicode);
+}}", List), Encoding.UTF8);
                 #endregion Data\Token.json
 
                 Core.Logger.Log("Setting saved.", Logger.LogTypes.Info);

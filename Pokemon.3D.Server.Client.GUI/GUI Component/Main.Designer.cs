@@ -217,6 +217,7 @@
             this.getCrashLogsToolStripMenuItem.Name = "getCrashLogsToolStripMenuItem";
             this.getCrashLogsToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
             this.getCrashLogsToolStripMenuItem.Text = "Get All Crash Logs";
+            this.getCrashLogsToolStripMenuItem.Click += new System.EventHandler(this.getCrashLogsToolStripMenuItem_Click);
             // 
             // toolStripSeparator7
             // 
