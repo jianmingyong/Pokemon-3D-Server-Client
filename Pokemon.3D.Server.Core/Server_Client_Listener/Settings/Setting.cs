@@ -556,6 +556,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
             TokenDefination.Add("SERVER_NOTOPERATOR", "The requested player is not an operator.");
             TokenDefination.Add("RCON_CONNECTFAILED", "Unable to connect to the requested server. Please try again.");
+            TokenDefination.Add("SERVER_PVPVALIDATION", "You are unable to use this party due to the following reason: {0}");
 
             OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
             OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));
@@ -1264,16 +1265,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                     return false;
                 }
                 #endregion application_settings.json
-
-                #region CLRPackage.lua
-                if (!File.Exists(ApplicationDirectory + "\\CLRPackage.lua"))
-                {
-                    using (WebClient Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
-                    {
-                        Client.DownloadFile("https://github.com/NLua/NLua/raw/master/Samples/CLRPackage.lua", ApplicationDirectory + "\\CLRPackage.lua");
-                    }
-                }
-                #endregion CLRPackage.lua
 
                 #region Data\BlackList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\BlackList.json"))
@@ -2112,32 +2103,49 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 File.WriteAllText(ApplicationDirectory + @"\application_settings.json",
                     string.Format(@"{{
 
-    /* Warning: The syntax for each setting is case sensitive.
-       String: ""Text inside a quote""
-       Integer: 0123456789
-       Boolean: true
+    /*
+        Warning: The syntax for each setting is case sensitive.
+        String: ""Text inside a quote you may use escape char like \\""
+        Integer: 0123456789
+        Boolean: true false
+
+        Please use the GUI Setting Editor in the server console if you are unsure how to change setting here.
     */
 
-    ""Pokémon 3D Server Client Setting File"":
+    ""Main Application Setting"":
     {{
         ""StartTime"": ""{0}"",
         ""ApplicationVersion"": ""{1}"",
         ""ProtocolVersion"": ""{2}"",
 
-        /* CheckForUpdate:  To allow application to check for update upon launch.
-           Syntax: Boolean: true, false */
+        /*
+            CheckForUpdate:  To allow or disallow the application to check for update upon launch.
+            Required Syntax: Boolean.
+        */
         ""CheckForUpdate"": {3},
 
-        /* GeneratePublicIP:  To allow application to update IP address upon launch.
-		   Syntax: Boolean: true, false */
-        ""GeneratePublicIP"": {4}
+        /*
+            GeneratePublicIP:  To allow or disallow the application to update the IP address upon launch.
+            Required Syntax: Boolean.
+        */
+        ""GeneratePublicIP"": {4},
+
+        /*
+            MainEntryPoint:  The main entry point of the server console.
+            Required Syntax: String.
+            1. ""Server"" => To start up as Hosting server.
+            2. ""RCON"" => To start up as RCON.
+        */
+        ""MainEntryPoint"": ""{5}"",
     }},
 
     ""Main Server Property"":
     {{
-        /* IPAddress:  Public IP address of your server.
-		   Syntax: Valid IPv4 address. */
-        ""IPAddress"": ""{5}"",
+        /*
+            IPAddress:  Public/External IP address of your server.
+            Required Syntax: Valid IPv4 address.
+        */
+        ""IPAddress"": ""{6}"",
 
         /* Port:  The port to use on your server.
 		   Syntax: Integer: Between 0 to 65535 inclusive. */
@@ -2307,6 +2315,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 
             ""Chat Feature"":
             {{
+                /* AllowChatChannels:  To allow player to use chat channels in the server.
+                    Syntax: Boolean: true, false. */
+                ""AllowChatChannels"": {63},
+
                 /* CustomChannels:  List of custom channels for the server.
                     Syntax: String: null for blank. */
                 ""CustomChannels"": ""{58}"",
@@ -2314,6 +2326,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 /* SpamResetDuration:  Amount of seconds for the user to send the same word again.
 				    Syntax: Integer: -1 to disable. */
                 ""SpamResetDuration"": {45}
+            }},
+
+            ""PvP Feature"":
+            {{
+                /* AllowPvP:  To allow player to PvP in the server.
+                    Syntax: Boolean: true, false */
+                ""AllowPvP"": {62}
+            }},
+
+            ""Trade Feature"":
+            {{
+                /* AllowTrade:  To allow player to Trade in the server.
+                    Syntax: Boolean: true, false */
+                ""AllowTrade"": {64}
             }}
         }}
     }},

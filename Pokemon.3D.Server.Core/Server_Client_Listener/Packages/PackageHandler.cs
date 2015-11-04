@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using System.Linq;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 {
@@ -541,6 +542,15 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Core.Logger.Log(Player.isGameJoltPlayer ?
                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the battle request from " + PVPPlayerName) :
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have joined the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+
+            // Status Update
+            Player.PvP_Status = Player.PvPTypes.Lobby;
+            Player.PvP_OpponentID = PvPPlayer.ID;
+            Player.PvP_Host = false;
+
+            PvPPlayer.PvP_Status = Player.PvPTypes.Lobby;
+            PvPPlayer.PvP_OpponentID = Player.ID;
+            PvPPlayer.PvP_Host = true;
         }
 
         private void HandleBattleQuit(Package p)
@@ -554,6 +564,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Core.Logger.Log(Player.isGameJoltPlayer ?
                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have rejected the battle request from " + PVPPlayerName) :
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+
+
         }
 
         private void HandleBattleOffer(Package p)
@@ -561,7 +573,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Player Player = Core.Player.GetPlayer(p.Client);
             Player PVPPlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
+            Player.PvP_Pokemon = p.DataItems[1].Split('|').ToList();
+
+            if (Player.DoPvPValidation())
+            {
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
+            }
+            else
+            {
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPVALIDATION","You have an invalid Pokemon in your party. Please remove the invalid Pokemon to ensure fair play."), Player.Network.Client));
+            }
         }
 
         private void HandleBattleStart(Package p)

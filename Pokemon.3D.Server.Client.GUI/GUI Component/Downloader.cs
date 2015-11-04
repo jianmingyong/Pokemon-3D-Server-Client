@@ -59,7 +59,7 @@ namespace Pokemon_3D_Server_Client_GUI
             }
             else
             {
-                objectListView1.UpdateObjects(Core.RCONGUIDownloadQueue);
+                objectListView1.UpdateObjects(Download);
             }
         }
 

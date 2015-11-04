@@ -13,6 +13,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
     /// </summary>
     public class Player
     {
+        #region Player Data
         /// <summary>
         /// Get/Set Player DataItem[0]
         /// </summary>
@@ -215,6 +216,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// Get/Set Player Last Valid Game Data
         /// </summary>
         public List<string> LastValidGameData { get; set; } = new List<string>();
+        #endregion Player Data
 
         /// <summary>
         /// Get/Set Player ID
@@ -226,6 +228,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public Networking Network { get; set; }
 
+        #region Chat Channel System
         /* 
             Chat Channel System:
             Default:
@@ -252,19 +255,66 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// Get/Set Player Last Chat Time
         /// </summary>
         public DateTime CC_LastChatTime { get; set; } = DateTime.Now;
+        #endregion Chat Channel System
 
-        /*
-            Player Status - For future usage.
-        */
+        #region PvP System
         /// <summary>
-        /// Get/Set Player PvP Status.
+        /// Get/Set Current Player PvP Status.
         /// </summary>
-        public bool IsInPvP { get; set; } = false;
+        public PvPTypes PvP_Status { get; set; } = PvPTypes.Nothing;
 
         /// <summary>
-        /// Get/Set Player Trade Status.
+        /// Get/Set PvP Host?
         /// </summary>
-        public bool IsInTrade { get; set; } = false;
+        public bool PvP_Host { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set PvP Rule Set.
+        /// </summary>
+        public PvPRules PvP_Rules { get; set; } = PvPRules.Default;
+
+        /// <summary>
+        /// Get/Set PvP Opponent ID
+        /// </summary>
+        public int PvP_OpponentID { get; set; } = -1;
+
+        /// <summary>
+        /// Get/Set PvP Participants.
+        /// </summary>
+        public List<string> PvP_Pokemon { get; set; } = new List<string>();
+
+        /// <summary>
+        /// PvP Types
+        /// </summary>
+        public enum PvPTypes
+        {
+            /// <summary>
+            /// PvP Types: Lobby
+            /// </summary>
+            Lobby,
+
+            /// <summary>
+            /// PvP Types: Battling
+            /// </summary>
+            Battling,
+
+            /// <summary>
+            /// PvP Types: Nothing
+            /// </summary>
+            Nothing,
+        }
+
+        /// <summary>
+        /// PvP Rules
+        /// </summary>
+        public enum PvPRules
+        {
+            /// <summary>
+            /// PvP Rules: Default
+            /// </summary>
+            Default,
+        }
+        #endregion PvP System
 
         /// <summary>
         /// A Collection of Busy Type
@@ -563,6 +613,25 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public override string ToString()
         {
             return isGameJoltPlayer ? string.Format("ID: {3} | {0} ({1}) {2}", Name, GameJoltID.ToString(), GetPlayerBusyType(), ID.ToString()) : string.Format("ID: {2} | {0} {1}", Name, GetPlayerBusyType(), ID.ToString());
+        }
+
+        /// <summary>
+        /// Check PvP Pokemon.
+        /// </summary>
+        public bool DoPvPValidation()
+        {
+            // {"Pokemon"[6]}{"Experience"[112709]}{"Gender"[0]}{"EggSteps"[0]}{"Item"[146]}{"ItemData"[]}{"NickName"[]}{"Level"[100]}{"OT"[28377]}{"Ability"[66]}{"Status"[]}{"Nature"[4]}{"CatchLocation"[]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[5]}{"CatchMethod"[]}{"Friendship"[255]}{"isShiny"[1]}{"Attack1"[488,20,20]}{"Attack2"[424,15,15]}{"Attack3"[481,15,15]}{"Attack4"[53,15,15]}{"HP"[274]}{"EVs"[10,35,20,30,12,26]}{"IVs"[6,27,12,21,12,18]}{"AdditionalData"[]}{"IDValue"[P3ewPpDfvzR]}
+            // |{"Pokemon"[250]}{"Experience"[116214]}{"Gender"[2]}{"EggSteps"[0]}{"Item"[146]}{"ItemData"[]}{"NickName"[]}{"Level"[45]}{"OT"[116016]}{"Ability"[46]}{"Status"[]}{"Nature"[1]}{"CatchLocation"[]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[2]}{"CatchMethod"[caught at]}{"Friendship"[130]}{"isShiny"[0]}{"Attack1"[326,20,20]}{"Attack2"[19,15,15]}{"Attack3"[221,5,5]}{"Attack4"[126,5,5]}{"HP"[157]}{"EVs"[3,3,0,0,0,0]}{"IVs"[16,4,31,23,1,2]}{"AdditionalData"[]}{"IDValue"[bE8d1hMZbsB]}
+            // |{"Pokemon"[3]}{"Experience"[49534]}{"Gender"[0]}{"EggSteps"[0]}{"Item"[0]}{"ItemData"[]}{"NickName"[]}{"Level"[100]}{"OT"[28377]}{"Ability"[65]}{"Status"[]}{"Nature"[6]}{"CatchLocation"[Daycare]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[5]}{"CatchMethod"[obtained at]}{"Friendship"[255]}{"isShiny"[1]}{"Attack1"[15,30,30]}{"Attack2"[75,25,25]}{"Attack3"[70,15,15]}{"Attack4"[431,20,20]}{"HP"[298]}{"EVs"[1,19,5,18,6,9]}{"IVs"[28,5,31,26,0,14]}{"AdditionalData"[]}{"IDValue"[HSYxV1MHrWV]}
+
+            // Check for invalid Pokemon.
+            List<int> InvalidPokemonID = new List<int> { };
+
+            for (int i = 0; i < PvP_Pokemon.Count; i++)
+            {
+                
+            }
+
         }
     }
 }
