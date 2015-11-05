@@ -67,6 +67,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
             }
         }
 
+        /// <summary>
         /// Log the message.
         /// </summary>
         /// <param name="Message">Message to log.</param>

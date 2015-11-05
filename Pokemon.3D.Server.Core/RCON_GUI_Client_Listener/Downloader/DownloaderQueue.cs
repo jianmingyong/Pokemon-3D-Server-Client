@@ -13,6 +13,9 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
     /// </summary>
     public class DownloaderQueue : List<DownloadFile>
     {
+        /// <summary>
+        /// Get/Set Download Type
+        /// </summary>
         public DownloadFile.FileType DownloadType { get; set; }
 
         /// <summary>
@@ -47,6 +50,9 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             }
         }
 
+        /// <summary>
+        /// Dispose Download Queue.
+        /// </summary>
         public void Dispose()
         {
             for (int i = 0; i < Count; i++)
@@ -54,7 +60,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 this[i].Dispose();
             }
 
-            this.RemoveRange(0, Count);
+            RemoveRange(0, Count);
         }
     }
 }

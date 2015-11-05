@@ -46,7 +46,9 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
         /// <summary>
         /// New Networking
         /// </summary>
-        /// <param name="Client">Client</param>
+        /// <param name="IPAddress">IPAddress</param>
+        /// <param name="Password">Password</param>
+        /// <param name="Port">Port</param>
         public Listener(string IPAddress, string Password, int Port)
         {
             this.IPAddress = IPAddress;
@@ -177,7 +179,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
                         LastValidPing = DateTime.Now;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Dispose();
                     return;

@@ -55,6 +55,9 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// </summary>
         public string Speed { get; set; }
 
+        /// <summary>
+        /// Get/Set Speed.
+        /// </summary>
         public double Speed_L { get; set; } = 0;
 
         /// <summary>

@@ -339,6 +339,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                                 break;
                         }
 
+                        TimeOffset = Core.Setting.TimeOffset;
+
                         LastWorldUpdate = DateTime.Now;
                         Core.Logger.Log(string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
                     }

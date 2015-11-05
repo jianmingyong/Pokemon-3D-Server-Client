@@ -28,12 +28,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public string ApplicationDirectory { get; set; }
 
+        #region Main Application Setting
         /// <summary>
         /// Get Startup Time.
         /// </summary>
         public DateTime StartTime { get; } = DateTime.Now;
 
-        private string TempApplicationVersion { get; set; }
+        private string _ApplicationVersion { get; set; }
         /// <summary>
         /// Get Application Version.
         /// </summary>
@@ -55,6 +56,29 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public bool GeneratePublicIP { get; set; } = true;
 
         /// <summary>
+        /// Get/Set Main Entry Point.
+        /// </summary>
+        public MainEntryPointType MainEntryPoint { get; set; }
+
+        /// <summary>
+        /// Main Entry Point Type.
+        /// </summary>
+        public enum MainEntryPointType
+        {
+            /// <summary>
+            /// Main Entry Point Type: Server
+            /// </summary>
+            Server,
+
+            /// <summary>
+            /// Main Entry Point Type: Rcon
+            /// </summary>
+            Rcon,
+        }
+        #endregion Main Application Setting
+
+        #region Main Server Property
+        /// <summary>
         /// Get/Set IP Address
         /// </summary>
         public IPAddress _IPAddress = Functions.GetPublicIP() == null ? null : System.Net.IPAddress.Parse(Functions.GetPublicIP());
@@ -71,7 +95,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    _IPAddress = System.Net.IPAddress.Parse(Functions.GetPublicIP());
+                    _IPAddress = GeneratePublicIP ? System.Net.IPAddress.Parse(Functions.GetPublicIP()) : null;
                 }
                 else
                 {
@@ -111,10 +135,24 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public string WelcomeMessage { get; set; } = "";
 
+        #region GameMode
         /// <summary>
         /// Get/Set GameMode
         /// </summary>
         public List<string> GameMode { get; set; } = new List<string> { "Pokemon 3D" };
+
+        private bool GM_Pokemon3D { get; set; } = true;
+
+        private bool GM_1YearLater3D { get; set; } = false;
+        private bool GM_DarkfireMode { get; set; } = false;
+        private bool GM_German { get; set; } = false;
+        private bool GM_PokemonGoldSilverRandomLocke { get; set; } = false;
+        private bool GM_PokemonLostSilver { get; set; } = false;
+        private bool GM_PokemonSilversSoul { get; set; } = false;
+        private bool GM_PokemonUniversal3D { get; set; } = false;
+
+        private string GM_Others { get; set; } = "";
+        #endregion GameMode
 
         private int _MaxPlayers = 20;
         /// <summary>
@@ -143,63 +181,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// Get/Set Offline Mode
         /// </summary>
         public bool OfflineMode { get; set; } = false;
+        #endregion Main Server Property
 
-        /// <summary>
-        /// Get/Set RCON Enable?
-        /// </summary>
-        public bool RCONEnable { get; set; } = true;
-
-        private int _RCONPort = 15125;
-        /// <summary>
-        /// Get/Set RCON Port.
-        /// </summary>
-        public int RCONPort
-        {
-            get
-            {
-                return _RCONPort;
-            }
-            set
-            {
-                _RCONPort = value.Clamp(0, 65535);
-            }
-        }
-
-        /// <summary>
-        /// Get/Set RCON Password.
-        /// </summary>
-        public string RCONPassword { get; set; } = "Password";
-
-        /// <summary>
-        /// Get/Set SCON Enable?
-        /// </summary>
-        public bool SCONEnable { get; set; } = true;
-
-        private ushort _SCONPort = 15126;
-        /// <summary>
-        /// Get/Set SCON Port
-        /// </summary>
-        public ushort SCONPort
-        {
-            get
-            {
-                return _SCONPort;
-            }
-            set
-            {
-                _SCONPort = value.Clamp(0, 65535);
-            }
-        }
-
-        /// <summary>
-        /// Get/Set SCON Password.
-        /// </summary>
-        public string _SCONPassword = "Password";
-        /// <summary>
-        /// Get/Set SCON Password
-        /// </summary>
-        public PasswordStorage SCONPassword { get; set; }
-
+        #region Advanced Server Property
+        #region World
         private int _Season = -2;
         /// <summary>
         /// Get/Set Season
@@ -212,7 +197,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
             set
             {
-                _Season = value.Clamp(-4, 3);
+                _Season = value.Clamp(-3, 3);
             }
         }
 
@@ -228,7 +213,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             }
             set
             {
-                _Weather = value.Clamp(-5, 9);
+                _Weather = value.Clamp(-4, 9);
             }
         }
 
@@ -236,6 +221,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// Get/Set Do DayCycle
         /// </summary>
         public bool DoDayCycle { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Time Offset
+        /// </summary>
+        public int TimeOffset { get; set; } = 0;
 
         /// <summary>
         /// Get/Set SeasonMonth
@@ -251,7 +241,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// Get/Set Default World Country
         /// </summary>
         public string DefaultWorldCountry { get; set; } = RegionInfo.CurrentRegion.EnglishName;
+        #endregion World
 
+        #region Network Ping System
         private int _NoPingKickTime = 30;
         /// <summary>
         /// Get/Set No Ping Kick Time
@@ -320,7 +312,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 }
             }
         }
-        
+        #endregion Network Ping System
+
+        #region Features
         /// <summary>
         /// Get/Set BlackList Feature
         /// </summary>
@@ -389,6 +383,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public List<SwearInfractionFilterList> SwearInfractionFilterListData { get; set; } = new List<SwearInfractionFilterList>();
 
+        #region Swear Infraction Feature
         private int _SwearInfractionCap = 5;
         /// <summary>
         /// Get/Set SwearInfraction Cap
@@ -434,6 +429,18 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 }
             }
         }
+        #endregion Swear Infraction Feature
+
+        #region Chat Feature
+        /// <summary>
+        /// Get/Set Allow Chat in server
+        /// </summary>
+        public bool AllowChatInServer { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Allow Chat Channels
+        /// </summary>
+        public bool AllowChatChannels { get; set; } = false;
 
         /// <summary>
         /// Get/Set Custom Chat Channels.
@@ -462,7 +469,30 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 }
             }
         }
+        #endregion Chat Feature
 
+        #region PvP Feature
+        /// <summary>
+        /// Get/Set Allow PvP
+        /// </summary>
+        public bool AllowPvP { get; set; } = true;
+
+        /// <summary>
+        /// Get/Set Allow PvP Validation
+        /// </summary>
+        public bool AllowPvPValidation { get; set; } = true;
+        #endregion PvP Feature
+
+        #region Trade Feature
+        /// <summary>
+        /// Get/Set Allow Trade
+        /// </summary>
+        public bool AllowTrade { get; set; } = true;
+        #endregion Trade Feature
+        #endregion Feature
+        #endregion Advanced Server Property
+
+        #region Server Client Logger
         /// <summary>
         /// Get/Set Logger Info Message
         /// </summary>
@@ -507,6 +537,67 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// Get/Set Logger Command Message
         /// </summary>
         public bool LoggerCommand { get; set; } = true;
+        #endregion Server Client Logger
+
+        #region RCON Server Property
+        /// <summary>
+        /// Get/Set RCON Enable?
+        /// </summary>
+        public bool RCONEnable { get; set; } = true;
+
+        private int _RCONPort = 15125;
+        /// <summary>
+        /// Get/Set RCON Port.
+        /// </summary>
+        public int RCONPort
+        {
+            get
+            {
+                return _RCONPort;
+            }
+            set
+            {
+                _RCONPort = value.Clamp(0, 65535);
+            }
+        }
+
+        /// <summary>
+        /// Get/Set RCON Password.
+        /// </summary>
+        public string RCONPassword { get; set; } = "Password";
+        #endregion RCON Server Property
+
+        #region SCON Server Property
+        /// <summary>
+        /// Get/Set SCON Enable?
+        /// </summary>
+        public bool SCONEnable { get; set; } = true;
+
+        private ushort _SCONPort = 15126;
+        /// <summary>
+        /// Get/Set SCON Port
+        /// </summary>
+        public ushort SCONPort
+        {
+            get
+            {
+                return _SCONPort;
+            }
+            set
+            {
+                _SCONPort = value.Clamp(0, 65535);
+            }
+        }
+
+        /// <summary>
+        /// Get/Set SCON Password.
+        /// </summary>
+        public string _SCONPassword = "Password";
+        /// <summary>
+        /// Get/Set SCON Password
+        /// </summary>
+        public PasswordStorage SCONPassword { get; set; }
+        #endregion SCON Server Property
 
         /// <summary>
         /// Get/Set Token Defination
@@ -632,8 +723,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 TempPropertyName = null;
                             }
 
-                            #region Pokémon 3D Server Client Setting File
-                            if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Pokémon 3D Server Client Setting File", StringComparison.OrdinalIgnoreCase))
+                            #region Main Application Setting
+                            if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Main Application Setting", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
@@ -641,11 +732,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     {
                                         if (Reader.TokenType == JsonToken.String)
                                         {
-                                            TempApplicationVersion = Reader.Value.ToString();
+                                            _ApplicationVersion = Reader.Value.ToString();
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Pokémon 3D Server Client Setting File.ApplicationVersion\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Main Application Setting.ApplicationVersion\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "CheckForUpdate", StringComparison.OrdinalIgnoreCase))
@@ -656,7 +747,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Pokémon 3D Server Client Setting File.CheckForUpdate\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Main Application Setting.CheckForUpdate\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "GeneratePublicIP", StringComparison.OrdinalIgnoreCase))
@@ -667,12 +758,35 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Pokémon 3D Server Client Setting File.GeneratePublicIP\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Main Application Setting.GeneratePublicIP\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "MainEntryPoint", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            if (string.Equals("Server", Reader.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                MainEntryPoint = MainEntryPointType.Server;
+                                            }
+                                            else if (string.Equals("RCON", Reader.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                MainEntryPoint = MainEntryPointType.Rcon;
+                                            }
+                                            else
+                                            {
+                                                MainEntryPoint = MainEntryPointType.Server;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Application Setting.MainEntryPoint\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
                             }
-                            #endregion Pokémon 3D Server Client Setting File
+                            #endregion Main Application Setting
+
                             #region Main Server Property
                             else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Main Server Property", StringComparison.OrdinalIgnoreCase))
                             {
@@ -741,18 +855,175 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                             Core.Logger.Log("\"Main Server Property.WelcomeMessage\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
-                                    else if (string.Equals(PropertyName, "GameMode", StringComparison.OrdinalIgnoreCase))
+                                }
+                            }
+                            #endregion Main Server Property
+
+                            #region GameMode
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "GameMode", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+
+                                    if (string.Equals(PropertyName, "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if (Reader.TokenType == JsonToken.String)
+                                        if (Reader.TokenType == JsonToken.Boolean)
                                         {
-                                            GameMode = Reader.Value.ToString().Split(',').ToList();
+                                            GM_Pokemon3D = (bool)Reader.Value;
+
+                                            if (GM_Pokemon3D)
+                                            {
+                                                GameMode.Add("Pokemon 3D");
+                                            }
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Main Server Property.GameMode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon 3D\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
-                                    else if (string.Equals(PropertyName, "MaxPlayers", StringComparison.OrdinalIgnoreCase))
+                                    else if (string.Equals(PropertyName, "1 Year Later 3D", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_1YearLater3D = (bool)Reader.Value;
+
+                                            if (GM_1YearLater3D)
+                                            {
+                                                GameMode.Add("1 Year Later 3D");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.1 Year Later 3D\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Darkfire Mode", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_DarkfireMode = (bool)Reader.Value;
+
+                                            if (GM_DarkfireMode)
+                                            {
+                                                GameMode.Add("Darkfire Mode");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Darkfire Mode\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "German", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_German = (bool)Reader.Value;
+
+                                            if (GM_German)
+                                            {
+                                                GameMode.Add("German");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.German\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Pokemon Gold&Silver - RandomLocke", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_PokemonGoldSilverRandomLocke = (bool)Reader.Value;
+
+                                            if (GM_PokemonGoldSilverRandomLocke)
+                                            {
+                                                GameMode.Add("Pokemon Gold&Silver - RandomLocke");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon Gold&Silver - RandomLocke\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Pokemon Lost Silver", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_PokemonLostSilver = (bool)Reader.Value;
+
+                                            if (GM_PokemonLostSilver)
+                                            {
+                                                GameMode.Add("Pokemon Lost Silver");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon Lost Silver\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Pokemon Silver's Soul", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_PokemonSilversSoul = (bool)Reader.Value;
+
+                                            if (GM_PokemonSilversSoul)
+                                            {
+                                                GameMode.Add("Pokemon Silver's Soul");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon Silver's Soul\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Pokemon Universal 3D", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            GM_PokemonUniversal3D = (bool)Reader.Value;
+
+                                            if (GM_PokemonUniversal3D)
+                                            {
+                                                GameMode.Add("Pokemon Universal 3D");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon Universal 3D\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "Others", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            GM_Others = Reader.Value.ToString();
+
+                                            for (int i = 0; i < GM_Others.SplitCount(","); i++)
+                                            {
+                                                GameMode.Add(GM_Others.Split(',')[i].Trim());
+                                            }
+                                        }
+                                        else if (Reader.TokenType == JsonToken.Null)
+                                        {
+                                            GM_Others = "";
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Others\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion GameMode
+
+                            #region Main Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "GameMode", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+
+                                    if (string.Equals(PropertyName, "MaxPlayers", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (Reader.TokenType == JsonToken.Integer)
                                         {
@@ -777,89 +1048,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Main Server Property
-                            #region RCON Server Property
-                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "RCON Server Property", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
-                                {
-                                    if (string.Equals(PropertyName, "RCONEnable", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Boolean)
-                                        {
-                                            RCONEnable = (bool)Reader.Value;
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"RCON Server Property.RCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "RCONPort", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Integer)
-                                        {
-                                            RCONPort = Reader.Value.ToString().ToUshort();
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"RCON Server Property.RCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "RCONPassword", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.String)
-                                        {
-                                            RCONPassword = Reader.Value.ToString();
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"RCON Server Property.RCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                }
-                            }
-                            #endregion RCON Server Property
-                            #region SCON Server Property
-                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "SCON Server Property", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
-                                {
-                                    if (string.Equals(PropertyName, "SCONEnable", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Boolean)
-                                        {
-                                            SCONEnable = (bool)Reader.Value;
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "SCONPort", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Integer)
-                                        {
-                                            SCONPort = Reader.Value.ToString().ToUshort();
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "SCONPassword", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.String)
-                                        {
-                                            _SCONPassword = Reader.Value.ToString();
-                                            SCONPassword = new PasswordStorage(_SCONPassword);
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                }
-                            }
-                            #endregion SCON Server Property
+
                             #region World
                             else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "World", StringComparison.OrdinalIgnoreCase))
                             {
@@ -898,9 +1087,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                             Core.Logger.Log("\"Advanced Server Property.World.DoDayCycle\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
+                                    else if (string.Equals(PropertyName, "TimeOffset", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            TimeOffset = Reader.Value.ToString().ToInt();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.TimeOffset\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
                                 }
                             }
                             #endregion World
+
                             #region SeasonMonth
                             else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "SeasonMonth", StringComparison.OrdinalIgnoreCase))
                             {
@@ -921,6 +1122,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion SeasonMonth
+
                             #region WeatherSeason
                             else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
                             {
@@ -941,6 +1143,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion WeatherSeason
+
                             #region World
                             else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
                             {
@@ -960,8 +1163,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion World
-                            #region FailSafe Features
-                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "FailSafe Features", StringComparison.OrdinalIgnoreCase))
+
+                            #region Network Ping System
+                            else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "Network Ping System", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
@@ -973,7 +1177,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Advanced Server Property.FailSafe Features.NoPingKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Advanced Server Property.Network Ping System.NoPingKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "AFKKickTime", StringComparison.OrdinalIgnoreCase))
@@ -984,7 +1188,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Advanced Server Property.FailSafe Features.AFKKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Advanced Server Property.Network Ping System.AFKKickTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "AutoRestartTime", StringComparison.OrdinalIgnoreCase))
@@ -995,12 +1199,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Advanced Server Property.FailSafe Features.AutoRestartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Advanced Server Property.Network Ping System.AutoRestartTime\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                 }
                             }
-                            #endregion FailSafe Features
+                            #endregion Network Ping System
+
                             #region Features
                             else if (StartObjectDepth == 2 && string.Equals(ObjectPropertyName, "Features", StringComparison.OrdinalIgnoreCase))
                             {
@@ -1086,6 +1291,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Features
+
                             #region Swear Infraction Feature
                             else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Swear Infraction Feature", StringComparison.OrdinalIgnoreCase))
                             {
@@ -1116,12 +1322,35 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Swear Infraction Feature
+
                             #region Chat Feature
                             else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Chat Feature", StringComparison.OrdinalIgnoreCase))
                             {
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
-                                    if (string.Equals(PropertyName, "CustomChannels", StringComparison.OrdinalIgnoreCase))
+                                    if (string.Equals(PropertyName, "AllowChatInServer", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            AllowChatChannels = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.Chat Feature.AllowChatInServer\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "AllowChatChannels", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            AllowChatChannels = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.Chat Feature.AllowChatChannels\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "CustomChannels", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (Reader.TokenType == JsonToken.String)
                                         {
@@ -1146,6 +1375,58 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Chat Feature
+
+                            #region PvP Feature
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "PvP Feature", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "AllowPvP", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            AllowPvP = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.PvP Feature.AllowPvP\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "AllowPvPValidation", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            AllowPvPValidation = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.PvP Feature.AllowPvPValidation\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion PvP Feature
+
+                            #region Trade Feature
+                            else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "Trade Feature", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "AllowTrade", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            AllowTrade = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"Advanced Server Property.World.Trade Feature.AllowTrade\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion Trade Feature
+
                             #region Server Client Logger
                             else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "Server Client Logger", StringComparison.OrdinalIgnoreCase))
                             {
@@ -1257,6 +1538,93 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 }
                             }
                             #endregion Server Client Logger
+
+                            #region RCON Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "RCON Server Property", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "RCONEnable", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            RCONEnable = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "RCONPort", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            RCONPort = Reader.Value.ToString().ToUshort();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "RCONPassword", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            RCONPassword = Reader.Value.ToString();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"RCON Server Property.RCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+
+                            #endregion RCON Server Property
+
+                            #region SCON Server Property
+                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "SCON Server Property", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
+                                {
+                                    if (string.Equals(PropertyName, "SCONEnable", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Boolean)
+                                        {
+                                            SCONEnable = (bool)Reader.Value;
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SCON Server Property.SCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SCONPort", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.Integer)
+                                        {
+                                            SCONPort = Reader.Value.ToString().ToUshort();
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SCON Server Property.SCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                    else if (string.Equals(PropertyName, "SCONPassword", StringComparison.OrdinalIgnoreCase))
+                                    {
+                                        if (Reader.TokenType == JsonToken.String)
+                                        {
+                                            _SCONPassword = Reader.Value.ToString();
+                                            SCONPassword = new PasswordStorage(_SCONPassword);
+                                        }
+                                        else
+                                        {
+                                            Core.Logger.Log("\"SCON Server Property.SCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                        }
+                                    }
+                                }
+                            }
+                            #endregion SCON Server Property
+
                         }
                     }
                 }
@@ -2070,7 +2438,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #endregion Data\Token.json
 
                 #region Overwrite Setting Per Version
-                if (TempApplicationVersion == "0.54.1.13")
+                if (_ApplicationVersion == "0.54.1.13")
                 {
                     TokenDefination["SERVER_LOGINTIME"] = "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)";
                 }
@@ -2119,19 +2487,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         ""ProtocolVersion"": ""{2}"",
 
         /*
-            CheckForUpdate:  To allow or disallow the application to check for update upon launch.
+            CheckForUpdate: To allow or disallow the application to check for update upon launch.
             Required Syntax: Boolean.
         */
         ""CheckForUpdate"": {3},
 
         /*
-            GeneratePublicIP:  To allow or disallow the application to update the IP address upon launch.
+            GeneratePublicIP: To allow or disallow the application to update the IP address upon launch.
             Required Syntax: Boolean.
         */
         ""GeneratePublicIP"": {4},
 
         /*
-            MainEntryPoint:  The main entry point of the server console.
+            MainEntryPoint: The main entry point of the server console.
             Required Syntax: String.
             1. ""Server"" => To start up as Hosting server.
             2. ""RCON"" => To start up as RCON.
@@ -2142,309 +2510,464 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
     ""Main Server Property"":
     {{
         /*
-            IPAddress:  Public/External IP address of your server.
+            IPAddress: Public/External IP address of your server.
             Required Syntax: Valid IPv4 address.
         */
         ""IPAddress"": ""{6}"",
 
-        /* Port:  The port to use on your server.
-		   Syntax: Integer: Between 0 to 65535 inclusive. */
-        ""Port"": {6},
+        /*
+            Port: The port to use on your server.
+            Required Syntax: Integer between 0 to 65535 inclusive.
+            Port cannot be the same as SCON and RCON.
+        */
+        ""Port"": {7},
 
-        /* ServerName:  The server name to display to public.
-		   Syntax: String */
-        ""ServerName"": ""{7}"",
+        /*
+            ServerName: The server name to be display to public.
+            Required Syntax: String.
+        */
+        ""ServerName"": ""{8}"",
 
-        /* ServerMessage:  The server message to display when a player select a server.
-		   Syntax: String: null for blank. */
-        ""ServerMessage"": {8},
+        /*
+            ServerMessage: The server message to display when a player select a server.
+            Required Syntax: String.
+            ""ServerMessage"": null, => If you do not want to display the server message.
+        */
+        ""ServerMessage"": {9},
 
-        /* WelcomeMessage:  The server message to display when a player joins a server.
-		   Syntax: String: null for blank. */
-        ""WelcomeMessage"": {9},
+        /*
+            WelcomeMessage: The server message to display when a player joins a server.
+            Required Syntax: String.
+            ""WelcomeMessage"": null, => If you do not want to display the welcome message.
+        */
+        ""WelcomeMessage"": {10},
 
-        /* GameMode:  The GameMode that player should play in order to join the server.
-		   Syntax: String. You may insert multiple gamemode by adding a comma seperator on each gamemode name. */
-        ""GameMode"": ""{10}"",
+        ""GameMode"":
+        {{
+            /*
+                Default GameMode: To allow or disallow default GameMode to join the server.
+                Required Syntax: Boolean.
+            */
+            ""Pokemon 3D"": {11},
 
-        /* MaxPlayers:  The maximum amount of player in the server that can join.
-		   Syntax: Integer: -1: Unlimited. */
-        ""MaxPlayers"": {11},
+            /*
+                Approved GameMode by staff: To allow or disallow custom GameMode to join the server.
+                Required Syntax: Boolean.
+            */
+            ""1 Year Later 3D"": {12},
+            ""Darkfire Mode"": {13},
+            ""German"": {14},
+            ""Pokemon Gold&Silver - RandomLocke"": {15},
+            ""Pokemon Lost Silver"": {16},
+            ""Pokemon Silver's Soul"": {17},
+            ""Pokemon Universal 3D"": {18},
 
-        /* OfflineMode:  The ability for offline profile player to join the server.
-		   Syntax: Boolean: true, false */
-        ""OfflineMode"": {12}
-    }},
+            /*
+                Other GameMode: To support other GameMode.
+                Required Syntax: String.
+                You may insert multiple GameMode by using a "","" (comma) after each GameMode name.
+            */
+            ""Others"": {19}
+        }},
 
-    ""RCON Server Property"":
-    {{
-        /* RCONEnable:  Enable RCON
-		   Syntax: Boolean: true, false */
-        ""RCONEnable"": {59},
+        /*
+            MaxPlayers: The maximum amount of player in the server that can join.
+            Required Syntax: Integer. -1 = Unlimited Players. (Technically not unlimited but the bigggest amount the game can handle.)
+        */
+        ""MaxPlayers"": {20},
 
-        /* RCONPort:  The port for RCON Listener. Please be unique and don't be same as Pokemon Listener Port.
-		   Syntax: Integer: Between 0 to 65535 inclusive. */
-        ""RCONPort"": {60},
-
-        /* RCONPassword:  The password for the RCON to connect.
-		   Syntax: String. Please do not insert password that contains your personal infomation. */
-        ""RCONPassword"": ""{61}""
-    }},
-
-    ""SCON Server Property"":
-    {{
-        /* SCONEnable:  Enable SCON
-		   Syntax: Boolean: true, false */
-        ""SCONEnable"": {56},
-
-        /* SCONPort:  The port for SCON Listener. Please be unique and don't be same as Pokemon Listener Port.
-		   Syntax: Integer: Between 0 to 65535 inclusive. */
-        ""SCONPort"": {57},
-
-        /* SCONPassword:  The password for the SCON to connect.
-		   Syntax: String. Please do not insert password that contains your personal infomation. */
-        ""SCONPassword"": ""{55}""
+        /*
+            OfflineMode: To allow or disallow offline save player joins the server.
+            - It will be allowed if other GameMode other than default server is allowed to join the server.
+            Required Syntax: Boolean.
+        */
+        ""OfflineMode"": {21}
     }},
 
     ""Advanced Server Property"":
     {{
         ""World"":
         {{
-            /* Season:  To set server default season.
-			    Syntax: Integer: Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3 */
-            ""Season"": {13},
+            /*
+                Season: To set server default season.
+                Required Syntax: Integer.
+                Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3
+            */
+            ""Season"": {22},
 
-            /* Weather:  To set server default weather.
-			    Syntax: Integer: Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4 */
-            ""Weather"": {14},
+            /*
+                Weather: To set server default weather.
+                Required Syntax: Integer.
+                Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4
+                Real world weather is not implemented. Do not use!
+            */
+            ""Weather"": {23},
 
-            /* DoDayCycle:  To allow the server to update day cycle.
-			    Syntax: Boolean: true, false */
-			""DoDayCycle"": {15},
+            /*
+                DoDayCycle: To allow or disallow the server to update day and night cycle.
+			    Required Syntax: Boolean.
+            */
+			""DoDayCycle"": {24},
 
-            /* SeasonMonth:  To set the season based on local date. Must set Season = -3
-			    Syntax: Integer: Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2
-			    You may insert more than one season by separating it with a comma. */
+            /*
+                Time Offset: Offset the time in the server.
+                Required Syntax: Integer.
+                The time offset is counted by seconds. 60 = 1 minute time difference from your local time.
+            */
+            ""TimeOffset"": {25},
+
+            /*
+                SeasonMonth: To set the season based on local date. Must set Season = -3
+			    Required Syntax: Integer.
+                Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2
+			    You may insert more than one season by separating it with a "","" (comma).
+            */
             ""SeasonMonth"":
             {{
-                ""January"": ""{16}"",
-                ""February"": ""{17}"",
-                ""March"": ""{18}"",
-                ""April"": ""{19}"",
-                ""May"": ""{20}"",
-                ""June"": ""{21}"",
-                ""July"": ""{22}"",
-                ""August"": ""{23}"",
-                ""September"": ""{24}"",
-                ""October"": ""{25}"",
-                ""November"": ""{26}"",
-                ""December"": ""{27}""
+                ""January"": ""{26}"",
+                ""February"": ""{27}"",
+                ""March"": ""{28}"",
+                ""April"": ""{29}"",
+                ""May"": ""{30}"",
+                ""June"": ""{31}"",
+                ""July"": ""{32}"",
+                ""August"": ""{33}"",
+                ""September"": ""{34}"",
+                ""October"": ""{35}"",
+                ""November"": ""{36}"",
+                ""December"": ""{37}""
             }},
 
-            /* WeatherSeason:  To set the weather based on server season. Must set Weather = -3
-			    Syntax: Integer: Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4
-			    You may insert more than one weather by separating it with a comma. */
+            /*
+                WeatherSeason: To set the weather based on server season. Must set Weather = -3
+			    Required Syntax: Integer.
+                Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4
+			    You may insert more than one season by separating it with a "","" (comma).
+                Real world weather is not implemented. Do not use!
+            */
             ""WeatherSeason"":
             {{
-                ""Winter"": ""{28}"",
-                ""Spring"": ""{29}"",
-                ""Summer"": ""{30}"",
-                ""Fall"": ""{31}""
+                ""Winter"": ""{38}"",
+                ""Spring"": ""{39}"",
+                ""Summer"": ""{40}"",
+                ""Fall"": ""{41}""
             }},
 
-            /* DefaultWorldCountry:  To set the default country for real world weather.
-                Syntax: String. Valid Country name / City name. No fancy character. Use Default A-Z a-z letter. */
-            ""DefaultWorldCountry"": ""{32}""
+            /*
+                DefaultWorldCountry: To set the default country for real world weather.
+                Required Syntax: String.
+                Valid Country name / City name. No fancy character. Use Default A-Z a-z letter.
+            */
+            ""DefaultWorldCountry"": ""{42}""
         }},
 
-        ""FailSafe Features"":
+        ""Network Ping System"":
         {{
-            /* NoPingKickTime:  To kick player out if there are no valid ping for n amount of seconds.
-			    Syntax: Integer: -1 to disable it. */
-            ""NoPingKickTime"": {33},
+            /*
+                NoPingKickTime: To kick player out if there are no valid ping for n amount of seconds.
+                Required Syntax: Integer. -1 to disable it.
+            */
+            ""NoPingKickTime"": {43},
 
-            /* AFKKickTime:  To kick player out if there are no valid activity for n amount of seconds.
-			    Syntax: Integer: -1 to disable it. */
-            ""AFKKickTime"": {34},
+            /*
+                AFKKickTime: To kick player out if there are no valid activity for n amount of seconds.
+			    Required Syntax: Integer. -1 to disable it.
+            */
+            ""AFKKickTime"": {44},
         
-            /* AutoRestartTime:  To automatically restart the server after n seconds. Disable PvP and trade features for the last 5 minutes of the countdown.
-			    Syntax: Integer: -1 to disable it. */
-            ""AutoRestartTime"": {35}
+            /*
+                AutoRestartTime: To automatically restart the server after n seconds. Disable PvP and trade features for the last 5 minutes of the countdown.
+			    Required Syntax: Integer. -1 to disable it.
+            */
+            ""AutoRestartTime"": {45}
         }},
 
         ""Features"":
         {{
-            /* BlackList:  To allow using blacklist feature.
-			    Syntax: Boolean: true, false */
-            ""BlackList"": {36},
+            /*
+                BlackList: To allow or disallow using Blacklist feature.
+			    Required Syntax: Boolean.
+            */
+            ""BlackList"": {46},
 
-            /* IPBlackList:  To allow using ipblacklist feature.
-			    Syntax: Boolean: true, false */
-            ""IPBlackList"": {37},
+            /*
+                IPBlackList: To allow or disallow using IPBlacklist feature.
+			    Required Syntax: Boolean.
+            */
+            ""IPBlackList"": {47},
 
-            /* WhiteList:  To allow using whitelist feature.
-			    Syntax: Boolean: true, false */
-            ""WhiteList"": {38},
+            /*
+                WhiteList: To allow or disallow using whitelist feature.
+			    Required Syntax: Boolean.
+            */
+            ""WhiteList"": {48},
 
-            /* OperatorList:  To allow using operator feature.
-			    Syntax: Boolean: true, false */
-            ""OperatorList"": {39},
+            /*
+                OperatorList: To allow or disallow using operator feature.
+			    Required Syntax: Boolean.
+            */
+            ""OperatorList"": {49},
 
-            /* MuteList:  To allow using mute feature.
-			    Syntax: Boolean: true, false */
-            ""MuteList"": {40},
+            /*
+                MuteList: To allow or disallow using mute feature.
+			    Required Syntax: Boolean.
+            */
+            ""MuteList"": {50},
 
-            /* OnlineSettingList:  To allow using mute feature.
-			    Syntax: Boolean: true, false */
-            ""OnlineSettingList"": {41},
+            /*
+                OnlineSettingList: To allow or disallow using Online Setting feature.
+			    Required Syntax: Boolean.
+            */
+            ""OnlineSettingList"": {51},
 
-            /* SwearInfractionList:  To allow using swear infraction feature.
-			    Syntax: Boolean: true, false */
-            ""SwearInfractionList"": {42},
+            /*
+                SwearInfractionList: To allow or disallow using swear infraction feature.
+			    Required Syntax: Boolean.
+            */
+            ""SwearInfractionList"": {52},
 
             ""Swear Infraction Feature"":
             {{
-                /* SwearInfractionCap:  Amount of infraction points before the first mute.
-				    Syntax: Integer: -1 to disable. */
-                ""SwearInfractionCap"": {43},
+                /*
+                    SwearInfractionCap: Amount of infraction points before the first mute.
+				    Required Syntax: Integer. -1 to disable.
+                */
+                ""SwearInfractionCap"": {53},
 
-                /* SwearInfractionReset:  Amount of days before it expire the infraction count.
-				    Syntax: Integer: -1 to disable. */
-                ""SwearInfractionReset"": {44}
+                /*
+                    SwearInfractionReset: Amount of days before it expire the infraction count.
+				    Required Syntax: Integer. -1 to disable.
+                */
+                ""SwearInfractionReset"": {54}
             }},
 
             ""Chat Feature"":
             {{
-                /* AllowChatChannels:  To allow player to use chat channels in the server.
-                    Syntax: Boolean: true, false. */
-                ""AllowChatChannels"": {63},
+                /*
+                    AllowChatInServer: To allow or disallow player to chat in the server.
+                    Required Syntax: Boolean.
+                */
+                ""AllowChatInServer"": {55},
 
-                /* CustomChannels:  List of custom channels for the server.
-                    Syntax: String: null for blank. */
-                ""CustomChannels"": ""{58}"",
+                /*
+                    AllowChatChannels: To allow or disallow player to use chat channels in the server.
+                    Required Syntax: Boolean.
+                */
+                ""AllowChatChannels"": {56},
 
-                /* SpamResetDuration:  Amount of seconds for the user to send the same word again.
-				    Syntax: Integer: -1 to disable. */
-                ""SpamResetDuration"": {45}
+                /*
+                    CustomChannels: List of custom channels for the server.
+                    Required Syntax: String.
+                    ""CustomChannels"": null, => If there are no custom channels.
+                */
+                ""CustomChannels"": {57},
+
+                /*
+                    SpamResetDuration: Amount of seconds for the user to send the same word again.
+				    Required Syntax: Integer. -1 to disable.
+                */
+                ""SpamResetDuration"": {58}
             }},
 
             ""PvP Feature"":
             {{
-                /* AllowPvP:  To allow player to PvP in the server.
-                    Syntax: Boolean: true, false */
-                ""AllowPvP"": {62}
+                /*
+                    AllowPvP: To allow or disallow player to PvP in the server.
+                    Required Syntax: Boolean.
+                */
+                ""AllowPvP"": {59},
+
+                /*
+                    AllowPvPValidation: To allow or disallow PvP Validation system.
+                    Required Syntax: Boolean.
+                    Online player can change all they want. Offline player do not have the power to change any.
+                */
+                ""AllowPvPValidation"": {60}
             }},
 
             ""Trade Feature"":
             {{
-                /* AllowTrade:  To allow player to Trade in the server.
-                    Syntax: Boolean: true, false */
-                ""AllowTrade"": {64}
+                /*
+                    AllowTrade: To allow or disallow player to Trade in the server.
+                    Required Syntax: Boolean.
+                */
+                ""AllowTrade"": {61}
             }}
         }}
     }},
 
     ""Server Client Logger"":
     {{
-        /* LoggerInfo:  To log server information.
-		   Syntax: Boolean: true, false */
-        ""LoggerInfo"": {46},
+        /*
+            LoggerInfo: To log server information.
+            Required Syntax: Boolean.
+        */
+        ""LoggerInfo"": {62},
 
-        /* LoggerWarning:  To log server warning including ex exception.
-		   Syntax: Boolean: true, false */
-        ""LoggerWarning"": {47},
+        /*
+            LoggerWarning: To log server warning including ex exception.
+            Required Syntax: Boolean.
+        */
+        ""LoggerWarning"": {63},
 
-        /* LoggerDebug:  To log server package data (Lag might happen if turn on).
-		   Syntax: Boolean: true, false */
-        ""LoggerDebug"": {48},
+        ""LoggerDebug"": {64},
 
-        /* LoggerChat:  To log server chat message.
-		   Syntax: Boolean: true, false */
-        ""LoggerChat"": {49},
+        /*
+            LoggerChat:  To log server chat message.
+            Required Syntax: Boolean.
+        */
+        ""LoggerChat"": {65},
 
-        /* LoggerPM:  To log server private chat message. (Actual Private Message content is not logged)
-		   Syntax: Boolean: true, false */
-        ""LoggerPM"": {50},
+        /*
+            LoggerPM: To log server private chat message. (Actual Private Message content is not logged)
+            Required Syntax: Boolean.
+        */
+        ""LoggerPM"": {66},
 
-        /* LoggerServer:  To log server message.
-		   Syntax: Boolean: true, false */
-        ""LoggerServer"": {51},
+        /*
+            LoggerServer: To log server message.
+            Required Syntax: Boolean.
+        */
+        ""LoggerServer"": {67},
 
-        /* LoggerTrade:  To log trade request. (Actual Trade Request content is not logged)
-		   Syntax: Boolean: true, false */
-        ""LoggerTrade"": {52},
+        /*
+            LoggerTrade: To log trade request. (Actual Trade Request content is not logged)
+            Required Syntax: Boolean.
+        */
+        ""LoggerTrade"": {68},
 
-        /* LoggerPvP:  To log pvp request. (Actual PvP Request content is not logged)
-		   Syntax: Boolean: true, false */
-        ""LoggerPvP"": {53},
+        /*
+            LoggerPvP: To log pvp request. (Actual PvP Request content is not logged)
+            Required Syntax: Boolean.
+        */
+        ""LoggerPvP"": {69},
 
-        /* LoggerCommand:  To log server command usage. (Debug Commands are not logged)
-		   Syntax: Boolean: true, false */
-        ""LoggerCommand"": {54}
+        /*
+            LoggerCommand: To log server command usage. (Debug Commands are not logged)
+            Required Syntax: Boolean.
+        */
+        ""LoggerCommand"": {70}
+    }},
+
+    ""RCON Server Property"":
+    {{
+        /*
+            RCONEnable: Enable RCON
+            Required Syntax: Boolean.
+        */
+        ""RCONEnable"": {71},
+
+        /*
+            RCONPort: The port for RCON Listener.
+            Required Syntax: Integer between 0 to 65535 inclusive.
+        */
+        ""RCONPort"": {72},
+
+        /*
+            RCONPassword: The password for the RCON to connect.
+		    Required Syntax: String. Please do not insert password that contains your personal infomation.
+        */
+        ""RCONPassword"": ""{73}""
+    }},
+
+    ""SCON Server Property"":
+    {{
+        /*
+            SCONEnable: Enable SCON
+		    Required Syntax: Boolean.
+        */
+        ""SCONEnable"": {74},
+
+        /*
+            SCONPort: The port for SCON Listener. Please be unique and don't be same as Pokemon Listener Port.
+		    Required Syntax: Integer between 0 to 65535 inclusive.
+        */
+        ""SCONPort"": {75},
+
+        /*
+            SCONPassword: The password for the SCON to connect.
+		    Required Syntax: String. Please do not insert password that contains your personal infomation.
+        */
+        ""SCONPassword"": ""{76}""
     }}
 }}",
-StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"), // StartTime
-ApplicationVersion, // ApplicationVersion
-ProtocolVersion, // ProtocolVersion
-CheckForUpdate.ToString().ToLower(), // CheckForUpdate
-GeneratePublicIP.ToString().ToLower(), // GeneratePublicIP
-IPAddress, // IPAddress
-Port.ToString(), // Port
-ServerName, // ServerName
-string.IsNullOrWhiteSpace(ServerMessage) ? "null" : @"""" + ServerMessage + @"""", // ServerMessage
-string.IsNullOrWhiteSpace(WelcomeMessage) ? "null" : @"""" + WelcomeMessage + @"""", // WelcomeMessage
-string.Join(",", GameMode), // GameMode
-MaxPlayers.ToString(), // MaxPlayers
-OfflineMode.ToString().ToLower(), // OfflineMode
-Season.ToString(), // Season
-Weather.ToString(), // Weather
-DoDayCycle.ToString().ToLower(), // DoDayCycle
-SeasonMonth.SeasonData.GetSplit(0), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(1), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(2), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(3), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(4), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(5), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(6), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(7), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(8), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(9), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(10), // SeasonMonth
-SeasonMonth.SeasonData.GetSplit(11), // SeasonMonth
-WeatherSeason.WeatherData.GetSplit(0), // WeatherSeason
-WeatherSeason.WeatherData.GetSplit(1), // WeatherSeason
-WeatherSeason.WeatherData.GetSplit(2), // WeatherSeason
-WeatherSeason.WeatherData.GetSplit(3), // WeatherSeason
-DefaultWorldCountry, // DefaultWorldCountry
-NoPingKickTime.ToString(), // NoPingKickTime
-AFKKickTime.ToString(), // AFKKickTime
-AutoRestartTime.ToString(), // AutoRestartTime
-BlackList.ToString().ToLower(), // BlackList
-IPBlackList.ToString().ToLower(), // IPBlackList
-WhiteList.ToString().ToLower(), // WhiteList
-OperatorList.ToString().ToLower(), // OperatorList
-MuteList.ToString().ToLower(), // MuteList
-OnlineSettingList.ToString().ToLower(), // OnlineSettingList
-SwearInfractionList.ToString().ToLower(), // SwearInfractionList
-SwearInfractionCap.ToString(), // SwearInfractionCap
-SwearInfractionReset.ToString(), // SwearInfractionReset
-SpamResetDuration.ToString(), // SpamResetDuration
-LoggerInfo.ToString().ToLower(), // LoggerInfo
-LoggerWarning.ToString().ToLower(), // LoggerWarning
-LoggerDebug.ToString().ToLower(), // LoggerDebug
-LoggerChat.ToString().ToLower(), // LoggerChat
-LoggerPM.ToString().ToLower(), // LoggerPM
-LoggerServer.ToString().ToLower(), // LoggerServer
-LoggerTrade.ToString().ToLower(), // LoggerTrade
-LoggerPvP.ToString().ToLower(), // LoggerPvP
-LoggerCommand.ToString().ToLower(), // LoggerCommand
-_SCONPassword, // SCONPassword
-SCONEnable.ToString().ToLower(), // SCONEnable
-SCONPort.ToString(), // SCONPort
-string.Join(",", CustomChannels), // CustomChannels
-RCONEnable.ToString().ToLower(), //RCONEnable
-RCONPort.ToString(), //RCONPort
-RCONPassword // RCONPassword 61
+StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"),
+ApplicationVersion,
+ProtocolVersion,
+CheckForUpdate.ToString().ToLower(),
+GeneratePublicIP.ToString().ToLower(),
+MainEntryPoint.ToString(),
+IPAddress,
+Port.ToString(),
+ServerName,
+string.IsNullOrWhiteSpace(ServerMessage) ? "null" : @"""" + ServerMessage + @"""",
+string.IsNullOrWhiteSpace(WelcomeMessage) ? "null" : @"""" + WelcomeMessage + @"""",
+GM_Pokemon3D.ToString().ToLower(),
+GM_1YearLater3D.ToString().ToLower(),
+GM_DarkfireMode.ToString().ToLower(),
+GM_German.ToString().ToLower(),
+GM_PokemonGoldSilverRandomLocke.ToString().ToLower(),
+GM_PokemonLostSilver.ToString().ToLower(),
+GM_PokemonSilversSoul.ToString().ToLower(),
+GM_PokemonUniversal3D.ToString().ToLower(),
+string.IsNullOrWhiteSpace(GM_Others) ? "null" : @"""" + GM_Others + @"""",
+MaxPlayers.ToString(),
+OfflineMode.ToString().ToLower(),
+Season.ToString(),
+Weather.ToString(),
+DoDayCycle.ToString().ToLower(),
+TimeOffset.ToString(),
+SeasonMonth.SeasonData.GetSplit(0),
+SeasonMonth.SeasonData.GetSplit(1),
+SeasonMonth.SeasonData.GetSplit(2),
+SeasonMonth.SeasonData.GetSplit(3),
+SeasonMonth.SeasonData.GetSplit(4),
+SeasonMonth.SeasonData.GetSplit(5),
+SeasonMonth.SeasonData.GetSplit(6),
+SeasonMonth.SeasonData.GetSplit(7),
+SeasonMonth.SeasonData.GetSplit(8),
+SeasonMonth.SeasonData.GetSplit(9),
+SeasonMonth.SeasonData.GetSplit(10),
+SeasonMonth.SeasonData.GetSplit(11),
+WeatherSeason.WeatherData.GetSplit(0),
+WeatherSeason.WeatherData.GetSplit(1),
+WeatherSeason.WeatherData.GetSplit(2),
+WeatherSeason.WeatherData.GetSplit(3),
+DefaultWorldCountry,
+NoPingKickTime.ToString(),
+AFKKickTime.ToString(),
+AutoRestartTime.ToString(),
+BlackList.ToString().ToLower(),
+IPBlackList.ToString().ToLower(),
+WhiteList.ToString().ToLower(),
+OperatorList.ToString().ToLower(),
+MuteList.ToString().ToLower(),
+OnlineSettingList.ToString().ToLower(),
+SwearInfractionList.ToString().ToLower(),
+SwearInfractionCap.ToString(),
+SwearInfractionReset.ToString(),
+AllowChatInServer.ToString().ToLower(),
+AllowChatChannels.ToString().ToLower(),
+CustomChannels.Count == 0 ? "null" : @"""" + string.Join(",", CustomChannels) + @"""",
+SpamResetDuration.ToString(),
+AllowPvP.ToString().ToLower(),
+AllowPvPValidation.ToString().ToLower(),
+AllowTrade.ToString().ToLower(),
+LoggerInfo.ToString().ToLower(),
+LoggerWarning.ToString().ToLower(),
+LoggerDebug.ToString().ToLower(),
+LoggerChat.ToString().ToLower(),
+LoggerPM.ToString().ToLower(),
+LoggerServer.ToString().ToLower(),
+LoggerTrade.ToString().ToLower(),
+LoggerPvP.ToString().ToLower(),
+LoggerCommand.ToString().ToLower(),
+RCONEnable.ToString().ToLower(),
+RCONPort.ToString(),
+RCONPassword,
+SCONEnable.ToString().ToLower(),
+SCONPort.ToString(),
+_SCONPassword
 ), Encoding.UTF8);
                 #endregion application_settings.json
 
