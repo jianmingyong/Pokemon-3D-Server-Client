@@ -5,6 +5,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
+using System.Text.RegularExpressions;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -481,7 +482,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Listener.TimeLeft()), p.Client));
             }
 
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL",CC_CurrentChatChannel), p.Client));
+            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", CC_CurrentChatChannel), p.Client));
         }
 
         /// <summary>
@@ -663,19 +664,51 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public bool DoPvPValidation()
         {
-            // {"Pokemon"[6]}{"Experience"[112709]}{"Gender"[0]}{"EggSteps"[0]}{"Item"[146]}{"ItemData"[]}{"NickName"[]}{"Level"[100]}{"OT"[28377]}{"Ability"[66]}{"Status"[]}{"Nature"[4]}{"CatchLocation"[]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[5]}{"CatchMethod"[]}{"Friendship"[255]}{"isShiny"[1]}{"Attack1"[488,20,20]}{"Attack2"[424,15,15]}{"Attack3"[481,15,15]}{"Attack4"[53,15,15]}{"HP"[274]}{"EVs"[10,35,20,30,12,26]}{"IVs"[6,27,12,21,12,18]}{"AdditionalData"[]}{"IDValue"[P3ewPpDfvzR]}
-            // |{"Pokemon"[250]}{"Experience"[116214]}{"Gender"[2]}{"EggSteps"[0]}{"Item"[146]}{"ItemData"[]}{"NickName"[]}{"Level"[45]}{"OT"[116016]}{"Ability"[46]}{"Status"[]}{"Nature"[1]}{"CatchLocation"[]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[2]}{"CatchMethod"[caught at]}{"Friendship"[130]}{"isShiny"[0]}{"Attack1"[326,20,20]}{"Attack2"[19,15,15]}{"Attack3"[221,5,5]}{"Attack4"[126,5,5]}{"HP"[157]}{"EVs"[3,3,0,0,0,0]}{"IVs"[16,4,31,23,1,2]}{"AdditionalData"[]}{"IDValue"[bE8d1hMZbsB]}
-            // |{"Pokemon"[3]}{"Experience"[49534]}{"Gender"[0]}{"EggSteps"[0]}{"Item"[0]}{"ItemData"[]}{"NickName"[]}{"Level"[100]}{"OT"[28377]}{"Ability"[65]}{"Status"[]}{"Nature"[6]}{"CatchLocation"[Daycare]}{"CatchTrainer"[jianmingyong]}{"CatchBall"[5]}{"CatchMethod"[obtained at]}{"Friendship"[255]}{"isShiny"[1]}{"Attack1"[15,30,30]}{"Attack2"[75,25,25]}{"Attack3"[70,15,15]}{"Attack4"[431,20,20]}{"HP"[298]}{"EVs"[1,19,5,18,6,9]}{"IVs"[28,5,31,26,0,14]}{"AdditionalData"[]}{"IDValue"[HSYxV1MHrWV]}
-
             // Check for invalid Pokemon.
-            List<int> InvalidPokemonID = new List<int> { };
+            Player OppPlayer = Core.Player.GetPlayer(PvP_OpponentID);
 
-            for (int i = 0; i < PvP_Pokemon.Count; i++)
+            List<int> InvalidPokemonID = new List<int>
+            {
+                146, // Gerneration 1
+                251, // Gerneration 2
+                283, 284, 290, 291, 292, 293, 294, 295, 300, 301, 302, 303, 309, 310, 311, 312, 313, 314, 316, 317, 318, 319, 320, 321, 325, 326, 339, 340, 343, 344, 345, 346, 347, 348, 351, 352, 353, 354, 355, 356, 358, 359, 369, 370, 377, 378, 379, 380, 381, 382, 383, 384, 386, // Generation 3
+                401, 402, 408, 409, 410, 411, 412, 413, 414, 417, 425, 426, 431, 432, 433, 434, 435, 441, 455, 477, 480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, // Generation 4
+                494, 517, 518, 527, 528, 529, 530, 532, 533, 534, 538, 539, 543, 544, 545, 548, 549, 550, 554, 555, 559, 560, 561, 564, 565, 566, 567, 568, 569, 572, 573, 574, 575, 576, 577, 578, 579, 587, 588, 589, 594, 615, 616, 617, 618, 619, 620, 624, 625, 631, 632, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649,  // Generation 5
+                650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 676, 677, 678, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 701, 702, 704, 705, 706, 710, 711, 712, 713, 716, 717, 718, 719, 720 // Generation 6
+            };
+
+            List<int> LegendaryListPokemonID = new List<int>
+            {
+                150, 151, // Generation 1 (Excluded 144, 145, 146)
+                249, 250, 251, // Generation 2 (Excluded 243, 244, 245)
+                377, 378, 379, 380, 381, 382, 383, 384, 385, 386, // Generation 3
+                480, 481, 482, 483, 484, 485, 486, 487, 488, 489, 490, 491, 492, 493, // Generation 4
+                494, 638, 639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, // Generation 5
+                716, 717, 718, 719, 720, 721 // Generation 6
+            };
+
+            if (PvP_Rules == PvPRules.Default)
+            {
+                if (GameMode == "Pokemon 3D" && OppPlayer.GameMode == "Pokemon 3D")
+                {
+                    if ((isGameJoltPlayer && OppPlayer.isGameJoltPlayer) || (isGameJoltPlayer != OppPlayer.isGameJoltPlayer))
+                    {
+                        for (int i = 0; i < PvP_Pokemon.Count; i++)
+                        {
+                            if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+            else if (PvP_Rules == PvPRules.League)
             {
                 
             }
 
-            return false;
+            return true;
         }
     }
 }
