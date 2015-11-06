@@ -68,7 +68,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Weather [ID]",
+                        $"Usage: /Weather <ID>",
                         $"-------------------------------------",
                         $"ID: Weather ID.",
                         $"Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4",

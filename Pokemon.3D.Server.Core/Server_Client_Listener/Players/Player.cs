@@ -244,7 +244,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <summary>
         /// Get/Set Player Current Chat Channel
         /// </summary>
-        public string CC_CurrentChatChannel { get; set; } = "All";
+        public string CC_CurrentChatChannel { get; set; } = ChatChannelType.Default.ToString();
 
         /// <summary>
         /// Get/Set Player Last Chat Message
@@ -255,6 +255,42 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// Get/Set Player Last Chat Time
         /// </summary>
         public DateTime CC_LastChatTime { get; set; } = DateTime.Now;
+
+        /// <summary>
+        /// Chat Channel Types
+        /// </summary>
+        public enum ChatChannelType
+        {
+            /// <summary>
+            /// Chat Channel Types: Default
+            /// </summary>
+            Default,
+
+            /// <summary>
+            /// Chat Channel Types: General
+            /// </summary>
+            General,
+
+            /// <summary>
+            /// Chat Channel Types: Trade
+            /// </summary>
+            Trade,
+
+            /// <summary>
+            /// Chat Channel Types: PvP Casual
+            /// </summary>
+            PvP_Casual,
+
+            /// <summary>
+            /// Chat Channel Types: PvP League
+            /// </summary>
+            PvP_League,
+
+            /// <summary>
+            /// Chat Channel Types: German Lounge
+            /// </summary>
+            German_Lounge,
+        }
         #endregion Chat Channel System
 
         #region PvP System
@@ -313,6 +349,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             /// PvP Rules: Default
             /// </summary>
             Default,
+
+            /// <summary>
+            /// PvP Rules: League
+            /// </summary>
+            League,
         }
         #endregion PvP System
 
@@ -439,6 +480,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Listener.TimeLeft()), p.Client));
             }
+
+            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL",CC_CurrentChatChannel), p.Client));
         }
 
         /// <summary>

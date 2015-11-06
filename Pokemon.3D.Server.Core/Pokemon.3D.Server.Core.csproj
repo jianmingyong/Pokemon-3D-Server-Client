@@ -80,6 +80,7 @@
     <Compile Include="SCON_Client_Listener\WrapperInstances\TCPClientWrapperInstance.cs" />
     <Compile Include="SCON_Client_Listener\WrapperInstances\TCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\Chat_Channels\ChatChannels_Change.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Operator\Remove.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Operator\Add.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Help.cs" />

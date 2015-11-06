@@ -66,7 +66,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
                 default:
                     this.HelpPageGenerator(Player,
                         $"---------- Help: {Name} ----------",
-                        $"Usage: /Player.Season [ID]",
+                        $"Usage: /Player.Season <ID>",
                         $"-------------------------------------",
                         $"ID: Season ID.",
                         $"Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3 | Server Default = -4",

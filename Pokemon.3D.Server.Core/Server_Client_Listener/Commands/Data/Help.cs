@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Channels;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
@@ -143,6 +144,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         $"---------- Category: No Category ----------",
                         $"/{new Kick().Name} - {new Kick().Description}",
                         $"/{new Say().Name} - {new Say().Description}",
+                        $"/{new ChatChannels_Change().Name} - {new ChatChannels_Change().Description}",
                         $"---------- Category: Client ----------",
                         $"/{new About().Name} - {new About().Description}",
                         $"/{new Restart().Name} - {new Restart().Description}",

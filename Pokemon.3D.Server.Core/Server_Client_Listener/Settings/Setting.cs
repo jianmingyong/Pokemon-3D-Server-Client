@@ -615,39 +615,59 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public void Setup()
         {
             // Initialize Tokens
-            TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
-            TokenDefination.Add("SERVER_BLACKLISTED", "You have been banned from server. Reason: {0} | Ban duration: {1}.");
+            #region Player Name Text
+            TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
+            TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
             TokenDefination.Add("SERVER_CHATGAMEJOLT", "<{0} ({1})>: {2}");
             TokenDefination.Add("SERVER_CHATNOGAMEJOLT", "<{0}>: {1}");
-            TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
-            TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_COMMANDGAMEJOLT", "[Command] {0} ({1}) {2}");
             TokenDefination.Add("SERVER_COMMANDNOGAMEJOLT", "[Command] {0} {1}");
-            TokenDefination.Add("SERVER_COMMANDPERMISSION", "You do not have the required permission to use this command.");
-            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
+            #endregion Player Name Text
+
+            #region Player Join Messages
+            TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
             TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
-            TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
-            TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)");
-            TokenDefination.Add("SERVER_MUTED", "You have been muted in the server. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_MUTEDTEMP", "You have been muted by that player. Reason: {0} | Ban duration: {1}.");
-            TokenDefination.Add("SERVER_NOGAMEJOLT", "{0} {1}");
-            TokenDefination.Add("SERVER_NOPING", "You have a slow connection or you have disconnected from internet for too long.");
+            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
+            TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
+            TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
+            #endregion Player Join Messages
+
+            #region Player Left Messages
+            TokenDefination.Add("SERVER_AFK", "You have been afk for too long.");
             TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
-            TokenDefination.Add("SERVER_PLAYERNOTEXIST", "The requested player does not exist in the server. Please try again.");
+            TokenDefination.Add("SERVER_NOPING", "You have a slow connection or you have disconnected from internet for too long.");
+            TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
+            #endregion Player Left Messages
+
+            #region Client Events
+            TokenDefination.Add("SERVER_CLOSE", "This server have been shut down or lost its connection. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_RESTART", "This server is restarting. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_RESTARTWARNING", "The server is scheduled to restart in {0}. Please enjoy your stay.");
-            TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
+            TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
+            #endregion Client Events
+
+            #region Ban / Mute
+            TokenDefination.Add("SERVER_BLACKLISTED", "You have been banned from server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_IPBLACKLISTED", "You have been ip banned from server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_MUTED", "You have been muted in the server. Reason: {0} | Ban duration: {1}.");
+            TokenDefination.Add("SERVER_MUTEDTEMP", "You have been muted by that player. Reason: {0} | Ban duration: {1}.");
             TokenDefination.Add("SERVER_SWEAR", "Please avoid swearing where necessary. Triggered word: {0}");
             TokenDefination.Add("SERVER_SWEARWARNING", "Please avoid swearing where necessary. Triggered word: {0} | You have {1} infraction point. {2} infraction point will get a timeout.");
-            TokenDefination.Add("SERVER_TRADEPVPFAIL", "The server is scheduled to restart in {0}. For your personal safety, starting a new trading and PvP is disabled.");
-            TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
-            TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
+            #endregion Ban / Mute
+
+            #region Using Command
+            TokenDefination.Add("SERVER_COMMANDPERMISSION", "You do not have the required permission to use this command.");
+            TokenDefination.Add("SERVER_PLAYERNOTEXIST", "The requested player does not exist in the server. Please try again.");
             TokenDefination.Add("SERVER_KICKSELF", "You are trying to kick yourself. For your personal safety, we will not kick you :)");
-            TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
             TokenDefination.Add("SERVER_NOTOPERATOR", "The requested player is not an operator.");
+            #endregion Using Command
+
+            TokenDefination.Add("SERVER_LOGINTIME", "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)");
+            TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
             TokenDefination.Add("RCON_CONNECTFAILED", "Unable to connect to the requested server. Please try again.");
             TokenDefination.Add("SERVER_PVPVALIDATION", "You are unable to use this party due to the following reason: {0}");
+            TokenDefination.Add("SERVER_NOCHAT", "This server do not allow user to chat. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_CURRENTCHATCHANNEL", "You are now at {0} Chat Channel. For more info, type \" /help chatchannel \".");
 
             OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
             OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));
@@ -2438,9 +2458,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #endregion Data\Token.json
 
                 #region Overwrite Setting Per Version
-                if (_ApplicationVersion == "0.54.1.13")
+                if (_ApplicationVersion == "0.54.1.36")
                 {
-                    TokenDefination["SERVER_LOGINTIME"] = "You have played in the server for {0} hour(s). We encourage your stay but also encourage you to take a small break :)";
+                    TokenDefination["SERVER_AFK"] = "You have been afk for too long.";
                 }
                 #endregion Overwrite Setting Per Version
 
@@ -3196,7 +3216,7 @@ WhiteListData[i].Reason);
         }},
 ",
 Data.Key,
-Data.Value);
+Data.Value.Replace(@"\", @"\\").Replace(@"/", @"\/").Replace(@"""", @"\"""));
                     }
 
                     List = List.Remove(List.LastIndexOf(","));

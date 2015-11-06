@@ -306,66 +306,73 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         {
             Player Player = Core.Player.GetPlayer(p.Client);
 
-            // Check if you are muted Globally
-            if (Player.IsMuteListed())
+            if (Core.Setting.AllowChatInServer)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime), p.Client));
-                Core.Logger.Log(Player.isGameJoltPlayer ?
-                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)) :
-                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)), Logger.LogTypes.Chat, p.Client);
-                return;
-            }
-
-            // Spam?
-            //if (Player.LastChatMessage != null && Player.LastChatMessage == p.DataItems[0])
-            //{
-            //    if ((DateTime.Now - Player.LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
-            //    {
-            //        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
-            //        Core.Logger.Log(Player.isGameJoltPlayer ?
-            //            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
-            //            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
-            //        return;
-            //    }
-            //}
-
-            // Command?
-            if (p.DataItems[0].StartsWith("/"))
-            {
-                HandleChatCommand(p);
-                return;
-            }
-
-            // Before send, check if you swear.
-            if (p.DataItems[0].HaveSweared())
-            {
-                Player.AddInfractionCount(1);
-                Player.AddMuteList(3600, "You have swear too much today.");
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.SwearInfractionCap < 1 ?
-                    Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord()) :
-                    Core.Setting.Token("SERVER_SWEARWARNING", p.DataItems[0].SwearWord(), Player.GetSwearInfractionList().Points.ToString(), Core.Setting.SwearInfractionCap.ToString()), p.Client));
-                Core.Logger.Log(Player.isGameJoltPlayer ?
-                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())) :
-                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())), Logger.LogTypes.Chat, p.Client);
-            }
-
-            // Let's do this.
-            if (!string.IsNullOrWhiteSpace(p.DataItems[0]))
-            {
-                for (int i = 0; i < Core.Player.Count; i++)
+                // Check if you are muted Globally
+                if (Player.IsMuteListed())
                 {
-                    if (!Player.IsMuteListed(Core.Player[i]))
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime), p.Client));
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_MUTED", Player.GetMuteList().Reason, Player.GetMuteList().RemainingTime)), Logger.LogTypes.Chat, p.Client);
+                    return;
+                }
+
+                // Spam?
+                if (Player.CC_LastChatTime != null && Player.CC_LastChatMessage == p.DataItems[0])
+                {
+                    if ((DateTime.Now - Player.CC_LastChatTime).TotalSeconds < Core.Setting.SpamResetDuration)
                     {
-                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.ID, p.DataItems[0], Core.Player[i].Network.Client));
+                        Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_SPAM"), p.Client));
+                        Core.Logger.Log(Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")) :
+                            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to chat with the following reason: " + Core.Setting.Token("SERVER_SPAM")), Logger.LogTypes.Chat, p.Client);
+                        return;
                     }
                 }
 
-                Core.Logger.Log(Player.isGameJoltPlayer ?
-                        Core.Setting.Token("SERVER_CHATGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
-                        Core.Setting.Token("SERVER_CHATNOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Chat, p.Client);
+                // Command?
+                if (p.DataItems[0].StartsWith("/"))
+                {
+                    HandleChatCommand(p);
+                    return;
+                }
 
-                //Player.LastChatMessage = p.DataItems[0];
-                //Player.LastChatTime = DateTime.Now;
+                // Before send, check if you swear.
+                if (p.DataItems[0].HaveSweared())
+                {
+                    Player.AddInfractionCount(1);
+                    Player.AddMuteList(3600, "You have swear too much today.");
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.SwearInfractionCap < 1 ?
+                        Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord()) :
+                        Core.Setting.Token("SERVER_SWEARWARNING", p.DataItems[0].SwearWord(), Player.GetSwearInfractionList().Points.ToString(), Core.Setting.SwearInfractionCap.ToString()), p.Client));
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "triggered swear infraction with the following reason: " + Core.Setting.Token("SERVER_SWEAR", p.DataItems[0].SwearWord())), Logger.LogTypes.Chat, p.Client);
+                }
+
+                // Let's do this.
+                if (!string.IsNullOrWhiteSpace(p.DataItems[0]))
+                {
+                    for (int i = 0; i < Core.Player.Count; i++)
+                    {
+                        if (!Player.IsMuteListed(Core.Player[i]) && (Player.CC_CurrentChatChannel == Core.Player[i].CC_CurrentChatChannel || Core.Player[i].CC_CurrentChatChannel == Player.ChatChannelType.Default.ToString()))
+                        {
+                            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.ID, p.DataItems[0], Core.Player[i].Network.Client));
+                        }
+                    }
+
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_CHATGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), p.DataItems[0]) :
+                            Core.Setting.Token("SERVER_CHATNOGAMEJOLT", Player.Name, p.DataItems[0]), Logger.LogTypes.Chat, p.Client);
+
+                    Player.CC_LastChatMessage = p.DataItems[0];
+                    Player.CC_LastChatTime = DateTime.Now;
+                }
+            }
+            else
+            {
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOCHAT"), p.Client));
             }
         }
 
