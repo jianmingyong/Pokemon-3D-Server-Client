@@ -6,7 +6,7 @@ skip_tags: true
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
-clone_depth: 1
+clone_depth: 2
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
