@@ -6,6 +6,9 @@ skip_tags: true
 os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
+clone_depth: 1
+cache:
+  - packages -> **\packages.config
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -16,6 +19,8 @@ install:
 - cmd: git submodule update --init --recursive
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client.sln
+after_build:
+- cmd: DEL /F /Q "%APPVEYOR_BUILD_FOLDER%\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.pdb" "%APPVEYOR_BUILD_FOLDER%\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.xml"
 build:
   project: Pokemon.3D.Server.Client.sln
   parallel: true
