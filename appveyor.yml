@@ -26,7 +26,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-- cmd: DEL /F /Q "C:\projects\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.pdb" "C:\projects\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.xml"
+- cmd: DEL /F /Q "C:\projects\pokemon-3d-server-client\Pokemon.3D.Server.Client.GUI\bin\Release\*.pdb" "C:\projects\pokemon-3d-server-client\Pokemon.3D.Server.Client.GUI\bin\Release\*.xml"
 artifacts:
 - path: Pokemon.3D.Server.Client.GUI/bin/Release
   name: Pokemon.3D.Server.Client.GUI
