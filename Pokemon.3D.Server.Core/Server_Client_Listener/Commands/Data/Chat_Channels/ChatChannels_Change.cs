@@ -4,7 +4,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Channels
 {
@@ -74,14 +74,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Chann
                             break;
                     }
 
-                    for (int i = 0; i < Core.Player.Count; i++)
+                    for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
                     {
-                        if (Core.Player[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Player[i] != Player)
+                        if (Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Pokemon3DPlayer[i] != Player)
                         {
-                            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                                 Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the current chat channel you are in.") :
                                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, "have joined the current chat channel you are in.")
-                                , Core.Player[i].Network.Client));
+                                , Core.Pokemon3DPlayer[i].Network.Client));
                         }
                     }
 

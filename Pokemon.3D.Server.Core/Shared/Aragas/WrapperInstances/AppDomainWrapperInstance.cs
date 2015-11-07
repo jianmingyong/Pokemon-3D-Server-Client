@@ -2,7 +2,7 @@
 using System.Reflection;
 using Aragas.Core.Wrappers;
 
-namespace Pokemon_3D_Server_Core.SCON_Client_Listener.WrapperInstances
+namespace Pokemon_3D_Server_Core.Shared.Aragas.WrapperInstances
 {
     /// <summary>
     /// Class containing AppDomain Wrapper Instances.

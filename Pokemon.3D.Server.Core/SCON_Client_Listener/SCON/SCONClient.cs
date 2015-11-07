@@ -14,7 +14,7 @@ using PokeD.Core.Packets.SCON.Logs;
 using PokeD.Core.Packets.SCON.Status;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
 {

@@ -8,8 +8,8 @@ using System.Threading;
 using Amib.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 {
@@ -175,7 +175,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
                     if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
                     {
-                        Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
+                        Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
                     }
                     else if (TimeLeft.TotalSeconds < 1)
                     {

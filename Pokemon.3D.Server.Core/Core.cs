@@ -1,17 +1,11 @@
 ﻿using System;
-using Pokemon_3D_Server_Core.RCON_Client_Listener.Players;
-using Pokemon_3D_Server_Core.RCON_Client_Listener.Servers;
-using Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader;
-using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader;
-using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using Pokemon_3D_Server_Core.Shared.jianmingyong;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -20,35 +14,58 @@ namespace Pokemon_3D_Server_Core
     /// </summary>
     public class Core
     {
+        #region Pokemon 3D Listener
         /// <summary>
-        /// Get RCON Player Collection.
+        /// Get Pokemon 3D Listener.
         /// </summary>
-        public static RCON_Client_Listener.Players.PlayerCollection RCONPlayer { get; } = new RCON_Client_Listener.Players.PlayerCollection();
+        public static Server_Client_Listener.Servers.Listener Pokemon3DListener { get; } = new Server_Client_Listener.Servers.Listener();
 
+        /// <summary>
+        /// Get Player Collection.
+        /// </summary>
+        public static Server_Client_Listener.Players.PlayerCollection Pokemon3DPlayer { get; } = new Server_Client_Listener.Players.PlayerCollection();
+
+        /// <summary>
+        /// Get World.
+        /// </summary>
+        public static Server_Client_Listener.Worlds.World World { get; } = new Server_Client_Listener.Worlds.World();
+        #endregion Pokemon 3D Listener
+
+        #region RCON Listener
         /// <summary>
         /// Get RCON Listener.
         /// </summary>
         public static RCON_Client_Listener.Servers.Listener RCONListener { get; } = new RCON_Client_Listener.Servers.Listener();
 
         /// <summary>
-        /// Get RCON Upload Queue.
+        /// Get RCON Player Collection.
         /// </summary>
-        public static UploaderQueue RCONUploadQueue { get; } = new UploaderQueue();
+        public static RCON_Client_Listener.Players.PlayerCollection RCONPlayer { get; } = new RCON_Client_Listener.Players.PlayerCollection();
 
         /// <summary>
-        /// Get RCON GUI Download Queue.
+        /// Get RCON Upload Queue.
         /// </summary>
-        public static DownloaderQueue RCONGUIDownloadQueue { get; } = new DownloaderQueue();
+        public static RCON_Client_Listener.Uploader.UploaderQueue RCONUploadQueue { get; } = new RCON_Client_Listener.Uploader.UploaderQueue();
+        #endregion
 
+        #region RCON GUI Listener
         /// <summary>
         /// Get RCON Listener.
         /// </summary>
         public static RCON_GUI_Client_Listener.Servers.Listener RCONGUIListener { get; set; }
 
         /// <summary>
+        /// Get RCON GUI Download Queue.
+        /// </summary>
+        public static RCON_GUI_Client_Listener.Downloader.DownloaderQueue RCONGUIDownloadQueue { get; } = new RCON_GUI_Client_Listener.Downloader.DownloaderQueue();
+        #endregion RCON GUI Listener
+
+        #region SCON Listener
+        /// <summary>
         /// Get SCON Listener.
         /// </summary>
         public static SCONListener SCONListener { get; } = new SCONListener();
+        #endregion SCON Listener
 
         /// <summary>
         /// Get Comamnd List.
@@ -61,24 +78,9 @@ namespace Pokemon_3D_Server_Core
         public static LoggerCollection Logger { get; } = new LoggerCollection();
 
         /// <summary>
-        /// Get Player Collection.
-        /// </summary>
-        public static Server_Client_Listener.Players.PlayerCollection Player { get; } = new Server_Client_Listener.Players.PlayerCollection();
-
-        /// <summary>
-        /// Get Pokemon 3D Listener.
-        /// </summary>
-        public static Server_Client_Listener.Servers.Listener Listener { get; } = new Server_Client_Listener.Servers.Listener();
-
-        /// <summary>
         /// Get Setting.
         /// </summary>
         public static Setting Setting { get; } = new Setting();
-
-        /// <summary>
-        /// Get World.
-        /// </summary>
-        public static World World { get; } = new World();
 
         /// <summary>
         /// Get Updater.
@@ -113,7 +115,7 @@ namespace Pokemon_3D_Server_Core
                 }
 
                 // Initialize Listener.
-                Listener.Start();
+                Pokemon3DListener.Start();
 
                 // Initialize RCONListener.
                 if (Setting.RCONEnable)
@@ -147,7 +149,7 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static void Dispose()
         {
-            Listener.Dispose();
+            Pokemon3DListener.Dispose();
             RCONListener.Dispose();
             SCONListener.Dispose();
             Logger.Dispose();

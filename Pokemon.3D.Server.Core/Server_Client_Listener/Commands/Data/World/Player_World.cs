@@ -1,8 +1,8 @@
 ﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
 {
@@ -40,7 +40,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
                     OnlineSetting Settings = Player.GetOnlineSetting();
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), Player.Network.Client));
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), Player.Network.Client));
                 }
             }
             #endregion /Player.World

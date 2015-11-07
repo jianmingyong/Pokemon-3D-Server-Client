@@ -41,13 +41,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
 
                     Player.CommandFeedback(null, string.Format("have sent a server chat."));
                 }
                 else if (Player == null)
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
+                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Group[0], null));
 
                     Core.Logger.Log(Group[0], Logger.LogTypes.Server);
                 }

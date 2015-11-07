@@ -90,7 +90,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
             }
             else
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_COMMANDPERMISSION"), Player.Network.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_COMMANDPERMISSION"), Player.Network.Client));
                 Core.Logger.Log(Player.isGameJoltPlayer ?
                         Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to use /" + Command.Name + " due to insufficient permission.") :
                         Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to use /" + Command.Name + " due to insufficient permission."), Logger.LogTypes.Command, Player.Network.Client);
@@ -144,12 +144,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         {
             if (Message != null)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message, Player.Network.Client));
             }
 
             if (Message2 != null)
             {
-                Core.Player.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                Core.Pokemon3DPlayer.SendToAllOperator(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_COMMANDGAMEJOLT", Player.Name, Player.GameJoltID.ToString(), Message2) :
                 Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, Message2)
                 , Player.Network.Client));
@@ -173,7 +173,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
             {
                 for (int i = 0; i < Message.Length; i++)
                 {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
                 }
             }
             else

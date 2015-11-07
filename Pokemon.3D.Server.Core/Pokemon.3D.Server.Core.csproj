@@ -51,6 +51,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
+      <HintPath>..\packages\PCLStorage.1.0.2\lib\net45\PCLStorage.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
+      <HintPath>..\packages\PCLStorage.1.0.2\lib\net45\PCLStorage.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -60,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Shared\Aragas\WrapperInstances\AppDomainWrapperInstance.cs" />
     <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />
     <Compile Include="RCON_Client_Listener\Players\Networking.cs" />
@@ -77,9 +86,8 @@
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
     <Compile Include="SCON_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="SCON_Client_Listener\WrapperInstances\AppDomainWrapperInstance.cs" />
-    <Compile Include="SCON_Client_Listener\WrapperInstances\TCPClientWrapperInstance.cs" />
-    <Compile Include="SCON_Client_Listener\WrapperInstances\TCPServerWrapperInstance.cs" />
+    <Compile Include="Shared\Aragas\WrapperInstances\TCPClientWrapperInstance.cs" />
+    <Compile Include="Shared\Aragas\WrapperInstances\TCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Chat_Channels\ChatChannels_Change.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Operator\Remove.cs" />
@@ -101,11 +109,11 @@
     <Compile Include="Server_Client_Listener\Commands\Data\Kick.cs" />
     <Compile Include="Server_Client_Listener\Events\PlayerEvent.cs" />
     <Compile Include="Server_Client_Listener\Events\LoggerEvent.cs" />
-    <Compile Include="Server_Client_Listener\Modules\Functions.cs" />
-    <Compile Include="Server_Client_Listener\Modules\Math.cs" />
-    <Compile Include="Server_Client_Listener\Modules\MathHelper.cs" />
-    <Compile Include="Server_Client_Listener\Modules\PlayerStatus.cs" />
-    <Compile Include="Server_Client_Listener\Modules\My Namespace.cs" />
+    <Compile Include="Shared\jianmingyong\Modules\Functions.cs" />
+    <Compile Include="Shared\jianmingyong\Modules\Math.cs" />
+    <Compile Include="Shared\jianmingyong\Modules\MathHelper.cs" />
+    <Compile Include="Server_Client_Listener\Module\PlayerStatus.cs" />
+    <Compile Include="Shared\jianmingyong\Modules\My Namespace.cs" />
     <Compile Include="Server_Client_Listener\Events\ClientEvent.cs" />
     <Compile Include="Server_Client_Listener\Interface\ICommand.cs" />
     <Compile Include="Server_Client_Listener\Loggers\Logger.cs" />
@@ -132,7 +140,8 @@
     <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
     <Compile Include="Server_Client_Listener\Worlds\World.cs" />
     <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="Updater.cs" />
+    <Compile Include="Shared\jianmingyong\ThreadCollection.cs" />
+    <Compile Include="Shared\jianmingyong\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resource\SwearInfractionFilterListData.json" />
@@ -153,11 +162,14 @@
       <Name>SmartThreadPool</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,9 +9,10 @@ using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader;
 using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -44,22 +45,45 @@ namespace Pokemon_3D_Server_Client_GUI
             LoggerEvent.Update += LoggerEvent_Update;
             ClientEvent.Update += ClientEvent_Update;
             PlayerEvent.Update += PlayerEvent_Update;
+
             Application.ThreadException += Application_ThreadException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-
+            
             Core.Start(Environment.CurrentDirectory);
+
+            if (Core.Setting.MainEntryPoint != Setting.MainEntryPointType.Rcon)
+            {
+                toolStripSeparator6.Visible = false;
+                RCON_Main_Button.Visible = false;
+                toolStripSeparator1.Visible = false;
+                toolStripLabel1.Visible = false;
+                RCON_IPAddress.Visible = false;
+                toolStripSeparator2.Visible = false;
+                toolStripLabel2.Visible = false;
+                RCON_Port.Visible = false;
+                toolStripSeparator3.Visible = false;
+                toolStripLabel3.Visible = false;
+                RCON_Password.Visible = false;
+                toolStripSeparator4.Visible = false;
+                RCON_Connect.Visible = false;
+            }
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            for (int i = 0; i < Core.Player.Count; i++)
+            if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.jianmingyong_Server)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
+                for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+                {
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Pokemon3DPlayer[i].Network.Client));
+                }
             }
-
-            if (Core.Setting.RCONEnable && Core.RCONGUIListener != null && Core.RCONGUIListener.IsActive)
+            else if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.Rcon)
             {
-                Core.RCONGUIListener.Dispose();
+                if (Core.RCONGUIListener != null)
+                {
+                    Core.RCONGUIListener.Dispose();
+                }
             }
 
             Core.Setting.Save();
@@ -75,8 +99,7 @@ namespace Pokemon_3D_Server_Client_GUI
                 Application.Restart();
                 Application.ExitThread();
             }
-
-            if (ApplicationUpdate)
+            else if (ApplicationUpdate)
             {
                 ApplicationUpdate = false;
                 Functions.Run(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", Core.Setting.ApplicationDirectory.Replace(" ", "%20"), false);
@@ -87,15 +110,26 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             if (!e.Alt && !e.Control && !e.Shift && e.KeyCode == Keys.Enter)
             {
-                if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.jianmingyong_Server)
                 {
-                    Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, Main_Command.Text, null));
-                }
-                else
-                {
-                    if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                    if (!string.IsNullOrWhiteSpace(Main_Command.Text.Trim()) && Main_Command.Text.StartsWith("/"))
                     {
                         Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, Main_Command.Text, null));
+                    }
+                    else
+                    {
+                        Core.Command.HandleAllCommand(new Package(Package.PackageTypes.ChatMessage, "/say " + Main_Command.Text, null));
+                    }
+                }
+                else if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.Rcon)
+                {
+                    if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()) && Main_Command.Text.StartsWith("/"))
+                    {
+                        Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, Main_Command.Text, null));
+                    }
+                    else if (Core.RCONGUIListener != null && !string.IsNullOrWhiteSpace(Main_Command.Text.Trim()))
+                    {
+                        Core.RCONGUIListener.SentToServer(new Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package(Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages.Package.PackageTypes.Logger, "/say " + Main_Command.Text, null));
                     }
                 }
 
@@ -349,7 +383,7 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private void KickToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Player Player = Core.Player.GetPlayer(Regex.Match(Main_CurrentPlayerOnline.Items[Main_CurrentPlayerOnline.SelectedIndex].ToString(), @"ID: (\d+) \|.+").Groups[1].Value.ToInt());
+            Player Player = Core.Pokemon3DPlayer.GetPlayer(Regex.Match(Main_CurrentPlayerOnline.Items[Main_CurrentPlayerOnline.SelectedIndex].ToString(), @"ID: (\d+) \|.+").Groups[1].Value.ToInt());
 
             Main_Command.Text = $"/kick {Player.Name} <Insert Reason here>";
         }

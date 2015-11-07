@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Aragas.Core.Data;
 using Pokemon_3D_Server_Core;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
 
 namespace Pokemon_3D_Server_Client_GUI

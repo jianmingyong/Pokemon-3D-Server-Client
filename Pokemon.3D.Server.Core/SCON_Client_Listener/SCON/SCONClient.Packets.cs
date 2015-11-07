@@ -9,7 +9,7 @@ using PokeD.Core.Packets.SCON.Authorization;
 using PokeD.Core.Packets.SCON.Chat;
 using PokeD.Core.Packets.SCON.Logs;
 using PokeD.Core.Packets.SCON.Status;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
@@ -97,17 +97,17 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
             }
 
             List<PlayerInfo> Player = new List<PlayerInfo>();
-            for (int i = 0; i < Core.Player.Count; i++)
+            for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
             {
                 Player.Add(new PlayerInfo()
                 {
-                    Name = Core.Player[i].Name,
-                    GameJoltID = Core.Player[i].GameJoltID.ToString().ToUlong(),
-                    IP = ((IPEndPoint)Core.Player[i].Network.Client.Client.RemoteEndPoint).Address.ToString(),
-                    LevelFile = Core.Player[i].LevelFile,
-                    Position = new Vector3(Core.Player[i].Position_X, Core.Player[i].Position_Y, Core.Player[i].Position_Z),
+                    Name = Core.Pokemon3DPlayer[i].Name,
+                    GameJoltID = Core.Pokemon3DPlayer[i].GameJoltID.ToString().ToLong(),
+                    IP = ((IPEndPoint)Core.Pokemon3DPlayer[i].Network.Client.Client.RemoteEndPoint).Address.ToString(),
+                    LevelFile = Core.Pokemon3DPlayer[i].LevelFile,
+                    Position = new Vector3(Core.Pokemon3DPlayer[i].Position_X, Core.Pokemon3DPlayer[i].Position_Y, Core.Pokemon3DPlayer[i].Position_Z),
                     Ping = 0,
-                    PlayTime = DateTime.Now - Core.Player[i].Network.LoginStartTime
+                    PlayTime = DateTime.Now - Core.Pokemon3DPlayer[i].Network.LoginStartTime
                 });
             }
 

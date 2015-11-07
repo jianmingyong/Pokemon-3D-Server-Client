@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using System.Text.RegularExpressions;
@@ -449,40 +449,40 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Name, GameJoltID));
             }
-            Core.Player.Add(this);
+            Core.Pokemon3DPlayer.Add(this);
 
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
+            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
 
-            for (int i = 0; i < Core.Player.Count; i++)
+            for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
             {
-                if (Core.Player[i].ID != ID)
+                if (Core.Pokemon3DPlayer[i].ID != ID)
                 {
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.CreatePlayer, Core.Player[i].ID.ToString(), p.Client));
-                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.GameData, Core.Player[i].ID, Core.Player[i].GenerateGameData(true), p.Client));
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.CreatePlayer, Core.Pokemon3DPlayer[i].ID.ToString(), p.Client));
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.GameData, Core.Pokemon3DPlayer[i].ID, Core.Pokemon3DPlayer[i].GenerateGameData(true), p.Client));
                 }
             }
 
-            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.CreatePlayer, ID.ToString(), null));
-            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.CreatePlayer, ID.ToString(), null));
+            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
 
             if (Core.Setting.WelcomeMessage != null)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.WelcomeMessage, p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.WelcomeMessage, p.Client));
             }
 
-            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
+            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), null));
             Core.Logger.Log(isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), Logger.LogTypes.Info, p.Client);
 
-            if (Core.Listener.TimeLeft() != null)
+            if (Core.Pokemon3DListener.TimeLeft() != null)
             {
-                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Listener.TimeLeft()), p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Pokemon3DListener.TimeLeft()), p.Client));
             }
 
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", CC_CurrentChatChannel), p.Client));
+            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", CC_CurrentChatChannel), p.Client));
         }
 
         /// <summary>
@@ -572,11 +572,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
                 if (p.IsFullPackageData())
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
                 }
                 else
                 {
-                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
                 }
             }
         }
@@ -665,7 +665,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public bool DoPvPValidation()
         {
             // Check for invalid Pokemon.
-            Player OppPlayer = Core.Player.GetPlayer(PvP_OpponentID);
+            Player OppPlayer = Core.Pokemon3DPlayer.GetPlayer(PvP_OpponentID);
 
             List<int> InvalidPokemonID = new List<int>
             {
@@ -689,7 +689,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (PvP_Rules == PvPRules.Default)
             {
-                if (GameMode == "Pokemon 3D" && OppPlayer.GameMode == "Pokemon 3D")
+                if (string.Equals(GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase) && string.Equals(OppPlayer.GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
                 {
                     if ((isGameJoltPlayer && OppPlayer.isGameJoltPlayer) || (isGameJoltPlayer != OppPlayer.isGameJoltPlayer))
                     {
@@ -705,7 +705,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             }
             else if (PvP_Rules == PvPRules.League)
             {
-                
+                for (int i = 0; i < PvP_Pokemon.Count; i++)
+                {
+                    if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                    {
+                        return false;
+                    }
+                    else if (LegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                    {
+                        return false;
+                    }
+                }
             }
 
             return true;

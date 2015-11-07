@@ -1,5 +1,5 @@
 ﻿using System;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Events
 {

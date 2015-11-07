@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Pokemon_3D_Server_Core.RCON_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 
 namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
@@ -38,9 +38,9 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
 
             Core.Logger.Log($"RCON Player (ID: {ID.ToString()}) have connected.", Logger.LogTypes.Info, p.Client);
 
-            for (int i = 0; i < Core.Player.Count; i++)
+            for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
             {
-                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.AddPlayer, $"{Core.Player[i].ID},{Core.Player[i].ToString()}", p.Client));
+                Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.AddPlayer, $"{Core.Pokemon3DPlayer[i].ID},{Core.Pokemon3DPlayer[i].ToString()}", p.Client));
             }
         }
     }

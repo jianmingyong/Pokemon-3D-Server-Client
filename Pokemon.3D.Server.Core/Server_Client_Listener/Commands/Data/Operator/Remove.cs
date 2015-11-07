@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
 {
@@ -42,13 +43,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 {
                     List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
-                    if (!Core.Player.HasPlayer(Group[0]))
+                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
+                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.IsOperator())
@@ -74,13 +75,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 {
                     List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
 
-                    if (!Core.Player.HasPlayer(Group[0]))
+                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
+                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.IsOperator())

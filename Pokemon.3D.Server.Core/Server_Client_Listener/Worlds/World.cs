@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
@@ -345,11 +345,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                         Core.Logger.Log(string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
                     }
 
-                    for (int i = 0; i < Core.Player.Count; i++)
+                    for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
                     {
-                        if (Core.Player[i].Network.IsActive)
+                        if (Core.Pokemon3DPlayer[i].Network.IsActive)
                         {
-                            Core.Player.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Network.Client));
+                            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Pokemon3DPlayer[i]), Core.Pokemon3DPlayer[i].Network.Client));
                         }
                     }
                 }

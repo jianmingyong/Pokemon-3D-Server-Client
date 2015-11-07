@@ -3,12 +3,12 @@ using System.Net;
 using System.Net.Cache;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
-namespace Pokemon_3D_Server_Core
+namespace Pokemon_3D_Server_Core.Shared.jianmingyong
 {
     /// <summary>
-    /// Class containing Updater features.
+    /// Class containing Updater.
     /// </summary>
     public class Updater
     {

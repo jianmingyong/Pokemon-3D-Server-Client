@@ -5,7 +5,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 

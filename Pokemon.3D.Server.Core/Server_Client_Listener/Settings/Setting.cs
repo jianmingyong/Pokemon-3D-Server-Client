@@ -11,7 +11,7 @@ using System.Text;
 using Aragas.Core.Data;
 using Newtonsoft.Json;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
@@ -58,7 +58,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// <summary>
         /// Get/Set Main Entry Point.
         /// </summary>
-        public MainEntryPointType MainEntryPoint { get; set; }
+        public MainEntryPointType MainEntryPoint { get; set; } = MainEntryPointType.jianmingyong_Server;
 
         /// <summary>
         /// Main Entry Point Type.
@@ -66,9 +66,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public enum MainEntryPointType
         {
             /// <summary>
-            /// Main Entry Point Type: Server
+            /// Main Entry Point Type: jianmingyong Server
             /// </summary>
-            Server,
+            jianmingyong_Server,
 
             /// <summary>
             /// Main Entry Point Type: Rcon
@@ -783,19 +783,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                     }
                                     else if (string.Equals(PropertyName, "MainEntryPoint", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        if (Reader.TokenType == JsonToken.String)
+                                        if (Reader.TokenType == JsonToken.Integer)
                                         {
-                                            if (string.Equals("Server", Reader.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                                            if (Reader.Value.ToString().ToInt() == (int)MainEntryPointType.jianmingyong_Server)
                                             {
-                                                MainEntryPoint = MainEntryPointType.Server;
+                                                MainEntryPoint = MainEntryPointType.jianmingyong_Server;
                                             }
-                                            else if (string.Equals("RCON", Reader.Value.ToString(), StringComparison.OrdinalIgnoreCase))
+                                            else if (Reader.Value.ToString().ToInt() == (int)MainEntryPointType.Rcon)
                                             {
                                                 MainEntryPoint = MainEntryPointType.Rcon;
                                             }
                                             else
                                             {
-                                                MainEntryPoint = MainEntryPointType.Server;
+                                                MainEntryPoint = MainEntryPointType.jianmingyong_Server;
                                             }
                                         }
                                         else
@@ -2520,11 +2520,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 
         /*
             MainEntryPoint: The main entry point of the server console.
-            Required Syntax: String.
-            1. ""Server"" => To start up as Hosting server.
-            2. ""RCON"" => To start up as RCON.
+            Required Syntax: Integer.
+            0 = jianmingyong Server Instance | 1 = RCON
         */
-        ""MainEntryPoint"": ""{5}"",
+        ""MainEntryPoint"": {5},
     }},
 
     ""Main Server Property"":
@@ -2916,7 +2915,7 @@ ApplicationVersion,
 ProtocolVersion,
 CheckForUpdate.ToString().ToLower(),
 GeneratePublicIP.ToString().ToLower(),
-MainEntryPoint.ToString(),
+(int)MainEntryPoint,
 IPAddress,
 Port.ToString(),
 ServerName,

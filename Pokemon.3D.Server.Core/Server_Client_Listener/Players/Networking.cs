@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using Amib.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Modules;
+using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
@@ -96,7 +96,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 if (IsActive)
                 {
                     IsActive = false;
-                    Core.Player.Remove(Client, "You have left the game.");
+                    Core.Pokemon3DPlayer.Remove(Client, "You have left the game.");
                 }
             }
             else
@@ -134,16 +134,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     {
                         if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
                         {
-                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
+                            Core.Pokemon3DPlayer.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
                             return;
                         }
                     }
 
                     if (Core.Setting.AFKKickTime >= 10)
                     {
-                        if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
+                        if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Pokemon3DPlayer.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
                         {
-                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_AFK"));
+                            Core.Pokemon3DPlayer.Remove(Client, Core.Setting.Token("SERVER_AFK"));
                             return;
                         }
                     }
@@ -156,7 +156,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
                 catch (Exception ex)
                 {
-                    Core.Player.Remove(Client, ex.Message);
+                    Core.Pokemon3DPlayer.Remove(Client, ex.Message);
                     return;
                 }
 
