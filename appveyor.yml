@@ -15,7 +15,10 @@ assembly_info:
   assembly_informational_version: '{version}'
 install:
 - cmd: git submodule update --init --recursive
-cache: '**\packages.config'
+cache:
+- Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\packages.config
+- Pokemon 3D Server Client\Pokemon.3D.Server.Client.Updater\packages.config
+- Pokemon 3D Server Client\Pokemon.3D.Server.Core\packages.config
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client.sln
 build:
