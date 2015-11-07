@@ -6,6 +6,7 @@ using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 {
@@ -306,11 +307,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public bool PvP_Host { get; set; } = false;
 
         /// <summary>
-        /// Get/Set PvP Rule Set.
-        /// </summary>
-        public PvPRules PvP_Rules { get; set; } = PvPRules.Default;
-
-        /// <summary>
         /// Get/Set PvP Opponent ID
         /// </summary>
         public int PvP_OpponentID { get; set; } = -1;
@@ -319,6 +315,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// Get/Set PvP Participants.
         /// </summary>
         public List<string> PvP_Pokemon { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Get/Set PvP Rules.
+        /// </summary>
+        public List<string> PvP_Rules { get; set; } = new List<string> { PvPRules.Default.ToString() };
 
         /// <summary>
         /// PvP Types
@@ -348,13 +349,39 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             /// <summary>
             /// PvP Rules: Default
+            /// <para>No unobtainable Pokemon.</para>
             /// </summary>
             Default,
 
             /// <summary>
             /// PvP Rules: League
+            /// <para>No Legendary Pokemon Except 3 Birds and 3 Dogs.</para>
             /// </summary>
             League,
+
+            /// <summary>
+            /// PvP Rules: Species Clause
+            /// <para>A player cannot have two Pokemon with the same National Pokedex number on a team.</para>
+            /// </summary>
+            Species_Clause,
+
+            /// <summary>
+            /// PvP Rules: Evasion Clause
+            /// <para>A Pokemon may not have the moves Double Team or Minimize in its moveset.</para>
+            /// </summary>
+            Evasion_Clause,
+
+            /// <summary>
+            /// PvP Rules: OHKO Clause
+            /// <para>A Pokemon may not have the moves Fissure, Guillotine, Horn Drill, or Sheer Cold in its moveset.</para>
+            /// </summary>
+            OHKO_Clause,
+
+            /// <summary>
+            /// PvP Rules: Moody Clause
+            /// <para>A team cannot have a Pokemon with the ability Moody.</para>
+            /// </summary>
+            Moody_Clause,
         }
         #endregion PvP System
 
@@ -664,9 +691,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public bool DoPvPValidation()
         {
-            // Check for invalid Pokemon.
+            // Get Opponent Details
             Player OppPlayer = Core.Pokemon3DPlayer.GetPlayer(PvP_OpponentID);
 
+            // PvP Default Rules - No unobtainable Pokemon.
             List<int> InvalidPokemonID = new List<int>
             {
                 146, // Gerneration 1
@@ -677,6 +705,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 650, 651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 664, 665, 666, 667, 668, 669, 670, 671, 672, 673, 676, 677, 678, 682, 683, 684, 685, 686, 687, 688, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 699, 701, 702, 704, 705, 706, 710, 711, 712, 713, 716, 717, 718, 719, 720 // Generation 6
             };
 
+            // PvP Custom League Rules - No Legendary Pokemon Except 3 Birds and 3 Dogs.
             List<int> LegendaryListPokemonID = new List<int>
             {
                 150, 151, // Generation 1 (Excluded 144, 145, 146)
@@ -687,33 +716,114 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 716, 717, 718, 719, 720, 721 // Generation 6
             };
 
-            if (PvP_Rules == PvPRules.Default)
+            // PvP Evasion Clause Rules - A Pokemon may not have the moves Double Team or Minimize in its moveset.
+            List<int> EvasionMoveID = new List<int> { 104, 107 };
+
+            // PvP OHKO Clause Rules - A Pokemon may not have the moves Fissure, Guillotine, Horn Drill, or Sheer Cold in its moveset.
+            List<int> OHKOMoveID = new List<int> { 90, 12, 32, 329 };
+
+            // PvP Moody Clause Rules - A team cannot have a Pokemon with the ability Moody.
+            int MoodyAbilityID = 141;
+
+            // Check All the Rules.
+            for (int i = 0; i < PvP_Rules.Count; i++)
             {
-                if (string.Equals(GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase) && string.Equals(OppPlayer.GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
+                if (PvP_Rules[i] == PvPRules.Default.ToString())
                 {
-                    if ((isGameJoltPlayer && OppPlayer.isGameJoltPlayer) || (isGameJoltPlayer != OppPlayer.isGameJoltPlayer))
+                    if (string.Equals(GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase) || string.Equals(OppPlayer.GameMode, "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
                     {
-                        for (int i = 0; i < PvP_Pokemon.Count; i++)
+                        if (!(!isGameJoltPlayer && !OppPlayer.isGameJoltPlayer))
                         {
-                            if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                            for (int a = 0; a < PvP_Pokemon.Count; a++)
+                            {
+                                if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (PvP_Rules[i] == PvPRules.League.ToString())
+                {
+                    for (int a = 0; a < PvP_Pokemon.Count; a++)
+                    {
+                        if (LegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else if (PvP_Rules[i] == PvPRules.Species_Clause.ToString())
+                {
+                    List<int> TempList = new List<int>();
+                    int CurrentPokemon;
+
+                    for (int a = 0; a < PvP_Pokemon.Count; a++)
+                    {
+                        CurrentPokemon = Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt();
+                        if (TempList.Contains(CurrentPokemon))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            TempList.Add(CurrentPokemon);
+                        }
+                    }
+                }
+                else if (PvP_Rules[i] == PvPRules.Evasion_Clause.ToString())
+                {
+                    for (int a = 0; a < PvP_Pokemon.Count; a++)
+                    {
+                        List<int> Moves = new List<int>();
+                        Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+
+                        while (m.Success)
+                        {
+                            Moves.Add(m.Groups[1].Value.ToInt());
+                            m = m.NextMatch();
+                        }
+
+                        for (int b = 0; b < Moves.Count; b++)
+                        {
+                            if (EvasionMoveID.Contains(Moves[b]))
                             {
                                 return false;
                             }
                         }
                     }
                 }
-            }
-            else if (PvP_Rules == PvPRules.League)
-            {
-                for (int i = 0; i < PvP_Pokemon.Count; i++)
+                else if (PvP_Rules[i] == PvPRules.OHKO_Clause.ToString())
                 {
-                    if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                    for (int a = 0; a < PvP_Pokemon.Count; a++)
                     {
-                        return false;
+                        List<int> Moves = new List<int>();
+                        Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+
+                        while (m.Success)
+                        {
+                            Moves.Add(m.Groups[1].Value.ToInt());
+                            m = m.NextMatch();
+                        }
+
+                        for (int b = 0; b < Moves.Count; b++)
+                        {
+                            if (OHKOMoveID.Contains(Moves[b]))
+                            {
+                                return false;
+                            }
+                        }
                     }
-                    else if (LegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[i], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
+                }
+                else if (PvP_Rules[i] == PvPRules.Moody_Clause.ToString())
+                {
+                    for (int a = 0; a < PvP_Pokemon.Count; a++)
                     {
-                        return false;
+                        if (MoodyAbilityID == Regex.Match(PvP_Pokemon[a], @"{""Ability""\[(\d+)]}.+").Groups[1].Value.ToInt())
+                        {
+                            return false;
+                        }
                     }
                 }
             }
