@@ -7,8 +7,6 @@ os: Visual Studio 2015
 configuration: Release
 platform: Any CPU
 clone_depth: 1
-cache:
-  - packages -> **\packages.config
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
@@ -17,14 +15,15 @@ assembly_info:
   assembly_informational_version: '{version}'
 install:
 - cmd: git submodule update --init --recursive
+cache: '**\packages.config'
 before_build:
 - ps: nuget restore Pokemon.3D.Server.Client.sln
-after_build:
-- cmd: DEL /F /Q "%APPVEYOR_BUILD_FOLDER%\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.pdb" "%APPVEYOR_BUILD_FOLDER%\Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.xml"
 build:
   project: Pokemon.3D.Server.Client.sln
   parallel: true
   verbosity: minimal
+after_build:
+- cmd: DEL /F /Q "Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.pdb" "Pokemon 3D Server Client\Pokemon.3D.Server.Client.GUI\bin\Release\*.xml"
 artifacts:
 - path: Pokemon.3D.Server.Client.GUI/bin/Release
   name: Pokemon.3D.Server.Client.GUI
@@ -34,6 +33,6 @@ deploy:
   release: "Pokémon 3D Server Client v$(appveyor_build_version)"
   auth_token:
     secure: UyngIeXJ3Cv4yHkTI7+2/PuW35IVx8Nn9yRh8wIEDLXRaG+OGNkqzhftWfjPbHNc
-  artifact: Pokemon.3D.Server.Client.GUI
+  artifact: Pokemon.3D.Server.Client.GUI, Pokemon.3D.Server.Client.Updater
   draft: false
   prerelease: true
