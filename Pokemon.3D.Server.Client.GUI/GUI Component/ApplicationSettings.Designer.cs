@@ -47,7 +47,7 @@
             this.TableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TableLayoutPanel1.Controls.Add(this.OK_Button, 0, 0);
             this.TableLayoutPanel1.Controls.Add(this.Cancel_Button, 1, 0);
-            this.TableLayoutPanel1.Location = new System.Drawing.Point(674, 474);
+            this.TableLayoutPanel1.Location = new System.Drawing.Point(915, 533);
             this.TableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.TableLayoutPanel1.Name = "TableLayoutPanel1";
             this.TableLayoutPanel1.RowCount = 1;
@@ -83,6 +83,8 @@
             this.ObjectListView1.AllColumns.Add(this.OlvColumn1);
             this.ObjectListView1.AllColumns.Add(this.OlvColumn2);
             this.ObjectListView1.AllColumns.Add(this.OlvColumn3);
+            this.ObjectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ObjectListView1.CellEditActivation = BrightIdeasSoftware.ObjectListView.CellEditActivateMode.DoubleClick;
             this.ObjectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.OlvColumn1,
@@ -93,12 +95,12 @@
             this.ObjectListView1.Location = new System.Drawing.Point(12, 12);
             this.ObjectListView1.MultiSelect = false;
             this.ObjectListView1.Name = "ObjectListView1";
-            this.ObjectListView1.RowHeight = 75;
+            this.ObjectListView1.RowHeight = 100;
             this.ObjectListView1.SelectAllOnControlA = false;
             this.ObjectListView1.SelectColumnsOnRightClick = false;
             this.ObjectListView1.SelectColumnsOnRightClickBehaviour = BrightIdeasSoftware.ObjectListView.ColumnSelectBehaviour.None;
             this.ObjectListView1.ShowItemToolTips = true;
-            this.ObjectListView1.Size = new System.Drawing.Size(858, 453);
+            this.ObjectListView1.Size = new System.Drawing.Size(1099, 514);
             this.ObjectListView1.TabIndex = 2;
             this.ObjectListView1.UseCompatibleStateImageBehavior = false;
             this.ObjectListView1.View = System.Windows.Forms.View.Details;
@@ -126,13 +128,13 @@
             this.OlvColumn3.Hideable = false;
             this.OlvColumn3.IsEditable = false;
             this.OlvColumn3.Text = "Remark";
-            this.OlvColumn3.Width = 300;
+            this.OlvColumn3.Width = 400;
             // 
             // ApplicationSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(882, 523);
+            this.ClientSize = new System.Drawing.Size(1123, 582);
             this.Controls.Add(this.ObjectListView1);
             this.Controls.Add(this.TableLayoutPanel1);
             this.Name = "ApplicationSettings";

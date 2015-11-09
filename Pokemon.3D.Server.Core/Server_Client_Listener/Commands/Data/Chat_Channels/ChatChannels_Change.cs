@@ -74,18 +74,22 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Chann
                             break;
                     }
 
-                    for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+                    if (Core.Setting.AllowChatChannels)
                     {
-                        if (Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Pokemon3DPlayer[i] != Player)
+                        for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
                         {
-                            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
-                                Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the current chat channel you are in.") :
-                                Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, "have joined the current chat channel you are in.")
-                                , Core.Pokemon3DPlayer[i].Network.Client));
+                            if (Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Pokemon3DPlayer[i] != Player)
+                            {
+                                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the current chat channel you are in.") :
+                                    Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, "have joined the current chat channel you are in.")
+                                    , Core.Pokemon3DPlayer[i].Network.Client));
+                            }
                         }
-                    }
 
-                    Player.CommandFeedback(Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", Player.CC_CurrentChatChannel), "have changed chat channel.");
+                        Player.CommandFeedback(Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", Player.CC_CurrentChatChannel), "have changed chat channel.");
+                    }
+                    
                 }
             }
             #endregion /ChatChannel <ID>

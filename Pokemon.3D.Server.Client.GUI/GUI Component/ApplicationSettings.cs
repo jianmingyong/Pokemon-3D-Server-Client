@@ -6,6 +6,7 @@ using Aragas.Core.Data;
 using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 
 namespace Pokemon_3D_Server_Client_GUI
 {
@@ -14,7 +15,7 @@ namespace Pokemon_3D_Server_Client_GUI
     /// </summary>
     public partial class ApplicationSettings : Form
     {
-        private List<Settings> Setting = new List<Settings>();
+        private List<Settings> SettingToDisplay = new List<Settings>();
 
         /// <summary>
         /// GUI Component Start Point.
@@ -26,63 +27,372 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private void ShowSetting()
         {
-            Setting.Add(new Settings("CheckForUpdate", Core.Setting.CheckForUpdate.ToString().ToLower(), "To allow application to check for update upon launch.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("GeneratePublicIP", Core.Setting.GeneratePublicIP.ToString().ToLower(), "To allow application to update IP address upon launch.\nSyntax: Boolean: true, false"));
+            SettingToDisplay = new List<Settings>
+            {
+                new Settings
+                (
+                    "CheckForUpdate",
+                    Core.Setting.CheckForUpdate.ToString().ToLower(),
+                    "To allow or disallow the application to check for update upon launch.\nRequired Syntax: Boolean."
+                ),
 
-            Setting.Add(new Settings("IPAddress", Core.Setting.IPAddress, "Public IP address of your server.\nSyntax: Valid IPv4 address."));
-            Setting.Add(new Settings("Port", Core.Setting.Port.ToString(), "The port to use on your server.\nSyntax: Integer: Between 0 to 65535 inclusive."));
-            Setting.Add(new Settings("ServerName", Core.Setting.ServerName, "The server name to display to public.\nSyntax: String."));
-            Setting.Add(new Settings("ServerMessage", Core.Setting.ServerMessage, "The server message to display when a player select a server.\nSyntax: String."));
-            Setting.Add(new Settings("WelcomeMessage", Core.Setting.WelcomeMessage, "The server message to display when a player joins a server.\nSyntax: String."));
-            Setting.Add(new Settings("GameMode", string.Join(",", Core.Setting.GameMode), "The GameMode that player should play in order to join the server.\nSyntax: String. You may insert multiple gamemode by adding a comma seperator on each gamemode name."));
-            Setting.Add(new Settings("MaxPlayers", Core.Setting.MaxPlayers.ToString(), "The maximum amount of player in the server that can join.\nSyntax: Integer: -1: Unlimited."));
-            Setting.Add(new Settings("OfflineMode", Core.Setting.OfflineMode.ToString().ToLower(), "The ability for offline profile player to join the server.\nSyntax: Boolean: true, false"));
+                new Settings
+                (
+                    "GeneratePublicIP",
+                    Core.Setting.GeneratePublicIP.ToString().ToLower(),
+                    "To allow or disallow the application to update the IP address upon launch.\nRequired Syntax: Boolean."
+                ),
 
-            Setting.Add(new Settings("SCONEnable", Core.Setting.SCONEnable.ToString().ToLower(), "Enable SCON.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("SCONPort", Core.Setting.SCONPort.ToString(), "The port for SCON Listener. Please be unique and don't be same as Pokemon Listener Port.\nSyntax: Integer: Between 0 to 65535 inclusive."));
-            Setting.Add(new Settings("SCONPassword", Core.Setting._SCONPassword, "The password for the SCON to connect.\nSyntax: String. Please do not insert password that contains your personal infomation."));
+                new Settings
+                (
+                    "MainEntryPoint",
+                    ((int)Core.Setting.MainEntryPoint).ToString(),
+                    "The main entry point of the server console.\nRequired Syntax: Integer.\njianmingyong Server Instance = 0 | RCON = 1"
+                ),
 
-            Setting.Add(new Settings("Season", Core.Setting.Season.ToString(), "To set server default season.\nSyntax: Integer: Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"));
-            Setting.Add(new Settings("Weather", Core.Setting.Weather.ToString(), "To set server default weather.\nSyntax: Integer: Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3 | Real World Weather = -4"));
-            Setting.Add(new Settings("DoDayCycle", Core.Setting.DoDayCycle.ToString().ToLower(), "To allow the server to update day cycle.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("SeasonMonth", Core.Setting.SeasonMonth.SeasonData, "To set the season based on local date. Must set Season = -3\nSyntax: Integer: Winter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2\nYou may insert more than one season by separating it with a comma."));
-            Setting.Add(new Settings("WeatherSeason", Core.Setting.WeatherSeason.WeatherData, "To set the weather based on server season. Must set Weather = -3\nSyntax: Integer: Clear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | Real World Weather = -4\nYou may insert more than one weather by separating it with a comma."));
-            Setting.Add(new Settings("DefaultWorldCountry", Core.Setting.DefaultWorldCountry, "To set the default country for real world weather.\nSyntax: String. Valid Country name / City name. No fancy character. Use Default A-Z a-z letter."));
+                new Settings
+                (
+                    "IPAddress",
+                    Core.Setting.IPAddress,
+                    "Public/External IP address of your server.\nRequired Syntax: Valid IPv4 address."
+                ),
 
-            Setting.Add(new Settings("NoPingKickTime", Core.Setting.NoPingKickTime.ToString(), "To kick player out if there are no valid ping for n amount of seconds.\nSyntax: Integer: -1 to disable it."));
-            Setting.Add(new Settings("AFKKickTime", Core.Setting.AFKKickTime.ToString(), "To kick player out if there are no valid activity for n amount of seconds.\nSyntax: Integer: -1 to disable it."));
-            Setting.Add(new Settings("AutoRestartTime", Core.Setting.AutoRestartTime.ToString(), "To automatically restart the server after n seconds. Disable PvP and trade features for the last 5 minutes of the countdown.\nSyntax: Integer: -1 to disable it."));
+                new Settings
+                (
+                    "Port",
+                    Core.Setting.Port.ToString(),
+                    "The port to use on your server.\nRequired Syntax: Integer between 0 to 65535 inclusive.\nPort cannot be the same as SCON and RCON."
+                ),
 
-            Setting.Add(new Settings("BlackList", Core.Setting.BlackList.ToString().ToLower(), "To allow using blacklist feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("IPBlackList", Core.Setting.IPBlackList.ToString().ToLower(), "To allow using ipblacklist feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("WhiteList", Core.Setting.WhiteList.ToString().ToLower(), "To allow using whitelist feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("OperatorList", Core.Setting.OperatorList.ToString().ToLower(), "To allow using operator feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("MuteList", Core.Setting.MuteList.ToString().ToLower(), "To allow using mute feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("OnlineSettingList", Core.Setting.OnlineSettingList.ToString().ToLower(), "To allow using online setting feature.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("SwearInfractionList", Core.Setting.SwearInfractionList.ToString().ToLower(), "To allow using swear infraction feature.\nSyntax: Boolean: true, false"));
+                new Settings
+                (
+                    "ServerName",
+                    Core.Setting.ServerName,
+                    "The server name to be display to public.\nRequired Syntax: String."
+                ),
 
-            Setting.Add(new Settings("SwearInfractionCap", Core.Setting.SwearInfractionCap.ToString(), "Amount of infraction points before the first mute.\nSyntax: Integer: -1 to disable."));
-            Setting.Add(new Settings("SwearInfractionReset", Core.Setting.SwearInfractionReset.ToString(), "Amount of days before it expire the infraction count.\nSyntax: Integer: -1 to disable."));
+                new Settings
+                (
+                    "ServerMessage",
+                    Core.Setting.ServerMessage,
+                    "The server message to display when a player select a server.\nRequired Syntax: String."
+                ),
 
-            Setting.Add(new Settings("CustomChannels", string.Join(",", Core.Setting.CustomChannels), "List of custom channels for the server.\nSyntax: String."));
-            Setting.Add(new Settings("SpamResetDuration", Core.Setting.SpamResetDuration.ToString(), "Amount of seconds for the user to send the same word again.\nSyntax: Integer: -1 to disable."));
+                new Settings
+                (
+                    "WelcomeMessage",
+                    Core.Setting.WelcomeMessage,
+                    "The server message to display when a player joins a server.\nRequired Syntax: String."
+                ),
 
-            Setting.Add(new Settings("LoggerInfo", Core.Setting.LoggerInfo.ToString().ToLower(), "To log server information.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerWarning", Core.Setting.LoggerWarning.ToString().ToLower(), "To log server warning including ex exception.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerDebug", Core.Setting.LoggerDebug.ToString().ToLower(), "To log server package data (Lag might happen if turn on).\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerChat", Core.Setting.LoggerChat.ToString().ToLower(), "To log server chat message.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerPM", Core.Setting.LoggerPM.ToString().ToLower(), "To log server private chat message. (Actual Private Message content is not logged)\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerServer", Core.Setting.LoggerServer.ToString().ToLower(), "To log server message.\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerTrade", Core.Setting.LoggerTrade.ToString().ToLower(), "To log trade request. (Actual Trade Request content is not logged)\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerPvP", Core.Setting.LoggerPvP.ToString().ToLower(), "To log pvp request. (Actual PvP Request content is not logged)\nSyntax: Boolean: true, false"));
-            Setting.Add(new Settings("LoggerCommand", Core.Setting.LoggerCommand.ToString().ToLower(), "To log server command usage. (Debug Commands are not logged)\nSyntax: Boolean: true, false"));
+                new Settings
+                (
+                    "GameMode",
+                    string.Join(", ",Core.Setting.GameMode),
+                    "The GameMode player should play in order to join the server.\nRequired Syntax: String.\nYou may insert multiple gamemode by adding a comma seperator on each gamemode name."
+                ),
 
-            ObjectListView1.AddObjects(Setting);
+                new Settings
+                (
+                    "MaxPlayers",
+                    Core.Setting.MaxPlayers.ToString(),
+                    "The maximum amount of player in the server that can join.\nRequired Syntax: Integer.\n-1 = Unlimited Players. (Technically not unlimited but the bigggest amount the game can handle.)"
+                ),
+
+                new Settings
+                (
+                    "OfflineMode",
+                    Core.Setting.OfflineMode.ToString().ToLower(),
+                    "To allow or disallow offline save player joins the server.\nRequired Syntax: Boolean.\nIt will be allowed if other GameMode other than default server is allowed to join the server."
+                ),
+
+                new Settings
+                (
+                    "Season",
+                    Core.Setting.Season.ToString(),
+                    "To set server default season.\nRequired Syntax: Integer.\nWinter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2 | SeasonMonth = -3"
+                ),
+
+                new Settings
+                (
+                    "Weather",
+                    Core.Setting.Weather.ToString(),
+                    "To set server default weather.\nRequired Syntax: Integer.\nClear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2 | WeatherSeason = -3"
+                ),
+
+                new Settings
+                (
+                    "DoDayCycle",
+                    Core.Setting.DoDayCycle.ToString().ToLower(),
+                    "To allow or disallow the server to update day and night cycle.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "TimeOffset",
+                    Core.Setting.TimeOffset.ToString(),
+                    "Offset the time in the server.\nRequired Syntax: Integer.\nThe time offset is counted by seconds. 60 = 1 minute time difference from your local time."
+                ),
+
+                new Settings
+                (
+                    "SeasonMonth",
+                    Core.Setting.SeasonMonth.SeasonData,
+                    "To set the season based on local date. Must set Season = -3\nRequired Syntax: Integer.\nWinter = 0 | Spring = 1 | Summer = 2 | Fall = 3 | Random = -1 | Default Season = -2"
+                ),
+
+                new Settings
+                (
+                    "WeatherSeason",
+                    Core.Setting.WeatherSeason.WeatherData,
+                    "To set the weather based on server season. Must set Weather = -3\nRequired Syntax: Integer.\nClear = 0 | Rain = 1 | Snow = 2 | Underwater = 3 | Sunny = 4 | Fog = 5 | Thunderstorm = 6 | Sandstorm = 7 | Ash = 8 | Blizzard = 9 | Random = -1 | Default Weather = -2"
+                ),
+
+                new Settings
+                (
+                    "DefaultWorldCountry",
+                    Core.Setting.DefaultWorldCountry,
+                    "To set the default country for real world weather.\nRequired Syntax: String.\nValid Country name / City name. No fancy character. Use Default A-Z a-z letter."
+                ),
+
+                new Settings
+                (
+                    "NoPingKickTime",
+                    Core.Setting.NoPingKickTime.ToString(),
+                    "To kick player out if there are no valid ping for n amount of seconds.\nRequired Syntax: Integer.\n-1 to disable it."
+                ),
+
+                new Settings
+                (
+                    "AFKKickTime",
+                    Core.Setting.AFKKickTime.ToString(),
+                    "To kick player out if there are no valid activity for n amount of seconds.\nRequired Syntax: Integer.\n-1 to disable it."
+                ),
+
+                new Settings
+                (
+                    "AutoRestartTime",
+                    Core.Setting.AutoRestartTime.ToString(),
+                    "To automatically restart the server after n seconds. Disable PvP and trade features for the last 5 minutes of the countdown.\nRequired Syntax: Integer.\n-1 to disable it."
+                ),
+
+                new Settings
+                (
+                    "BlackList",
+                    Core.Setting.BlackList.ToString().ToLower(),
+                    "To allow or disallow using Blacklist feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "IPBlackList",
+                    Core.Setting.IPBlackList.ToString().ToLower(),
+                    "To allow or disallow using IPBlacklist feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "WhiteList",
+                    Core.Setting.WhiteList.ToString().ToLower(),
+                    "To allow or disallow using WhiteList feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "OperatorList",
+                    Core.Setting.OperatorList.ToString().ToLower(),
+                    "To allow or disallow using OperatorList feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "MuteList",
+                    Core.Setting.MuteList.ToString().ToLower(),
+                    "To allow or disallow using MuteList feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "OnlineSettingList",
+                    Core.Setting.OnlineSettingList.ToString().ToLower(),
+                    "To allow or disallow using OnlineSettingList feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "SwearInfractionList",
+                    Core.Setting.SwearInfractionList.ToString().ToLower(),
+                    "To allow or disallow using SwearInfractionList feature.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "SwearInfractionCap",
+                    Core.Setting.SwearInfractionCap.ToString(),
+                    "Amount of infraction points before the first mute.\nRequired Syntax: Integer.\n-1 to disable."
+                ),
+
+                new Settings
+                (
+                    "SwearInfractionReset",
+                    Core.Setting.SwearInfractionReset.ToString(),
+                    "Amount of days before it expire the infraction count.\nRequired Syntax: Integer.\n-1 to disable."
+                ),
+
+                new Settings
+                (
+                    "AllowChatInServer",
+                    Core.Setting.AllowChatInServer.ToString().ToLower(),
+                    "To allow or disallow player to chat in the server.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "AllowChatChannels",
+                    Core.Setting.AllowChatChannels.ToString().ToLower(),
+                    "To allow or disallow player to use chat channels in the server.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "CustomChannels",
+                    string.Join(", ",Core.Setting.CustomChannels),
+                    "List of custom channels for the server.\nRequired Syntax: String."
+                ),
+
+                new Settings
+                (
+                    "SpamResetDuration",
+                    Core.Setting.SpamResetDuration.ToString(),
+                    "Amount of seconds for the user to send the same word again.\nRequired Syntax: Integer.\n-1 to disable."
+                ),
+
+                new Settings
+                (
+                    "AllowPvP",
+                    Core.Setting.AllowPvP.ToString().ToLower(),
+                    "To allow or disallow player to PvP in the server.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "AllowPvPValidation",
+                    Core.Setting.AllowPvPValidation.ToString().ToLower(),
+                    "To allow or disallow PvP Validation system.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "AllowTrade",
+                    Core.Setting.AllowTrade.ToString().ToLower(),
+                    "To allow or disallow player to Trade in the server.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerInfo",
+                    Core.Setting.LoggerInfo.ToString().ToLower(),
+                    "To log server information.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerWarning",
+                    Core.Setting.LoggerWarning.ToString().ToLower(),
+                    "To log server warning including ex exception.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerChat",
+                    Core.Setting.LoggerChat.ToString().ToLower(),
+                    "To log server chat message.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerPM",
+                    Core.Setting.LoggerPM.ToString().ToLower(),
+                    "To log server private chat message. (Actual Private Message content is not logged)\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerServer",
+                    Core.Setting.LoggerServer.ToString().ToLower(),
+                    "To log server message.\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerTrade",
+                    Core.Setting.LoggerTrade.ToString().ToLower(),
+                    "To log trade request. (Actual Trade Request content is not logged)\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerPvP",
+                    Core.Setting.LoggerPvP.ToString().ToLower(),
+                    "To log pvp request. (Actual PvP Request content is not logged)\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "LoggerCommand",
+                    Core.Setting.LoggerCommand.ToString().ToLower(),
+                    "To log server command usage. (Debug Commands are not logged)\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "RCONEnable",
+                    Core.Setting.RCONEnable.ToString().ToLower(),
+                    "Enable RCON\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "RCONPort",
+                    Core.Setting.RCONPort.ToString(),
+                    "The port for RCON Listener.\nRequired Syntax: Integer between 0 to 65535 inclusive."
+                ),
+
+                new Settings
+                (
+                    "RCONPassword",
+                    Core.Setting.RCONPassword,
+                    "The password for the RCON to connect.\nRequired Syntax: String."
+                ),
+
+                new Settings
+                (
+                    "SCONEnable",
+                    Core.Setting.SCONEnable.ToString().ToLower(),
+                    "Enable SCON\nRequired Syntax: Boolean."
+                ),
+
+                new Settings
+                (
+                    "SCONPort",
+                    Core.Setting.SCONPort.ToString(),
+                    "The port for SCON Listener.\nRequired Syntax: Integer between 0 to 65535 inclusive."
+                ),
+
+                new Settings
+                (
+                    "SCONPassword",
+                    Core.Setting._SCONPassword,
+                    "The password for the SCON to connect.\nRequired Syntax: String."
+                ),
+            };
+
+            ObjectListView1.AddObjects(SettingToDisplay);
         }
 
         private void OK_Button_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < Setting.Count; i++)
+            for (int i = 0; i < SettingToDisplay.Count; i++)
             {
                 switch (((Settings)ObjectListView1.GetModelObject(i)).Setting)
                 {
@@ -100,6 +410,23 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.GeneratePublicIP = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "MainEntryPoint":
+                        try
+                        {
+                            if (((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt() == (int)Setting.MainEntryPointType.jianmingyong_Server)
+                            {
+                                Core.Setting.MainEntryPoint = Setting.MainEntryPointType.jianmingyong_Server;
+                            }
+                            else if (((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt() == (int)Setting.MainEntryPointType.Rcon)
+                            {
+                                Core.Setting.MainEntryPoint = Setting.MainEntryPointType.Rcon;
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -160,6 +487,62 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.GameMode = ((Settings)ObjectListView1.GetModelObject(i)).Value.Split(',').ToList();
+
+                            Core.Setting.GM_Pokemon3D = false;
+                            Core.Setting.GM_1YearLater3D = false;
+                            Core.Setting.GM_DarkfireMode = false;
+                            Core.Setting.GM_German = false;
+                            Core.Setting.GM_PokemonGoldSilverRandomLocke = false;
+                            Core.Setting.GM_PokemonLostSilver = false;
+                            Core.Setting.GM_PokemonSilversSoul = false;
+                            Core.Setting.GM_PokemonUniversal3D = false;
+
+                            List<string> Others = new List<string>();
+
+                            for (int a = 0; a < Core.Setting.GameMode.Count; a++)
+                            {
+                                if (string.Equals(Core.Setting.GameMode[a], "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_Pokemon3D = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "1 Year Later 3D", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_1YearLater3D = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "Darkfire Mode", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_DarkfireMode = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "German", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_German = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "Pokemon Gold&Silver - RandomLocke", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_PokemonGoldSilverRandomLocke = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "Pokemon Lost Silver", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_PokemonLostSilver = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "Pokemon Silver's Soul", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_PokemonSilversSoul = true;
+                                }
+                                else if (string.Equals(Core.Setting.GameMode[a], "Pokemon Universal 3D", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    Core.Setting.GM_PokemonUniversal3D = true;
+                                }
+                                else
+                                {
+                                    Others.Add(Core.Setting.GameMode[a]);
+                                }
+                            }
+
+                            if (Others.Count > 0)
+                            {
+                                Core.Setting.GM_Others = string.Join(", ", Others);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -186,37 +569,7 @@ namespace Pokemon_3D_Server_Client_GUI
                             ex.CatchError();
                         }
                         break;
-                    case "SCONEnable":
-                        try
-                        {
-                            Core.Setting.SCONEnable = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
-                    case "SCONPort":
-                        try
-                        {
-                            Core.Setting.SCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToUshort();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
-                    case "SCONPassword":
-                        try
-                        {
-                            Core.Setting._SCONPassword = ((Settings)ObjectListView1.GetModelObject(i)).Value;
-                            Core.Setting.SCONPassword = new PasswordStorage(((Settings)ObjectListView1.GetModelObject(i)).Value);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
+                    
                     case "Season":
                         try
                         {
@@ -241,6 +594,16 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.DoDayCycle = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "TimeOffset":
+                        try
+                        {
+                            Core.Setting.TimeOffset = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
                         }
                         catch (Exception ex)
                         {
@@ -397,6 +760,26 @@ namespace Pokemon_3D_Server_Client_GUI
                             ex.CatchError();
                         }
                         break;
+                    case "AllowChatInServer":
+                        try
+                        {
+                            Core.Setting.AllowChatInServer = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "AllowChatChannels":
+                        try
+                        {
+                            Core.Setting.AllowChatChannels = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
                     case "CustomChannels":
                         try
                         {
@@ -411,6 +794,36 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.SpamResetDuration = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "AllowPvP":
+                        try
+                        {
+                            Core.Setting.AllowPvP = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "AllowPvPValidation":
+                        try
+                        {
+                            Core.Setting.AllowPvPValidation = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "AllowTrade":
+                        try
+                        {
+                            Core.Setting.AllowTrade = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
                         }
                         catch (Exception ex)
                         {
@@ -501,6 +914,67 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.LoggerCommand = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "RCONEnable":
+                        try
+                        {
+                            Core.Setting.RCONEnable = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "RCONPort":
+                        try
+                        {
+                            Core.Setting.RCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToInt();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "RCONPassword":
+                        try
+                        {
+                            Core.Setting.RCONPassword = ((Settings)ObjectListView1.GetModelObject(i)).Value;
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "SCONEnable":
+                        try
+                        {
+                            Core.Setting.SCONEnable = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "SCONPort":
+                        try
+                        {
+                            Core.Setting.SCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToUshort();
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.CatchError();
+                        }
+                        break;
+                    case "SCONPassword":
+                        try
+                        {
+                            Core.Setting._SCONPassword = ((Settings)ObjectListView1.GetModelObject(i)).Value;
+                            Core.Setting.SCONPassword = new PasswordStorage(((Settings)ObjectListView1.GetModelObject(i)).Value);
                         }
                         catch (Exception ex)
                         {

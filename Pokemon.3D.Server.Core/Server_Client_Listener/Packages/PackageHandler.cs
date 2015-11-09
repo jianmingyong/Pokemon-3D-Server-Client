@@ -357,7 +357,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 {
                     for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
                     {
-                        if (!Player.IsMuteListed(Core.Pokemon3DPlayer[i]) && (Player.CC_CurrentChatChannel == Core.Pokemon3DPlayer[i].CC_CurrentChatChannel || Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.ChatChannelType.Default.ToString()))
+                        if (!Player.IsMuteListed(Core.Pokemon3DPlayer[i]) && (Player.CC_CurrentChatChannel == Core.Pokemon3DPlayer[i].CC_CurrentChatChannel || Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.ChatChannelType.Default.ToString() || !Core.Setting.AllowChatChannels))
                         {
                             Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.ID, p.DataItems[0], Core.Pokemon3DPlayer[i].Network.Client));
                         }
@@ -401,6 +401,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
 
+            if (!Core.Setting.AllowTrade)
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEDISALLOW"), p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEDISALLOW")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEDISALLOW")), Logger.LogTypes.Trade, p.Client);
+                return;
+            }
+
             // Server Restart Timer.
             if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
@@ -437,6 +448,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Player TradePlayer = Core.Pokemon3DPlayer.GetPlayer(p.DataItems[0].ToInt());
 
             string TradePlayerName = TradePlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", TradePlayer.Name, TradePlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", TradePlayer.Name, "");
+
+            if (!Core.Setting.AllowTrade)
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEDISALLOW"), p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.TradeQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEDISALLOW")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to trade with the following reason: " + Core.Setting.Token("SERVER_TRADEDISALLOW")), Logger.LogTypes.Trade, p.Client);
+                return;
+            }
 
             // Server Restart Timer.
             if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
@@ -497,6 +519,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
+            if (!Core.Setting.AllowPvP)
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPDISALLOW"), p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_PVPDISALLOW")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_PVPDISALLOW")), Logger.LogTypes.PvP, p.Client);
+                return;
+            }
+
             // Server Restart Timer.
             if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
@@ -534,6 +567,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             string PVPPlayerName = PvPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PvPPlayer.Name, PvPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PvPPlayer.Name, "");
 
+            if (!Core.Setting.AllowPvP)
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPDISALLOW"), p.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", p.Client));
+
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_PVPDISALLOW")) :
+                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "is unable to battle with the following reason: " + Core.Setting.Token("SERVER_PVPDISALLOW")), Logger.LogTypes.PvP, p.Client);
+                return;
+            }
+
             // Server Restart Timer.
             if (Core.Setting.AutoRestartTime >= 10 && (Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now).TotalSeconds <= 300)
             {
@@ -555,10 +599,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Player.PvP_Status = Player.PvPTypes.Lobby;
             Player.PvP_OpponentID = PvPPlayer.ID;
             Player.PvP_Host = false;
+            Player.PvP_Validatated = false;
 
             PvPPlayer.PvP_Status = Player.PvPTypes.Lobby;
             PvPPlayer.PvP_OpponentID = Player.ID;
             PvPPlayer.PvP_Host = true;
+            PvPPlayer.PvP_Validatated = false;
         }
 
         private void HandleBattleQuit(Package p)
@@ -573,7 +619,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have rejected the battle request from " + PVPPlayerName) :
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have rejected the battle request from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
 
-
+            Player.PvP_Status = Player.PvPTypes.Nothing;
+            PVPPlayer.PvP_Status = Player.PvPTypes.Nothing;
         }
 
         private void HandleBattleOffer(Package p)
@@ -583,13 +630,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             Player.PvP_Pokemon = p.DataItems[1].Split('|').ToList();
 
-            if (Player.DoPvPValidation())
+            string ValidationResult = Player.DoPvPValidation();
+            Player.PvP_Validatated = true;
+
+            if (ValidationResult == null)
             {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
+            }
+            else if (ValidationResult.Contains("You may use this team"))
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, ValidationResult, Player.Network.Client));
                 Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleOffer, Player.ID, p.DataItems[1], PVPPlayer.Network.Client));
             }
             else
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPVALIDATION","You have an invalid Pokemon in your party. Please remove the invalid Pokemon to ensure fair play."), Player.Network.Client));
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPVALIDATION", ValidationResult), Player.Network.Client));
             }
         }
 
@@ -600,10 +655,45 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
 
             string PVPPlayerName = PVPPlayer.isGameJoltPlayer ? Core.Setting.Token("SERVER_GAMEJOLT", PVPPlayer.Name, PVPPlayer.GameJoltID.ToString(), "") : Core.Setting.Token("SERVER_NOGAMEJOLT", PVPPlayer.Name, "");
 
-            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleStart, Player.ID, "", PVPPlayer.Network.Client));
-            Core.Logger.Log(Player.isGameJoltPlayer ?
-                    Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the battle from " + PVPPlayerName) :
-                    Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+            if (Player.PvP_Validatated)
+            {
+                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleStart, Player.ID, "", PVPPlayer.Network.Client));
+                Core.Logger.Log(Player.isGameJoltPlayer ?
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the battle from " + PVPPlayerName) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+
+                Player.PvP_Status = Player.PvPTypes.Battling;
+            }
+            else
+            {
+                string ValidationResult = Player.DoPvPValidation();
+                Player.PvP_Validatated = true;
+
+                if (ValidationResult == null)
+                {
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleStart, Player.ID, "", PVPPlayer.Network.Client));
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the battle from " + PVPPlayerName) :
+                            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+
+                    Player.PvP_Status = Player.PvPTypes.Battling;
+                }
+                else if (ValidationResult.Contains("You may use this team"))
+                {
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, ValidationResult, Player.Network.Client));
+
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleStart, Player.ID, "", PVPPlayer.Network.Client));
+                    Core.Logger.Log(Player.isGameJoltPlayer ?
+                            Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have accept the battle from " + PVPPlayerName) :
+                            Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have accept the battle from " + PVPPlayerName), Logger.LogTypes.PvP, p.Client);
+
+                    Player.PvP_Status = Player.PvPTypes.Battling;
+                }
+                else
+                {
+                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_PVPVALIDATION", ValidationResult), Player.Network.Client));
+                }
+            }
         }
 
         private void HandleBattleClientData(Package p)

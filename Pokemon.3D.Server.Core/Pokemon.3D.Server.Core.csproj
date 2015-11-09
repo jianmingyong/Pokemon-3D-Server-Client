@@ -68,6 +68,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Server_Client_Listener\Commands\Data\PvP\League.cs" />
+    <Compile Include="Server_Client_Listener\Commands\Data\PvP\Unstuck.cs" />
     <Compile Include="Shared\Aragas\WrapperInstances\AppDomainWrapperInstance.cs" />
     <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />
@@ -82,7 +84,6 @@
     <Compile Include="RCON_GUI_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Packages\PackageHandler.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="Resource\Banned Pokemon.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
     <Compile Include="SCON_Client_Listener\Servers\Listener.cs" />

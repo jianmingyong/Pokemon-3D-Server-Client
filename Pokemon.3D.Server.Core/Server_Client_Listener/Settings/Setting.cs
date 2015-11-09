@@ -139,19 +139,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// <summary>
         /// Get/Set GameMode
         /// </summary>
-        public List<string> GameMode { get; set; } = new List<string> { "Pokemon 3D" };
+        public List<string> GameMode { get; set; } = new List<string> { };
 
-        private bool GM_Pokemon3D { get; set; } = true;
+        public bool GM_Pokemon3D { get; set; } = true;
 
-        private bool GM_1YearLater3D { get; set; } = false;
-        private bool GM_DarkfireMode { get; set; } = false;
-        private bool GM_German { get; set; } = false;
-        private bool GM_PokemonGoldSilverRandomLocke { get; set; } = false;
-        private bool GM_PokemonLostSilver { get; set; } = false;
-        private bool GM_PokemonSilversSoul { get; set; } = false;
-        private bool GM_PokemonUniversal3D { get; set; } = false;
+        public bool GM_1YearLater3D { get; set; } = false;
+        public bool GM_DarkfireMode { get; set; } = false;
+        public bool GM_German { get; set; } = false;
+        public bool GM_PokemonGoldSilverRandomLocke { get; set; } = false;
+        public bool GM_PokemonLostSilver { get; set; } = false;
+        public bool GM_PokemonSilversSoul { get; set; } = false;
+        public bool GM_PokemonUniversal3D { get; set; } = false;
 
-        private string GM_Others { get; set; } = "";
+        public string GM_Others { get; set; } = "";
         #endregion GameMode
 
         private int _MaxPlayers = 20;
@@ -666,6 +666,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_SPAM", "Please be unique :) don't send the same message again in quick succession.");
             TokenDefination.Add("RCON_CONNECTFAILED", "Unable to connect to the requested server. Please try again.");
             TokenDefination.Add("SERVER_PVPVALIDATION", "You are unable to use this party due to the following reason: {0}");
+            TokenDefination.Add("SERVER_PVPDISALLOW", "This server do not allow user to PvP. Sorry for the inconveniences caused.");
+            TokenDefination.Add("SERVER_TRADEDISALLOW", "This server do not allow user to Trade. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_NOCHAT", "This server do not allow user to chat. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_CURRENTCHATCHANNEL", "You are now at {0} Chat Channel. For more info, type \" /help chatchannel \".");
 
@@ -2521,7 +2523,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /*
             MainEntryPoint: The main entry point of the server console.
             Required Syntax: Integer.
-            0 = jianmingyong Server Instance | 1 = RCON
+            jianmingyong Server Instance = 0 | RCON = 1
         */
         ""MainEntryPoint"": {5},
     }},
