@@ -420,7 +420,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
         /// </summary>
         public bool IsFullPackageData()
         {
-            if (string.IsNullOrWhiteSpace(DataItems[0]))
+            if (string.IsNullOrWhiteSpace(DataItems[4]))
             {
                 return false;
             }

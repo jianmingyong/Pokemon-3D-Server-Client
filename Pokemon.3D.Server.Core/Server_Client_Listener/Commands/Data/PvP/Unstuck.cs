@@ -43,9 +43,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.PvP
                     {
                         Player.PvP_Status = Player.PvPTypes.Nothing;
                         Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.BattleQuit, Player.ID, "", Core.Pokemon3DPlayer.GetPlayer(Player.PvP_OpponentID).Network.Client));
-                    }
 
-                    Player.CommandFeedback(null, string.Format("have forced quit a battle."));
+                        Player.CommandFeedback(null, string.Format("have forced quit a battle."));
+                    }
                 }
             }
             #endregion /Unstuck

@@ -977,7 +977,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             {
                                 if (EvasionMoveID.Contains(Moves[b]))
                                 {
-                                    return "You may use this team but you are warned that Double Team or Minimize are not allowed to be used during battle.";
+                                    return "You have a team that have Double Team or Minimize. Please remove the invalid Pokemon to ensure fair play.";
                                 }
                             }
                         }
@@ -997,7 +997,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             {
                                 if (OHKOMoveID.Contains(Moves[b]))
                                 {
-                                    return "You may use this team but you are warned that Fissure, Guillotine, Horn Drill, or Sheer Cold are not allowed to be used during battle.";
+                                    return "You have a team that have Fissure, Guillotine, Horn Drill, or Sheer Cold. Please remove the invalid Pokemon to ensure fair play.";
                                 }
                             }
                         }
@@ -1017,7 +1017,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             {
                                 if (AccuracyMoveID.Contains(Moves[b]))
                                 {
-                                    return "You may use this team but you are warned that Sand-Attack, Smoke Screen and Kinesis are not allowed to be used during battle.";
+                                    return "You have a team that have Sand-Attack, Smoke Screen and Kinesis. Please remove the invalid Pokemon to ensure fair play.";
                                 }
                             }
                         }
