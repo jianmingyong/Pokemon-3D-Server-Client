@@ -9,6 +9,7 @@ using Amib.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
+using Pokemon_3D_Server_Core.Shared.jianmingyong;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
@@ -18,15 +19,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
     /// </summary>
     public class Listener : IDisposable
     {
-        private IPEndPoint IPEndPoint { get; set; }
         private TcpListener TcpListener { get; set; }
 
         private TcpClient Client { get; set; }
-
         private StreamReader Reader { get; set; }
 
-        private List<Thread> ThreadCollection { get; set; } = new List<Thread>();
-
+        private ThreadCollection ThreadCollection { get; set; } = new ThreadCollection();
         private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
 
         private bool IsActive { get; set; } = false;
@@ -46,33 +44,26 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 }
                 else
                 {
-                    IPEndPoint = new IPEndPoint(IPAddress.Any, Core.Setting.Port);
-                    TcpListener = new TcpListener(IPEndPoint);
+                    TcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Core.Setting.Port));
                     TcpListener.Start();
 
                     IsActive = true;
 
                     // Threading
-                    Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
-                    Thread.Start();
-                    ThreadCollection.Add(Thread);
+                    ThreadCollection.Add(new ThreadStart(ThreadStartListening));
+                    ThreadCollection.Add(new ThreadStart(Core.World.Update));
 
                     if (Core.Setting.AutoRestartTime >= 10)
                     {
                         Core.Logger.Log($"The server will restart every {Core.Setting.AutoRestartTime.ToString()} seconds.", Logger.LogTypes.Info);
 
-                        Thread Thread2 = new Thread(new ThreadStart(ThreadAutoRestart)) { IsBackground = true };
-                        Thread2.Start();
-                        ThreadCollection.Add(Thread2);
+                        ThreadCollection.Add(new ThreadStart(ThreadAutoRestart));
                     }
-
-                    Thread Thread3 = new Thread(new ThreadStart(Core.World.Update)) { IsBackground = true };
-                    Thread3.Start();
-                    ThreadCollection.Add(Thread3);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ex.CatchError();
                 Dispose();
             }
         }
@@ -88,14 +79,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             if (Client != null) Client.Close();
             if (Reader != null) Reader.Dispose();
 
-            for (int i = 0; i < ThreadCollection.Count; i++)
-            {
-                if (ThreadCollection[i].IsAlive)
-                {
-                    ThreadCollection[i].Abort();
-                }
-            }
-            ThreadCollection.RemoveRange(0, ThreadCollection.Count);
+            ThreadCollection.Dispose();
 
             Core.Logger.Log("Pokemon 3D Listener Disposed.", Logger.LogTypes.Info);
         }
@@ -131,9 +115,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 try
                 {
                     Client = TcpListener.AcceptTcpClient();
-                    Reader = new StreamReader(Client.GetStream());
 
-                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Reader.ReadLine());
+                    if (Client != null)
+                    {
+                        Reader = new StreamReader(Client.GetStream());
+                        ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Reader.ReadLine());
+                    }
                 }
                 catch (ThreadAbortException) { return; }
                 catch (Exception) { }

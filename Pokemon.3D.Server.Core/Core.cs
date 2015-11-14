@@ -6,6 +6,7 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Shared.jianmingyong;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
+using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -114,19 +115,22 @@ namespace Pokemon_3D_Server_Core
                     return;
                 }
 
-                // Initialize Listener.
-                Pokemon3DListener.Start();
-
-                // Initialize RCONListener.
-                if (Setting.RCONEnable)
+                if (Setting.MainEntryPoint == Setting.MainEntryPointType.jianmingyong_Server)
                 {
-                    RCONListener.Start();
-                }
+                    // Initialize Listener.
+                    Pokemon3DListener.Start();
 
-                // Initialize SCONListener.
-                if (Setting.SCONEnable)
-                {
-                    SCONListener.Start();
+                    // Initialize RCONListener.
+                    if (Setting.RCONEnable)
+                    {
+                        RCONListener.Start();
+                    }
+
+                    // Initialize SCONListener.
+                    if (Setting.SCONEnable)
+                    {
+                        SCONListener.Start();
+                    }
                 }
 
                 // Initialize Updater

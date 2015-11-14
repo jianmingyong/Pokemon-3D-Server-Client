@@ -136,7 +136,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 }
 
                 // Offline mode?
-                if (!Core.Setting.OfflineMode && !Player.isGameJoltPlayer)
+                if (!Core.Setting.OfflineMode && !Player.isGameJoltPlayer && string.IsNullOrWhiteSpace(p.DataItems[2]))
                 {
                     Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Core.Setting.Token("SERVER_OFFLINEMODE"), p.Client));
                     Core.Logger.Log(Player.isGameJoltPlayer ?
