@@ -169,7 +169,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                         $"/{new Weather().Name} - {new Weather().Description}",
                         $"/{new World.World().Name} - {new World.World().Description}",
                         $"---------- Category: PvP ----------",
-                        $"/{new Unstuck().Name} - {new Unstuck().Description}",
                         $"/{new League().Name} - {new League().Description}",
                     };
                 default:
