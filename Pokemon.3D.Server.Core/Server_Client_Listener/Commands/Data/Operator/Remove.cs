@@ -39,10 +39,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
             #region /deop <Name>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any))
             {
+                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
-
                     if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
@@ -73,8 +73,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 }
                 else if (Player == null)
                 {
-                    List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
-
                     if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
