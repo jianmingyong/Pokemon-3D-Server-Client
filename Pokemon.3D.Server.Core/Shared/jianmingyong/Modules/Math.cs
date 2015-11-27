@@ -11,12 +11,12 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Modules
         /// <summary>
         /// Represents the natural logarithmic base, specified by the constant, e.
         /// </summary>
-        public static readonly double E = "2.7182818284590452354".ToDouble();
+        public static readonly double E = System.Math.E.ToString().ToDouble();
 
         /// <summary>
-        /// Represents the natural logarithmic base, specified by the constant, e.
+        /// Represents the ratio of the circumference of a circle to its diameter, specified by the constant, π.
         /// </summary>
-        public static readonly double PI = "3.14159265358979323846".ToDouble();
+        public static readonly double PI = System.Math.PI.ToString().ToDouble();
 
         /// <summary>
         /// Returns the absolute value of a Decimal number.

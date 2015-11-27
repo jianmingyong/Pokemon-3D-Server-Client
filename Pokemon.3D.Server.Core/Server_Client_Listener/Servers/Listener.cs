@@ -123,7 +123,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     }
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception) { }
+                catch (Exception) { Client.Close(); }
             } while (IsActive);
         }
 

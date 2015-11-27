@@ -149,7 +149,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 bool IsGameModeMatched = false;
                 for (int i = 0; i < Core.Setting.GameMode.Count; i++)
                 {
-                    if (string.Equals(Core.Setting.GameMode[i].Trim(), Player.GameMode, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(Core.Setting.GameMode[i].Trim(), Player.GameMode, StringComparison.OrdinalIgnoreCase) || string.Equals(Core.Setting.GameMode[i].Trim(), p.DataItems[0], StringComparison.OrdinalIgnoreCase))
                     {
                         IsGameModeMatched = true;
                         break;
