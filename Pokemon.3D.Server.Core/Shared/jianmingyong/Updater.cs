@@ -25,12 +25,15 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
         /// </summary>
         public void Update()
         {
-            UpdateURL = "https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/Update.dat";
+            if (My.Computer.Network.IsAvailable)
+            {
+                UpdateURL = "https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/Update.dat";
 
-            Core.Logger.Log("Checking for update...", Logger.LogTypes.Info);
+                Core.Logger.Log("Checking for update...", Logger.LogTypes.Info);
 
-            Client.DownloadStringAsync(new Uri(UpdateURL));
-            Client.DownloadStringCompleted += Client_DownloadStringCompleted;
+                Client.DownloadStringAsync(new Uri(UpdateURL));
+                Client.DownloadStringCompleted += Client_DownloadStringCompleted;
+            }
         }
 
         private void Client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)

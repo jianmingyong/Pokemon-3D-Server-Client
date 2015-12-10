@@ -141,16 +141,49 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public List<string> GameMode { get; set; } = new List<string> { };
 
+        /// <summary>
+        /// Get/Set GM_Pokemon3D
+        /// </summary>
         public bool GM_Pokemon3D { get; set; } = true;
 
+        /// <summary>
+        /// Get/Set GM_1YearLater3D
+        /// </summary>
         public bool GM_1YearLater3D { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_DarkfireMode
+        /// </summary>
         public bool GM_DarkfireMode { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_German
+        /// </summary>
         public bool GM_German { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_PokemonGoldSilverRandomLocke
+        /// </summary>
         public bool GM_PokemonGoldSilverRandomLocke { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_PokemonLostSilver
+        /// </summary>
         public bool GM_PokemonLostSilver { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_PokemonSilversSoul
+        /// </summary>
         public bool GM_PokemonSilversSoul { get; set; } = false;
+
+        /// <summary>
+        /// Get/Set GM_PokemonUniversal3D
+        /// </summary>
         public bool GM_PokemonUniversal3D { get; set; } = false;
 
+        /// <summary>
+        /// Get/Set GM_Others
+        /// </summary>
         public string GM_Others { get; set; } = "";
         #endregion GameMode
 

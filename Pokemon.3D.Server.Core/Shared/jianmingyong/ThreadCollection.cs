@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using Amib.Threading;
 
 namespace Pokemon_3D_Server_Core.Shared.jianmingyong
 {
@@ -15,12 +12,12 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
         /// <summary>
         /// Add a new thread into the collection.
         /// </summary>
-        /// <param name="Thread">Thread to add.</param>
+        /// <param name="ThreadStart">Thread to add.</param>
         public void Add(ThreadStart ThreadStart)
         {
             Thread Thread = new Thread(ThreadStart) { IsBackground = true };
             Thread.Start();
-            this.Add(Thread);
+            Add(Thread);
         }
 
         private void RemoveAll()
@@ -39,7 +36,7 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
         /// </summary>
         public void Dispose()
         {
-            this.RemoveAll();
+            RemoveAll();
         }
     }
 }

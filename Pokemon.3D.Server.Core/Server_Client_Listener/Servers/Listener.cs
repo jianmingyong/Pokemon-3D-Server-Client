@@ -101,6 +101,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             if (Functions.CheckPortOpen(Core.Setting.Port))
             {
                 Core.Logger.Log($"Server started. Players can join using the following address: {Core.Setting.IPAddress}:{Core.Setting.Port.ToString()} (Global), {Functions.GetPrivateIP()}:{Core.Setting.Port.ToString()} (Local) and with the following GameMode: {GameMode}.", Logger.LogTypes.Info);
+                ThreadCollection.Add(new ThreadStart(ThreadPortCheck));
             }
             else
             {
@@ -123,7 +124,32 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     }
                 }
                 catch (ThreadAbortException) { return; }
-                catch (Exception) { Client.Close(); }
+                catch (Exception) { }
+            } while (IsActive);
+        }
+
+        private void ThreadPortCheck()
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            Core.Logger.Log("Port check is now enabled.", Logger.LogTypes.Info);
+
+            do
+            {
+                if (sw.Elapsed.TotalMinutes >= 15)
+                {
+                    if (Functions.CheckPortOpen(Core.Setting.Port))
+                    {
+                        Core.Logger.Log("Port Check cycle completed. Result: True.", Logger.LogTypes.Info);
+                        sw.Restart();
+                    }
+                    else
+                    {
+                        Core.Logger.Log("Port Check cycle completed. Result: False.", Logger.LogTypes.Info);
+                        ClientEvent.Invoke(ClientEvent.Types.Restart);
+                    }
+                }
             } while (IsActive);
         }
 
