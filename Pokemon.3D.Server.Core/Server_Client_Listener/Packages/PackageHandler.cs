@@ -298,8 +298,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.PrivateMessage, Player.ID, p.DataItems, p.Client));
 
                 Core.Logger.Log(Player.isGameJoltPlayer ?
-                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have sent a private message to " + p.DataItems[0]) :
-                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a private message to " + p.DataItems[0]), Logger.LogTypes.PM, p.Client);
+                        Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have sent a private message to " + p.DataItems[0] + " with the following message: " + p.DataItems[1]) :
+                        Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have sent a private message to " + p.DataItems[0] + " with the following message: " + p.DataItems[1]), Logger.LogTypes.PM, p.Client);
             }
         }
 

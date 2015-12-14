@@ -21,11 +21,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
     {
         private TcpListener TcpListener { get; set; }
 
-        private TcpClient Client { get; set; }
-        private StreamReader Reader { get; set; }
-
         private ThreadCollection ThreadCollection { get; set; } = new ThreadCollection();
-        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
+        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Environment.ProcessorCount);
 
         private bool IsActive { get; set; } = false;
 
@@ -76,8 +73,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             IsActive = false;
 
             if (TcpListener != null) TcpListener.Stop();
-            if (Client != null) Client.Close();
-            if (Reader != null) Reader.Dispose();
 
             ThreadCollection.Dispose();
 
@@ -115,17 +110,39 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             {
                 try
                 {
-                    Client = TcpListener.AcceptTcpClient();
-
-                    if (Client != null)
-                    {
-                        Reader = new StreamReader(Client.GetStream());
-                        ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Reader.ReadLine());
-                    }
+                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadAcceptTcpClient), TcpListener.AcceptTcpClient());
                 }
                 catch (ThreadAbortException) { return; }
                 catch (Exception) { }
             } while (IsActive);
+        }
+
+        private object ThreadAcceptTcpClient(object obj)
+        {
+            try
+            {
+                TcpClient Client = (TcpClient)obj;
+                
+                if (Client != null)
+                {
+                    StreamReader Reader = new StreamReader(Client.GetStream());
+                    string ReturnMessage = Reader.ReadLine();
+
+                    if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                    {
+                        Package Package = new Package(ReturnMessage, Client);
+                        Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
+
+                        if (Package.IsValid)
+                        {
+                            Package.Handle();
+                        }
+                    }
+                }
+            }
+            catch (Exception) { }
+
+            return null;
         }
 
         private void ThreadPortCheck()
@@ -150,29 +167,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                         ClientEvent.Invoke(ClientEvent.Types.Restart);
                     }
                 }
-            } while (IsActive);
-        }
-
-        private object ThreadHandlePackage(object obj)
-        {
-            try
-            {
-                string ReturnMessage = (string)obj;
-
-                if (!string.IsNullOrWhiteSpace(ReturnMessage))
+                else
                 {
-                    Package Package = new Package(ReturnMessage, Client);
-                    Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
-
-                    if (Package.IsValid)
-                    {
-                        Package.Handle();
-                    }
+                    Thread.Sleep(1);
                 }
-            }
-            catch (Exception) { }
-
-            return null;
+            } while (IsActive);
         }
 
         private void ThreadAutoRestart()
