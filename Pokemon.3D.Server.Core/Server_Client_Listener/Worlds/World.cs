@@ -345,11 +345,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
                         Core.Logger.Log(string.Format(@"Current Season: {0} | Current Weather: {1} | Current Time: {2}", GetSeasonName(Season), GetWeatherName(Weather), _CurrentTime.AddSeconds(TimeOffset).ToString()), Logger.LogTypes.Info);
                     }
 
-                    for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+                    for (int i = 0; i < Core.Player.Count; i++)
                     {
-                        if (Core.Pokemon3DPlayer[i].Network.IsActive)
+                        if (Core.Player[i].Network.IsActive)
                         {
-                            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Pokemon3DPlayer[i]), Core.Pokemon3DPlayer[i].Network.Client));
+                            Core.Player.SentToPlayer(new Package(Package.PackageTypes.WorldData, GenerateWorld(Core.Player[i]), Core.Player[i].Network.Client));
                         }
                     }
                 }

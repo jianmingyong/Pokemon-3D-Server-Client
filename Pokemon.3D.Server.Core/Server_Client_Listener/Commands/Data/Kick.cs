@@ -42,7 +42,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                         return;
@@ -54,10 +54,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
-                        Core.Pokemon3DPlayer.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Player.CommandFeedback("You have successfully kicked " + KickPlayerName, $"have kick {KickPlayerName} with the following reason: {Group[1]}");
                         return;
@@ -65,17 +65,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 }
                 else if (Player == null)
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                         return;
                     }
                     else
                     {
-                        Player KickPlayer = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
-                        Core.Pokemon3DPlayer.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
                         Core.Logger.Log("You have successfully kicked " + KickPlayerName, Logger.LogTypes.Info);
                         return;
@@ -91,7 +91,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
@@ -101,26 +101,26 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
 
-                        Core.Pokemon3DPlayer.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 
                         Player.CommandFeedback("You have successfully kicked " + KickPlayerName, string.Format("have kick {0} with the following reason: No reason.", KickPlayerName));
                     }
                 }
                 else if (Player == null)
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                     }
                     else
                     {
-                        Player KickPlayer = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
                         string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
 
-                        Core.Pokemon3DPlayer.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
+                        Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 
                         Core.Logger.Log("You have successfully kicked " + KickPlayerName, Logger.LogTypes.Info);
                     }

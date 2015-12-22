@@ -505,42 +505,42 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 Core.Setting.OnlineSettingListData.Add(new OnlineSetting(Name, GameJoltID));
             }
-            Core.Pokemon3DPlayer.Add(this);
+            Core.Player.Add(this);
 
-            Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
+            Core.Player.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
 
-            for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+            for (int i = 0; i < Core.Player.Count; i++)
             {
-                if (Core.Pokemon3DPlayer[i].ID != ID)
+                if (Core.Player[i].ID != ID)
                 {
-                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.CreatePlayer, Core.Pokemon3DPlayer[i].ID.ToString(), p.Client));
-                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.GameData, Core.Pokemon3DPlayer[i].ID, Core.Pokemon3DPlayer[i].GenerateGameData(true), p.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.CreatePlayer, Core.Player[i].ID.ToString(), p.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.GameData, Core.Player[i].ID, Core.Player[i].GenerateGameData(true), p.Client));
                 }
             }
 
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.CreatePlayer, ID.ToString(), null));
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.CreatePlayer, ID.ToString(), null));
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
 
             if (Core.Setting.WelcomeMessage != null)
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.WelcomeMessage, p.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.WelcomeMessage, p.Client));
             }
 
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), null));
             Core.Logger.Log(isGameJoltPlayer ?
                 Core.Setting.Token("SERVER_GAMEJOLT", Name, GameJoltID.ToString(), "join the game!") :
                 Core.Setting.Token("SERVER_NOGAMEJOLT", Name, "join the game!"), Logger.LogTypes.Info, p.Client);
 
-            if (Core.Pokemon3DListener.TimeLeft() != null)
+            if (Core.Listener.TimeLeft() != null)
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Pokemon3DListener.TimeLeft()), p.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_RESTARTWARNING", Core.Listener.TimeLeft()), p.Client));
             }
 
             if (Core.Setting.AllowChatChannels)
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", CC_CurrentChatChannel), p.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_CURRENTCHATCHANNEL", CC_CurrentChatChannel), p.Client));
             }
         }
 
@@ -631,11 +631,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
                 if (p.IsFullPackageData())
                 {
-                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(true), null));
                 }
                 else
                 {
-                    Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
+                    Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.GameData, ID, GenerateGameData(false), null));
                 }
             }
         }
@@ -724,7 +724,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public string DoPvPValidation()
         {
             // Get Opponent Details
-            Player OppPlayer = Core.Pokemon3DPlayer.GetPlayer(PvP_OpponentID);
+            Player OppPlayer = Core.Player.GetPlayer(PvP_OpponentID);
 
             #region List of Banned Stuff
             // PvP Default Rules - No unobtainable Pokemon.

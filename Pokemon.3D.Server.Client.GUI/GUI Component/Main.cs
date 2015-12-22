@@ -73,9 +73,9 @@ namespace Pokemon_3D_Server_Client_GUI
         {
             if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.jianmingyong_Server)
             {
-                for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+                for (int i = 0; i < Core.Player.Count; i++)
                 {
-                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Pokemon3DPlayer[i].Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ServerClose, ApplicationRestart ? Core.Setting.Token("SERVER_RESTART") : ApplicationUpdate ? Core.Setting.Token("SERVER_UPDATE") : Core.Setting.Token("SERVER_CLOSE"), Core.Player[i].Network.Client));
                 }
             }
             else if (Core.Setting.MainEntryPoint == Setting.MainEntryPointType.Rcon)
@@ -392,7 +392,7 @@ namespace Pokemon_3D_Server_Client_GUI
 
         private void KickToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Player Player = Core.Pokemon3DPlayer.GetPlayer(Regex.Match(Main_CurrentPlayerOnline.Items[Main_CurrentPlayerOnline.SelectedIndex].ToString(), @"ID: (\d+) \|.+").Groups[1].Value.ToInt());
+            Player Player = Core.Player.GetPlayer(Regex.Match(Main_CurrentPlayerOnline.Items[Main_CurrentPlayerOnline.SelectedIndex].ToString(), @"ID: (\d+) \|.+").Groups[1].Value.ToInt());
 
             Main_Command.Text = $"/kick {Player.Name} <Insert Reason here>";
         }

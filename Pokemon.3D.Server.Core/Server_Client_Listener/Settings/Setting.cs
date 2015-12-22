@@ -26,7 +26,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// <summary>
         /// Get/Set Application Directory.
         /// </summary>
-        public string ApplicationDirectory { get; set; }
+        public string ApplicationDirectory { get; private set; }
 
         #region Main Application Setting
         /// <summary>
@@ -95,7 +95,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             {
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    _IPAddress = GeneratePublicIP ? System.Net.IPAddress.Parse(Functions.GetPublicIP()) : null;
+                    _IPAddress = GeneratePublicIP ? Functions.GetPublicIP() == null ? null : System.Net.IPAddress.Parse(Functions.GetPublicIP()) : null;
                 }
                 else
                 {
@@ -643,10 +643,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public List<MapFileList> MapFileListData { get; set; } = new List<MapFileList>();
 
         /// <summary>
-        /// Setup Setting
+        /// New Setting.
         /// </summary>
-        public void Setup()
+        /// <param name="Directory">Start Directory.</param>
+        public Setting(string Directory)
         {
+            ApplicationDirectory = Directory;
+
             // Initialize Tokens
             #region Player Name Text
             TokenDefination.Add("SERVER_GAMEJOLT", "{0} ({1}) {2}");
@@ -658,15 +661,15 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             #endregion Player Name Text
 
             #region Player Join Messages
-            TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
             TokenDefination.Add("SERVER_FULL", "This server is currently full of players.");
-            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
             TokenDefination.Add("SERVER_OFFLINEMODE", "This server do not allow offline save.");
             TokenDefination.Add("SERVER_WRONGGAMEMODE", "This server require you to play the following gamemode: {0}.");
+            TokenDefination.Add("SERVER_DISALLOW", "You do not have required permission to join the server. Please try again later.");
+            TokenDefination.Add("SERVER_CLONE", "You are still in the server. Please try again later.");
             #endregion Player Join Messages
 
             #region Player Left Messages
-            TokenDefination.Add("SERVER_AFK", "You have been afk for too long.");
+            TokenDefination.Add("SERVER_AFK", "You have been afking for too long.");
             TokenDefination.Add("SERVER_PLAYERLEFT", "You have left the server.");
             TokenDefination.Add("SERVER_NOPING", "You have a slow connection or you have disconnected from internet for too long.");
             TokenDefination.Add("SERVER_KICKED", "You have been kicked in the server with the following reason: {0}");
@@ -703,11 +706,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
             TokenDefination.Add("SERVER_TRADEDISALLOW", "This server do not allow user to Trade. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_NOCHAT", "This server do not allow user to chat. Sorry for the inconveniences caused.");
             TokenDefination.Add("SERVER_CURRENTCHATCHANNEL", "You are now at {0} Chat Channel. For more info, type \" /help chatchannel \".");
+            TokenDefination.Add("SERVER_ERROR", "Package Data Error: {0}. Unable to verify.");
 
             OperatorListData.Add(new OperatorList("jianmingyong", 116016, "I am the god of time.", (int)Player.OperatorTypes.Creator));
             OperatorListData.Add(new OperatorList("jianmingyong1998", 222452, "I am the god of space.", (int)Player.OperatorTypes.Creator));
-
-            Core.Logger.Log("Setting initialized.", Logger.LogTypes.Info);
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
-﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
+﻿using Pokemon_3D_Server_Core.Server_Client_Listener.Interface;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Players;
+using Pokemon_3D_Server_Core.Shared.jianmingyong;
 
 namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
 {
@@ -38,11 +38,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Updater.Update();
+                    using (Updater Updater = new Updater())
+                    {
+                        Updater.Update();
+                    }
                 }
                 else if (Player == null)
                 {
-                    Core.Updater.Update();
+                    using (Updater Updater = new Updater())
+                    {
+                        Updater.Update();
+                    }
                 }
             }
             #endregion /Update

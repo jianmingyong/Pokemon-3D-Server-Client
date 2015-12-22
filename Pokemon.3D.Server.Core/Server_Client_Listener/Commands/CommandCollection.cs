@@ -36,7 +36,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         {
             for (int i = 0; i < Count; i++)
             {
-                this[i].Handle(p, p.Client == null ? null : Core.Pokemon3DPlayer.GetPlayer(p.Client));
+                this[i].Handle(p, p.Client == null ? null : Core.Player.GetPlayer(p.Client));
             }
         }
     }

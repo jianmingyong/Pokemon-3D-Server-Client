@@ -44,14 +44,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.PvP
                         Player.PvP_Rules = new List<string> { Player.PvPRules.Custom_League.ToString() };
                         Player.PvP_Validatated = false;
 
-                        Core.Pokemon3DPlayer.GetPlayer(Player.PvP_OpponentID).PvP_Rules = new List<string> { Player.PvPRules.Custom_League.ToString() };
-                        Core.Pokemon3DPlayer.GetPlayer(Player.PvP_OpponentID).PvP_Validatated = false;
+                        Core.Player.GetPlayer(Player.PvP_OpponentID).PvP_Rules = new List<string> { Player.PvPRules.Custom_League.ToString() };
+                        Core.Player.GetPlayer(Player.PvP_OpponentID).PvP_Validatated = false;
 
                         Player.CommandFeedback("The PvP match will now obey League rules. For more info refer:", null);
-                        Player.CommandFeedback("http://www.aggressivegaming.org/pokemon/threads/general-league-rules.1052/", null);
+                        Player.CommandFeedback("http://www.aggressivegaming.org/pokemon/link-forums/general-league-rules.219/", null);
 
-                        Core.Pokemon3DPlayer.GetPlayer(Player.PvP_OpponentID).CommandFeedback("The PvP match will now obey League rules. For more info refer:", null);
-                        Core.Pokemon3DPlayer.GetPlayer(Player.PvP_OpponentID).CommandFeedback("http://www.aggressivegaming.org/pokemon/threads/general-league-rules.1052/", null);
+                        Core.Player.GetPlayer(Player.PvP_OpponentID).CommandFeedback("The PvP match will now obey League rules. For more info refer:", null);
+                        Core.Player.GetPlayer(Player.PvP_OpponentID).CommandFeedback("http://www.aggressivegaming.org/pokemon/link-forums/general-league-rules.219/", null);
                     }
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -22,7 +21,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
         private TcpListener TcpListener { get; set; }
 
         private ThreadCollection ThreadCollection { get; set; } = new ThreadCollection();
-        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Environment.ProcessorCount);
+        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
 
         private bool IsActive { get; set; } = false;
 
@@ -110,19 +109,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             {
                 try
                 {
-                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadAcceptTcpClient), TcpListener.AcceptTcpClient());
+                    ThreadPool.QueueWorkItem(new Action<TcpClient>(ThreadAcceptTcpClient), TcpListener.AcceptTcpClient());
                 }
                 catch (ThreadAbortException) { return; }
                 catch (Exception) { }
             } while (IsActive);
         }
 
-        private object ThreadAcceptTcpClient(object obj)
+        private void ThreadAcceptTcpClient(TcpClient Client)
         {
             try
             {
-                TcpClient Client = (TcpClient)obj;
-                
                 if (Client != null)
                 {
                     StreamReader Reader = new StreamReader(Client.GetStream());
@@ -141,8 +138,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                 }
             }
             catch (Exception) { }
-
-            return null;
         }
 
         private void ThreadPortCheck()
@@ -187,7 +182,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
                     if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
                     {
-                        Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
+                        Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_TRADEPVPFAIL", this.TimeLeft()), null));
                     }
                     else if (TimeLeft.TotalSeconds < 1)
                     {

@@ -46,7 +46,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (Player.isGameJoltPlayer)
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
@@ -55,20 +55,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             }
             else
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
             }
 
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
             Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+
+            Player.Network.ThreadPool3.WaitForIdle();
+
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
-            Core.Pokemon3DPlayer.Remove(Player);
+            Core.Player.Remove(Player);
         }
 
         /// <summary>
@@ -83,7 +86,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (Player.isGameJoltPlayer)
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
@@ -92,20 +95,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             }
             else
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
             }
 
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
             Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+
+            Player.Network.ThreadPool3.WaitForIdle();
+
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
-            Core.Pokemon3DPlayer.Remove(Player);
+            Core.Player.Remove(Player);
         }
 
         /// <summary>
@@ -120,7 +126,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             if (Player.isGameJoltPlayer)
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 OnlineSetting OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
@@ -129,20 +135,23 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             }
             else
             {
-                Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
+                Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server."), null));
                 Core.Logger.Log(Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
             }
 
-            Core.Pokemon3DPlayer.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
+            Core.Player.SendToAllPlayer(new Package(Package.PackageTypes.DestroyPlayer, Player.ID.ToString(), null));
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
             {
-                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
+                Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
             Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+
+            Player.Network.ThreadPool3.WaitForIdle();
+
             PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
-            Core.Pokemon3DPlayer.Remove(Player);
+            Core.Player.Remove(Player);
         }
 
         /// <summary>
@@ -151,7 +160,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="ID">ID of the player.</param>
         public bool HasPlayer(int ID)
         {
-            if ((from Player p in Core.Pokemon3DPlayer where p.ID == ID select p).Count() > 0)
+            if ((from Player p in Core.Player where p.ID == ID select p).Count() > 0)
             {
                 return true;
             }
@@ -167,7 +176,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Name">Name of the player.</param>
         public bool HasPlayer(string Name)
         {
-            if ((from Player p in Core.Pokemon3DPlayer where p.Name == Name select p).Count() > 0)
+            if ((from Player p in Core.Player where p.Name == Name select p).Count() > 0)
             {
                 return true;
             }
@@ -183,7 +192,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Client">TcpClient of the player.</param>
         public bool HasPlayer(TcpClient Client)
         {
-            if ((from Player p in Core.Pokemon3DPlayer where p.Network.Client == Client select p).Count() > 0)
+            if ((from Player p in Core.Player where p.Network.Client == Client select p).Count() > 0)
             {
                 return true;
             }
@@ -199,7 +208,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="ID">ID of the player.</param>
         public Player GetPlayer(int ID)
         {
-            return (from Player p in Core.Pokemon3DPlayer where p.ID == ID select p).FirstOrDefault();
+            return (from Player p in Core.Player where p.ID == ID select p).FirstOrDefault();
         }
 
         /// <summary>
@@ -208,7 +217,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Name">Name of the player.</param>
         public Player GetPlayer(string Name)
         {
-            return (from Player p in Core.Pokemon3DPlayer where p.Name == Name select p).FirstOrDefault();
+            return (from Player p in Core.Player where p.Name == Name select p).FirstOrDefault();
         }
 
         /// <summary>
@@ -217,7 +226,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Client">TcpClient of the player.</param>
         public Player GetPlayer(TcpClient Client)
         {
-            return (from Player p in Core.Pokemon3DPlayer where p.Network.Client == Client select p).FirstOrDefault();
+            return (from Player p in Core.Player where p.Network.Client == Client select p).FirstOrDefault();
         }
 
         private int GetNextValidID()
@@ -229,7 +238,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             else
             {
                 int ValidID = 0;
-                List<Player> ListOfPlayer = (from Player p in Core.Pokemon3DPlayer orderby p.ID ascending select p).ToList();
+                List<Player> ListOfPlayer = (from Player p in Core.Player orderby p.ID ascending select p).ToList();
 
                 for (int i = 0; i < ListOfPlayer.Count; i++)
                 {
@@ -253,7 +262,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public void SentToPlayer(Package p)
         {
 
-            if (Core.Pokemon3DPlayer.HasPlayer(p.Client))
+            if (Core.Player.HasPlayer(p.Client))
             {
                 Player Player = GetPlayer(p.Client);
                 Player.Network.SentToPlayer(p);
@@ -282,9 +291,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             for (int i = 0; i < Count; i++)
             {
-                if (p.Client != null && Core.Pokemon3DPlayer[i].Network.Client != p.Client && (Core.Pokemon3DPlayer[i].IsOperator() || Core.Pokemon3DPlayer[i].GameJoltID == 116016 || Core.Pokemon3DPlayer[i].GameJoltID == 222452))
+                if (p.Client != null && Core.Player[i].Network.Client != p.Client && (Core.Player[i].IsOperator() || Core.Player[i].GameJoltID == 116016 || Core.Player[i].GameJoltID == 222452))
                 {
-                    Core.Pokemon3DPlayer[i].Network.SentToPlayer(p);
+                    Core.Player[i].Network.SentToPlayer(p);
                 }
             }
         }
@@ -297,9 +306,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         {
             for (int i = 0; i < Count; i++)
             {
-                if (p.Client == null || Core.Pokemon3DPlayer[i].Network.Client != p.Client)
+                if (p.Client == null || Core.Player[i].Network.Client != p.Client)
                 {
-                    Core.Pokemon3DPlayer[i].Network.SentToPlayer(p);
+                    Core.Player[i].Network.SentToPlayer(p);
                 }
             }
         }

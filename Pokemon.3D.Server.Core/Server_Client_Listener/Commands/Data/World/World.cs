@@ -38,7 +38,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(), Player.Network.Client));
                 }
                 else if (Player == null)
                 {

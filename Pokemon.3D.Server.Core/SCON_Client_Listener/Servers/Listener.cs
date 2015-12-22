@@ -13,9 +13,9 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
     /// <summary>
     /// Class containing Pokemon 3D Listener
     /// </summary>
-    public class SCONListener : IDisposable
+    public class Listener : IDisposable
     {
-        private ITCPListener Listener { get; set; }
+        private ITCPListener TcpListener { get; set; }
 
         private bool IsActive { get; set; } = false;
 
@@ -26,7 +26,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
         /// <summary>
         /// New SCON Listener.
         /// </summary>
-        public SCONListener()
+        public Listener()
         {
             AppDomainWrapper.Instance = new AppDomainWrapperInstance();
             TCPListenerWrapper.Instance = new TCPServerWrapperInstance();
@@ -56,8 +56,8 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                     UpdateCycle.Start();
                     ThreadCollection.Add(UpdateCycle);
 
-                    Listener = TCPListenerWrapper.CreateTCPListener(Core.Setting.SCONPort);
-                    Listener.Start();
+                    TcpListener = TCPListenerWrapper.CreateTCPListener(Core.Setting.SCONPort);
+                    TcpListener.Start();
 
                     IsActive = true;
                 }
@@ -75,7 +75,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
         {
             IsActive = false;
 
-            if (Listener != null) Listener.Stop();
+            if (TcpListener != null) TcpListener.Stop();
 
             for (int i = 0; i < ThreadCollection.Count; i++)
             {
@@ -110,9 +110,9 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
             {
                 try
                 {
-                    if (Listener.AvailableClients)
+                    if (TcpListener.AvailableClients)
                     {
-                        SCONClients.Add(new SCONClient(Listener.AcceptTCPClient(), this));
+                        SCONClients.Add(new SCONClient(TcpListener.AcceptTCPClient(), this));
                         Core.Logger.Log("New SCON Player Added.", Logger.LogTypes.Debug);
                     }
                 }

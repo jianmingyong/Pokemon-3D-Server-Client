@@ -76,14 +76,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Chann
 
                     if (Core.Setting.AllowChatChannels)
                     {
-                        for (int i = 0; i < Core.Pokemon3DPlayer.Count; i++)
+                        for (int i = 0; i < Core.Player.Count; i++)
                         {
-                            if (Core.Pokemon3DPlayer[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Pokemon3DPlayer[i] != Player)
+                            if (Core.Player[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Player[i] != Player)
                             {
-                                Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
+                                Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.isGameJoltPlayer ?
                                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have joined the current chat channel you are in.") :
                                     Core.Setting.Token("SERVER_COMMANDNOGAMEJOLT", Player.Name, "have joined the current chat channel you are in.")
-                                    , Core.Pokemon3DPlayer[i].Network.Client));
+                                    , Core.Player[i].Network.Client));
                             }
                         }
 

@@ -43,13 +43,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
                     else
                     {
-                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player Players = Core.Player.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
@@ -66,13 +66,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 }
                 else if (Player == null)
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                     }
                     else
                     {
-                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player Players = Core.Player.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
@@ -97,13 +97,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Player.CommandFeedback(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), null);
                     }
                     else
                     {
-                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player Players = Core.Player.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
@@ -120,13 +120,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                 }
                 else if (Player == null)
                 {
-                    if (!Core.Pokemon3DPlayer.HasPlayer(Group[0]))
+                    if (!Core.Player.HasPlayer(Group[0]))
                     {
                         Core.Logger.Log(Core.Setting.Token("SERVER_PLAYERNOTEXIST"), Logger.LogTypes.Info);
                     }
                     else
                     {
-                        Player Players = Core.Pokemon3DPlayer.GetPlayer(Group[0]);
+                        Player Players = Core.Player.GetPlayer(Group[0]);
                         string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)

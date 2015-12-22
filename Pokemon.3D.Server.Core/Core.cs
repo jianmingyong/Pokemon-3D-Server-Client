@@ -1,12 +1,9 @@
 ﻿using System;
-using Pokemon_3D_Server_Core.SCON_Client_Listener.Servers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
 using Pokemon_3D_Server_Core.Shared.jianmingyong;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
-using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 
 namespace Pokemon_3D_Server_Core
 {
@@ -15,16 +12,46 @@ namespace Pokemon_3D_Server_Core
     /// </summary>
     public class Core
     {
-        #region Pokemon 3D Listener
+        /// <summary>
+        /// Get Setting.
+        /// </summary>
+        public static Setting Setting { get; private set; }
+
+        /// <summary>
+        /// Get Logger.
+        /// </summary>
+        public static LoggerCollection Logger { get; private set; }
+
+        /// <summary>
+        /// Get Updater.
+        /// </summary>
+        public static Updater Updater { get; private set; }
+
         /// <summary>
         /// Get Pokemon 3D Listener.
         /// </summary>
-        public static Server_Client_Listener.Servers.Listener Pokemon3DListener { get; } = new Server_Client_Listener.Servers.Listener();
+        public static Server_Client_Listener.Servers.Listener Listener { get; private set; }
 
+        /// <summary>
+        /// Get RCON Listener.
+        /// </summary>
+        public static RCON_Client_Listener.Servers.Listener RCONListener { get; private set; }
+
+        /// <summary>
+        /// Get SCON Listener.
+        /// </summary>
+        public static SCON_Client_Listener.Servers.Listener SCONListener { get; private set; }
+
+        /// <summary>
+        /// Get Comamnd List.
+        /// </summary>
+        public static CommandCollection Command { get; private set; }
+
+        #region Pokemon 3D Listener
         /// <summary>
         /// Get Player Collection.
         /// </summary>
-        public static Server_Client_Listener.Players.PlayerCollection Pokemon3DPlayer { get; } = new Server_Client_Listener.Players.PlayerCollection();
+        public static Server_Client_Listener.Players.PlayerCollection Player { get; } = new Server_Client_Listener.Players.PlayerCollection();
 
         /// <summary>
         /// Get World.
@@ -33,11 +60,6 @@ namespace Pokemon_3D_Server_Core
         #endregion Pokemon 3D Listener
 
         #region RCON Listener
-        /// <summary>
-        /// Get RCON Listener.
-        /// </summary>
-        public static RCON_Client_Listener.Servers.Listener RCONListener { get; } = new RCON_Client_Listener.Servers.Listener();
-
         /// <summary>
         /// Get RCON Player Collection.
         /// </summary>
@@ -61,48 +83,21 @@ namespace Pokemon_3D_Server_Core
         public static RCON_GUI_Client_Listener.Downloader.DownloaderQueue RCONGUIDownloadQueue { get; } = new RCON_GUI_Client_Listener.Downloader.DownloaderQueue();
         #endregion RCON GUI Listener
 
-        #region SCON Listener
-        /// <summary>
-        /// Get SCON Listener.
-        /// </summary>
-        public static SCONListener SCONListener { get; } = new SCONListener();
-        #endregion SCON Listener
-
-        /// <summary>
-        /// Get Comamnd List.
-        /// </summary>
-        public static CommandCollection Command { get; } = new CommandCollection();
-
-        /// <summary>
-        /// Get Logger.
-        /// </summary>
-        public static LoggerCollection Logger { get; } = new LoggerCollection();
-
-        /// <summary>
-        /// Get Setting.
-        /// </summary>
-        public static Setting Setting { get; } = new Setting();
-
-        /// <summary>
-        /// Get Updater.
-        /// </summary>
-        public static Updater Updater { get; } = new Updater();
-
         /// <summary>
         /// Server Main Entry Point - Initialize as many things as possible here.
         /// Order is important here, any additional initialization should be place at the bottom.
         /// </summary>
+        /// <param name="Directory">Start Directory.</param>
         public static void Start(string Directory)
         {
             try
             {
-                Setting.ApplicationDirectory = Directory;
+                // Initialize Setting
+                Setting = new Setting(Directory);
 
                 // Initialize Logger.
+                Logger = new LoggerCollection();
                 Logger.Start();
-
-                // Initialize Setting.
-                Setting.Setup();
 
                 if (Setting.Load())
                 {
@@ -115,31 +110,36 @@ namespace Pokemon_3D_Server_Core
                     return;
                 }
 
+                // Initialize Updater
+                if (Setting.CheckForUpdate)
+                {
+                    Updater = new Updater();
+                    Updater.Update();
+                }
+
                 if (Setting.MainEntryPoint == Setting.MainEntryPointType.jianmingyong_Server)
                 {
                     // Initialize Listener.
-                    Pokemon3DListener.Start();
+                    Listener = new Server_Client_Listener.Servers.Listener();
+                    Listener.Start();
 
                     // Initialize RCONListener.
                     if (Setting.RCONEnable)
                     {
+                        RCONListener = new RCON_Client_Listener.Servers.Listener();
                         RCONListener.Start();
                     }
 
                     // Initialize SCONListener.
                     if (Setting.SCONEnable)
                     {
+                        SCONListener = new SCON_Client_Listener.Servers.Listener();
                         SCONListener.Start();
                     }
                 }
 
-                // Initialize Updater
-                if (Setting.CheckForUpdate)
-                {
-                    Updater.Update();
-                }
-
                 // Initialize Command.
+                Command = new CommandCollection();
                 Command.AddCommand();
             }
             catch (Exception ex)
@@ -153,10 +153,10 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static void Dispose()
         {
-            Pokemon3DListener.Dispose();
-            RCONListener.Dispose();
-            SCONListener.Dispose();
-            Logger.Dispose();
+            if (Listener != null) Listener.Dispose();
+            if (RCONListener != null) RCONListener.Dispose();
+            if (SCONListener != null) SCONListener.Dispose();
+            if (Logger != null) Logger.Dispose();
         }
     }
 }

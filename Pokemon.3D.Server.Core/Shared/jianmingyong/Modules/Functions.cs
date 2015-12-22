@@ -210,7 +210,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             {
                 try
                 {
-                    if (Client.ConnectAsync(GetPublicIP(), Port).Wait(5000))
+                    if (Client.ConnectAsync(Core.Setting.IPAddress, Port).Wait(5000))
                     {
                         return true;
                     }

@@ -40,7 +40,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
                     OnlineSetting Settings = Player.GetOnlineSetting();
-                    Core.Pokemon3DPlayer.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), Player.Network.Client));
+                    Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.World.ToString(Settings.CurrentWorldSeason,Settings.CurrentWorldWeather), Player.Network.Client));
                 }
             }
             #endregion /Player.World

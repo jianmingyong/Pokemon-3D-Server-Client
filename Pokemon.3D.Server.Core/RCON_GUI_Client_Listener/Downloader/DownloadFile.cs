@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Packages;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
-using System;
-using System.Diagnostics;
 
 namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
 {
@@ -142,11 +141,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             }
             else if (TotalBytes_L < 1024 * 1024)
             {
-                TotalBytes = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(TotalBytes_L / 1024, 2).ToString("F2") + " KB";
+                TotalBytes = Shared.jianmingyong.Modules.Math.Round(TotalBytes_L / 1024, 2).ToString("F2") + " KB";
             }
             else if (TotalBytes_L < 1024 * 1024 * 1024)
             {
-                TotalBytes = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(TotalBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
+                TotalBytes = Shared.jianmingyong.Modules.Math.Round(TotalBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
             }
 
             Status = DownloadStatus.Initializing.ToString();
@@ -162,7 +161,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 {
                     Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\CrashLogs\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    if (Stream.Length == TotalBytes_L || Stream.Length - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
+                    if (Stream.Length == TotalBytes_L || Stream.Length - Encoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
                     {
                         Status = DownloadStatus.Skipped.ToString();
 
@@ -193,7 +192,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 {
                     Stream = new FileStream(Core.Setting.ApplicationDirectory + "\\Download\\Logger\\" + Name, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
 
-                    if (Stream.Length == TotalBytes_L || Stream.Length - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
+                    if (Stream.Length == TotalBytes_L || Stream.Length - Encoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
                     {
                         Status = DownloadStatus.Skipped.ToString();
 
@@ -241,7 +240,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                     Status = DownloadStatus.Completed.ToString();
                     Speed = "0 B/s";
                 }
-                else if (CurrentBytes_L - ASCIIEncoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
+                else if (CurrentBytes_L - Encoding.UTF8.GetByteCount(Environment.NewLine.ToCharArray()) == TotalBytes_L)
                 {
                     Status = DownloadStatus.Completed.ToString();
                     Speed = "0 B/s";
@@ -284,11 +283,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                     }
                     else if (CurrentBytes_L < 1024 * 1024)
                     {
-                        CurrentBytes = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(CurrentBytes_L / 1024, 2).ToString("F2") + " KB";
+                        CurrentBytes = Shared.jianmingyong.Modules.Math.Round(CurrentBytes_L / 1024, 2).ToString("F2") + " KB";
                     }
                     else if (CurrentBytes_L < 1024 * 1024 * 1024)
                     {
-                        CurrentBytes = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(CurrentBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
+                        CurrentBytes = Shared.jianmingyong.Modules.Math.Round(CurrentBytes_L / 1024 / 1024,2).ToString("F2") + " MB";
                     }
 
                     Writer.WriteLine(p.DataItems[i + 1]);
@@ -343,11 +342,11 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 }
                 else if (Speed_L < 1024 * 1024)
                 {
-                    Speed = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(Speed_L / 1024, 2).ToString("F2") + " KB/s";
+                    Speed = Shared.jianmingyong.Modules.Math.Round(Speed_L / 1024, 2).ToString("F2") + " KB/s";
                 }
                 else if (Speed_L < 1024 * 1024 * 1024)
                 {
-                    Speed = Pokemon_3D_Server_Core.Shared.jianmingyong.Modules.Math.Round(Speed_L / 1024 / 1024,2).ToString("f2") + " MB/s";
+                    Speed = Shared.jianmingyong.Modules.Math.Round(Speed_L / 1024 / 1024,2).ToString("f2") + " MB/s";
                 }
 
                 sw.Stop();

@@ -37,7 +37,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         public ITCPClient Client { get; }
         ProtobufStream Stream { get; }
 
-        private readonly SCONListener _listener;
+        private readonly Listener _listener;
 
 #if DEBUG
         // -- Debug -- //
@@ -56,7 +56,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         /// </summary>
         /// <param name="client">Client.</param>
         /// <param name="sconListener">SCONListener.</param>
-        public SCONClient(ITCPClient client, SCONListener sconListener)
+        public SCONClient(ITCPClient client, Listener sconListener)
         {
             Client = client;
             Stream = new ProtobufStream(Client);

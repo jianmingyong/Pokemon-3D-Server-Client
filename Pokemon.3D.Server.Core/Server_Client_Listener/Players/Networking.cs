@@ -23,7 +23,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
         private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
         private IWorkItemsGroup ThreadPool2 = new SmartThreadPool().CreateWorkItemsGroup(1);
-        private IWorkItemsGroup ThreadPool3 = new SmartThreadPool().CreateWorkItemsGroup(1);
+
+        /// <summary>
+        /// Get Sending WorkPool.
+        /// </summary>
+        public IWorkItemsGroup ThreadPool3 = new SmartThreadPool().CreateWorkItemsGroup(1);
 
         private int LastHourCheck = 0;
 
@@ -83,42 +87,36 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             {
                 try
                 {
-                    ThreadPool.QueueWorkItem(new WorkItemCallback(ThreadPreHandlePackage), Reader.ReadLine());
+                    if (Client.Available > -1)
+                    {
+                        ThreadPool.QueueWorkItem(new Action<string>(ThreadPreHandlePackage), Reader.ReadLine());
+                    }
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    if (IsActive)
+                    {
+                        IsActive = false;
+                        Core.Player.Remove(Client, "You have left the game.");
+                    }
+                }
             } while (IsActive);
         }
 
-        private object ThreadPreHandlePackage(object p)
+        private void ThreadPreHandlePackage(string p)
         {
-            if (string.IsNullOrEmpty((string)p))
+            Package Package = new Package(p, Client);
+            if (Package.IsValid)
             {
-                if (IsActive)
-                {
-                    IsActive = false;
-                    Core.Pokemon3DPlayer.Remove(Client, "You have left the game.");
-                }
+                LastValidPing = DateTime.Now;
+                ThreadPool2.QueueWorkItem(new Action<Package>(ThreadHandlePackage), Package);
+                Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
             }
-            else
-            {
-                Package Package = new Package((string)p, Client);
-                if (Package.IsValid)
-                {
-                    LastValidPing = DateTime.Now;
-                    ThreadPool2.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Package);
-                    Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
-                }
-            }
-
-            return null;
         }
 
-        private object ThreadHandlePackage(object obj)
+        private void ThreadHandlePackage(Package p)
         {
-            Package Package = (Package)obj;
-            Package.Handle();
-
-            return null;
+            p.Handle();
         }
 
         private void ThreadStartPinging()
@@ -134,16 +132,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     {
                         if ((DateTime.Now - LastValidPing).TotalSeconds >= Core.Setting.NoPingKickTime)
                         {
-                            Core.Pokemon3DPlayer.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
+                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_NOPING"));
                             return;
                         }
                     }
 
                     if (Core.Setting.AFKKickTime >= 10)
                     {
-                        if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Pokemon3DPlayer.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
+                        if ((DateTime.Now - LastValidMovement).TotalSeconds >= Core.Setting.AFKKickTime && Core.Player.GetPlayer(Client).BusyType == (int)Player.BusyTypes.Inactive)
                         {
-                            Core.Pokemon3DPlayer.Remove(Client, Core.Setting.Token("SERVER_AFK"));
+                            Core.Player.Remove(Client, Core.Setting.Token("SERVER_AFK"));
                             return;
                         }
                     }
@@ -156,7 +154,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 }
                 catch (Exception ex)
                 {
-                    Core.Pokemon3DPlayer.Remove(Client, ex.Message);
+                    Core.Player.Remove(Client, ex.Message);
                     return;
                 }
 
