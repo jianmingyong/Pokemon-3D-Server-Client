@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 
 using Aragas.Core.Wrappers;
-
+using PokeD.Core.Packets.SCON.Authorization;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.SCON;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
@@ -69,7 +69,16 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
 
         public void AddClient(SCONClient client) { Clients.Add(client); }
-        public void RemoveClient(SCONClient client, string reason = "") { Clients.Remove(client); }
+
+        public void RemoveClient(SCONClient client, string reason = "")
+        {
+            Clients.Remove(client);
+
+            if(!string.IsNullOrEmpty(reason))
+                client.SendPacket(new AuthorizationDisconnectPacket { Reason = reason });
+
+            client.Dispose();
+        }
 
 
         private void Update()
@@ -99,7 +108,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
             Clients.Clear();
 
-            Core.Logger.Log("SCON Listener Disposed.", Logger.LogTypes.Info);
+            Core.Logger.Log("SCON Listener Disposed.");
         }
     }
 }

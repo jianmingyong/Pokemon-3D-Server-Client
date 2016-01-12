@@ -85,7 +85,7 @@
     <Compile Include="RCON_GUI_Client_Listener\Servers\Listener.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
     <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
-    <Compile Include="SCON_Client_Listener\Servers\Listener.cs" />
+    <Compile Include="SCON_Client_Listener\Servers\ModuleSCON.cs" />
     <Compile Include="Shared\Aragas\WrapperInstances\TCPClientWrapperInstance.cs" />
     <Compile Include="Shared\Aragas\WrapperInstances\TCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
