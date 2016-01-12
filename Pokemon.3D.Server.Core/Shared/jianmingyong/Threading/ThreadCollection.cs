@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Pokemon_3D_Server_Core.Shared.jianmingyong
+namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Threading
 {
     /// <summary>
     /// Class containing Thread
@@ -20,7 +20,10 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
             Add(Thread);
         }
 
-        private void RemoveAll()
+        /// <summary>
+        /// Dispose all running threads.
+        /// </summary>
+        public void Dispose()
         {
             for (int i = 0; i < Count; i++)
             {
@@ -29,14 +32,6 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
                     this[i].Abort();
                 }
             }
-        }
-
-        /// <summary>
-        /// Dispose all running threads.
-        /// </summary>
-        public void Dispose()
-        {
-            RemoveAll();
         }
     }
 }

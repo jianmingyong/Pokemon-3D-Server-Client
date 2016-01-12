@@ -140,7 +140,7 @@
     <Compile Include="Server_Client_Listener\Worlds\WeatherSeason.cs" />
     <Compile Include="Server_Client_Listener\Worlds\World.cs" />
     <Compile Include="Server_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="Shared\jianmingyong\ThreadCollection.cs" />
+    <Compile Include="Shared\jianmingyong\Threading\ThreadCollection.cs" />
     <Compile Include="Shared\jianmingyong\Updater.cs" />
   </ItemGroup>
   <ItemGroup>
