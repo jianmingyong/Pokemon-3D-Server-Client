@@ -7,6 +7,7 @@ using PokeD.Core.Packets.SCON.Authorization;
 using Pokemon_3D_Server_Core.SCON_Client_Listener.SCON;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
+using Pokemon_3D_Server_Core.Shared.Aragas.WrapperInstances;
 
 namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 {
@@ -21,7 +22,11 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
         
         private bool IsActive { get; set; } = false;
 
-
+        public ModuleSCON()
+        {
+            TCPClientWrapper.Instance = new TCPClientWrapperInstance();
+            TCPListenerWrapper.Instance = new TCPServerWrapperInstance();
+        }
 
         public void Start()
         {
@@ -49,8 +54,9 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
                     IsActive = true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ex.CatchError();
                 Dispose();
             }
         }
@@ -108,7 +114,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.Servers
 
             Clients.Clear();
 
-            Core.Logger.Log("SCON Listener Disposed.");
+            Core.Logger.Log("SCON Listener Disposed.",Logger.LogTypes.Info);
         }
     }
 }

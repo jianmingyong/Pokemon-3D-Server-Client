@@ -37,10 +37,10 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static RCON_Client_Listener.Servers.Listener RCONListener { get; private set; }
 
-        ///// <summary>
-        ///// Get SCON Listener.
-        ///// </summary>
-        //public static SCON_Client_Listener.Servers.Listener SCONListener { get; private set; }
+        /// <summary>
+        /// Get SCON Listener.
+        /// </summary>
+        public static SCON_Client_Listener.Servers.ModuleSCON SCONListener { get; private set; }
 
         /// <summary>
         /// Get Comamnd List.
@@ -133,9 +133,9 @@ namespace Pokemon_3D_Server_Core
                     // Initialize SCONListener.
                     if (Setting.SCONEnable)
                     {
-                        //SCONListener = new SCON_Client_Listener.Servers.Listener();
-                        //SCONListener.Start();
-                        Logger.Log("SCON have been disabled due to incompatible update. Sorry for the inconvience caused.", Server_Client_Listener.Loggers.Logger.LogTypes.Info);
+                        SCONListener = new SCON_Client_Listener.Servers.ModuleSCON();
+                        SCONListener.Start();
+                        //Logger.Log("SCON have been disabled due to incompatible update. Sorry for the inconvience caused.", Server_Client_Listener.Loggers.Logger.LogTypes.Info);
                     }
                 }
 
@@ -156,7 +156,7 @@ namespace Pokemon_3D_Server_Core
         {
             if (Listener != null) Listener.Dispose();
             if (RCONListener != null) RCONListener.Dispose();
-            //if (SCONListener != null) SCONListener.Dispose();
+            if (SCONListener != null) SCONListener.Dispose();
             if (Logger != null) Logger.Dispose();
         }
     }

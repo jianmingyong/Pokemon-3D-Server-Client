@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Server_Client_Listener\Commands\Data\PvP\League.cs" />
-    <Compile Include="Shared\Aragas\WrapperInstances\AppDomainWrapperInstance.cs" />
     <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />
     <Compile Include="RCON_Client_Listener\Players\Networking.cs" />
