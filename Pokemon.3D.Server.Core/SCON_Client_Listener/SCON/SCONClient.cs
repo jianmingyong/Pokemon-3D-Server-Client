@@ -48,7 +48,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
         public SCONClient(ITCPClient clientWrapper, ModuleSCON server)
         {
             Stream = new ProtobufStream(clientWrapper);
-            Module = (ModuleSCON) server;
+            Module = server;
 
             AuthorizationStatus = (EncryptionEnabled ? AuthorizationStatus.EncryprionEnabled : 0);
         }
@@ -69,8 +69,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                     else
                     {
                         Core.Logger.Log($"Protobuf Reading Error: Packet Length size is 0. Disconnecting.");
-                        SendPacket(new AuthorizationDisconnectPacket { Reason = "Packet Length size is 0!" });
-                        Module.RemoveClient(this);
+                        Module.RemoveClient(this, "Packet Length size is 0!");
                     }
                 }
             }
@@ -108,8 +107,7 @@ namespace Pokemon_3D_Server_Core.SCON_Client_Listener.SCON
                     else
                     {
                         Core.Logger.Log($"SCON Reading Error: Packet ID {id} is not correct, Packet Data: {data}. Disconnecting.");
-                        SendPacket(new AuthorizationDisconnectPacket { Reason = $"Packet ID {id} is not correct!" });
-                        Module.RemoveClient(this);
+                        Module.RemoveClient(this, $"Packet ID {id} is not correct!");
                     }
                 }
             }
