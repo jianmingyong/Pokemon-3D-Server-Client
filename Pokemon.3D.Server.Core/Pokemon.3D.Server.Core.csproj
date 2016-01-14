@@ -76,7 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Nancy\Nancy.cs" />
+    <Compile Include="Nancy\NancyWrapper.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\PvP\League.cs" />
     <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />

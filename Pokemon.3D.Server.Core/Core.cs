@@ -148,8 +148,8 @@ namespace Pokemon_3D_Server_Core
                         var dataApi = new NancyData();
                         dataApi.Add("online", GetOnlineClients);
 
-                        Nancy.Nancy.SetDataApi(dataApi);
-                        Nancy.Nancy.Start(Setting.NancyHost, Setting.NancyPort);
+                        NancyImpl.SetDataApi(dataApi);
+                        NancyImpl.Start(Setting.NancyHost, Setting.NancyPort);
                     }
                 }
 
@@ -177,6 +177,7 @@ namespace Pokemon_3D_Server_Core
             if (Listener != null) Listener.Dispose();
             if (RCONListener != null) RCONListener.Dispose();
             if (SCONListener != null) SCONListener.Dispose();
+            NancyImpl.Stop();
             if (Logger != null) Logger.Dispose();
         }
     }

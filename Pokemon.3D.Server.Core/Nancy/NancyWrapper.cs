@@ -39,13 +39,13 @@ namespace Pokemon_3D_Server_Core.Nancy
     {
         public ApiNancyModule() : base("/api")
         {
-            foreach (var pageAction in NancyWrapperInstance.DataApi.List)
+            foreach (var pageAction in NancyImpl.DataApi.List)
                 Get[$"/{pageAction.Page}"] = pageAction.Action;
         }
     }
 
 
-    public static class Nancy
+    public static class NancyImpl
     {
         public static NancyData DataApi { get; private set; }
 
