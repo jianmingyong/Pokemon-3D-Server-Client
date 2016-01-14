@@ -632,6 +632,34 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public PasswordStorage SCONPassword { get; set; }
         #endregion SCON Server Property
 
+        #region Nancy Property
+        /// <summary>
+        /// Get/Set Nancy Enable?
+        /// </summary>
+        public bool NancyEnable { get; set; } = true;
+
+        private ushort _NancyPort = 15126;
+        /// <summary>
+        /// Get/Set Nancy Port
+        /// </summary>
+        public ushort NancyPort
+        {
+            get
+            {
+                return _NancyPort;
+            }
+            set
+            {
+                _NancyPort = value.Clamp(0, 8765);
+            }
+        }
+
+        /// <summary>
+        /// Get/Set Nancy Host
+        /// </summary>
+        public string NancyHost { get; set; } = "localhost";
+        #endregion SCON Server Property
+
         /// <summary>
         /// Get/Set Token Defination
         /// </summary>

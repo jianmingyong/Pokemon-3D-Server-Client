@@ -258,7 +258,7 @@ namespace Pokemon_3D_Server_Core.Shared.Aragas.WrapperInstances
         }
     }
 
-    public class TCPClientWrapperInstance : ITCPClientWrapper
+    public class TCPClientWrapperInstance : ITCPClientFactory
     {
         public ITCPClient CreateTCPClient() { return new SocketTCPClient(); }
         internal static ITCPClient CreateTCPClient(Socket socket) { return new SocketTCPClient(socket); }
