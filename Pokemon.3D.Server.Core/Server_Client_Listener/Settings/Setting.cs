@@ -638,7 +638,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public bool NancyEnable { get; set; } = true;
 
-        private ushort _NancyPort = 15126;
+        private ushort _NancyPort = 8765;
         /// <summary>
         /// Get/Set Nancy Port
         /// </summary>
