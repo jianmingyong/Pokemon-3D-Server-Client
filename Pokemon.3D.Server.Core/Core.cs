@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Linq;
+using Aragas.Core.Wrappers;
+using Newtonsoft.Json;
+using Pokemon_3D_Server_Core.Nancy;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Commands;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Settings;
@@ -137,6 +141,16 @@ namespace Pokemon_3D_Server_Core
                         SCONListener.Start();
                         //Logger.Log("SCON have been disabled due to incompatible update. Sorry for the inconvience caused.", Server_Client_Listener.Loggers.Logger.LogTypes.Info);
                     }
+
+                    // Initialize Nancy.
+                    if (Setting.NancyEnable)
+                    {
+                        var dataApi = new NancyData();
+                        dataApi.Add("online", GetOnlineClients);
+
+                        Nancy.Nancy.SetDataApi(dataApi);
+                        Nancy.Nancy.Start(Setting.NancyHost, Setting.NancyPort);
+                    }
                 }
 
                 // Initialize Command.
@@ -147,6 +161,12 @@ namespace Pokemon_3D_Server_Core
             {
                 ex.CatchError();
             }
+        }
+        private static dynamic GetOnlineClients(dynamic args)
+        {
+            var response = new OnlineResponseJson(Player.Select(player => new OnlineResponseJson.PlayerJson(player.Name, 0, player.isGameJoltPlayer)));
+            var jsonResponse = JsonConvert.SerializeObject(response, Formatting.None);
+            return jsonResponse;
         }
 
         /// <summary>
