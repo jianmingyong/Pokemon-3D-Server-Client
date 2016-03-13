@@ -357,7 +357,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
                 {
                     for (int i = 0; i < Core.Player.Count; i++)
                     {
-                        if (!Player.IsMuteListed(Core.Player[i]) && (Player.CC_CurrentChatChannel == Core.Player[i].CC_CurrentChatChannel || Core.Player[i].CC_CurrentChatChannel == Player.ChatChannelType.Default.ToString() || !Core.Setting.AllowChatChannels))
+                        if (!Player.IsMuteListed(Core.Player[i]) && (Player.CC_CurrentChatChannel == Core.Player[i].CC_CurrentChatChannel || !Core.Setting.AllowChatChannels))
                         {
                             Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Player.ID, p.DataItems[0], Core.Player[i].Network.Client));
                         }

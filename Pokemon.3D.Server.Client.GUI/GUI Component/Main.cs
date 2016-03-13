@@ -213,35 +213,23 @@ namespace Pokemon_3D_Server_Client_GUI
                 {
                     if (Type == PlayerEvent.Types.Add)
                     {
-                        for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
-                        {
-                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").ToInt()))
-                            {
-                                Main_CurrentPlayerOnline.Items[i] = Args.GetSplit(1, ",");
-                                return;
-                            }
-                        }
-
-                        Main_CurrentPlayerOnline.Items.Add(Args.GetSplit(1, ","));
+                        if (!Main_CurrentPlayerOnline.Items.Contains("ID: " + Args.GetSplit(0, ",")))
+                            Main_CurrentPlayerOnline.Items.Add(Args.GetSplit(1, ","));
                     }
                     else if (Type == PlayerEvent.Types.Remove)
                     {
                         for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
                         {
-                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").ToInt()))
-                            {
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",")))
                                 Main_CurrentPlayerOnline.Items.RemoveAt(i);
-                            }
                         }
                     }
                     else if (Type == PlayerEvent.Types.Update)
                     {
                         for (int i = 0; i < Main_CurrentPlayerOnline.Items.Count; i++)
                         {
-                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",").ToInt()))
-                            {
+                            if (Main_CurrentPlayerOnline.Items[i].ToString().Contains("ID: " + Args.GetSplit(0, ",")))
                                 Main_CurrentPlayerOnline.Items[i] = Args.GetSplit(1, ",");
-                            }
                         }
                     }
                 }
