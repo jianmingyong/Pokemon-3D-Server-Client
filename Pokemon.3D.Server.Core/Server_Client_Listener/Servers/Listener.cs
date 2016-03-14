@@ -22,7 +22,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
         private TcpListener TcpListener { get; set; }
 
         private ThreadCollection ThreadCollection { get; set; } = new ThreadCollection();
-        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(1);
+        private IWorkItemsGroup ThreadPool = new SmartThreadPool().CreateWorkItemsGroup(Environment.ProcessorCount);
 
         private bool IsActive { get; set; } = false;
 
