@@ -165,7 +165,8 @@ namespace Pokemon_3D_Server_Core
 
         private static dynamic GetOnlineClients(dynamic args)
         {
-            var response = new OnlineResponseJson(Player.Select(player => new OnlineResponseJson.PlayerJson(player.isGameJoltPlayer ? $"{player.Name} ({player.GameJoltID})" : player.Name, 0, player.isGameJoltPlayer)));
+            OnlineResponseJson response;
+            response = new OnlineResponseJson(Player.Select(player => new OnlineResponseJson.PlayerJson(player.isGameJoltPlayer ? $"{player.Name} ({player.GameJoltID})" : player.Name, 0, player.isGameJoltPlayer)));
             var jsonResponse = JsonConvert.SerializeObject(response, Formatting.None);
             return jsonResponse;
         }
