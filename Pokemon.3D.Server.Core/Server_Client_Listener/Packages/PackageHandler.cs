@@ -496,7 +496,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Packages
             Player Player = Core.Player.GetPlayer(p.Client);
             Player TradePlayer = Core.Player.GetPlayer(p.DataItems[0].ToInt());
 
-            Core.Player.SentToPlayer(new Package(Package.PackageTypes.TradeOffer, Player.ID, p.DataItems[1].replace("{\"isShiny\"[0]}", "{\"isShiny\"[1]}"), TradePlayer.Network.Client));
+            Core.Player.SentToPlayer(new Package(Package.PackageTypes.TradeOffer, Player.ID, p.DataItems[1].Replace("{\"isShiny\"[0]}", "{\"isShiny\"[1]}"), TradePlayer.Network.Client));
             Core.Logger.Log(Player.isGameJoltPlayer ?
                     Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "have offered the following pokemon: " + p.DataItems[1]) :
                     Core.Setting.Token("SERVER_NOGAMEJOLT", Player.Name, "have offered the following pokemon: " + p.DataItems[1]), Logger.LogTypes.Trade, p.Client);
