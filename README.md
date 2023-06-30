@@ -1,9 +1,9 @@
-# Pokemon-3D-Server-Client
+# Developer Note: This server client is now obsolete. A brand new version will be released when it is ready. 
 
 ## Pokémon 3D Server Client c#:
 **Mono Latest:** | **Windows .NET 4.5:**
 ---------------- | ---------------------
-[![Build Status](https://travis-ci.org/jianmingyong/Pokemon-3D-Server-Client.svg?branch=master)](https://travis-ci.org/jianmingyong/Pokemon-3D-Server-Client) | [![Build status](https://ci.appveyor.com/api/projects/status/etgwvbwvl5s0f96j?svg=true)](https://ci.appveyor.com/project/jianmingyong/pokemon-3d-server-client)
+Obsolete | [![Build status](https://ci.appveyor.com/api/projects/status/etgwvbwvl5s0f96j?svg=true)](https://ci.appveyor.com/project/jianmingyong/pokemon-3d-server-client)
 
 How to Build?
 
