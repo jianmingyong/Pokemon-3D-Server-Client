@@ -1,9 +1,3 @@
-[submodule "Aragas.Core"]
-	path = Aragas.Core
-	url = https://github.com/Aragas/Aragas.Core.git
-[submodule "PokeD.Core"]
-	path = PokeD.Core
-	url = https://github.com/PokeD/PokeD.Core.git
 [submodule "SmartThreadPool"]
 	path = SmartThreadPool
 	url = https://github.com/amibar/SmartThreadPool.git

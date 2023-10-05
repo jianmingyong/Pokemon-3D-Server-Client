@@ -146,11 +146,13 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         }
                     }
 
+                    /*
                     if (DateTime.Now >= LoginStartTime.AddHours(LastHourCheck + 1))
                     {
                         SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Core.Setting.Token("SERVER_LOGINTIME", (LastHourCheck + 1).ToString()), Client));
                         LastHourCheck++;
                     }
+                    */
                 }
                 catch (Exception ex)
                 {

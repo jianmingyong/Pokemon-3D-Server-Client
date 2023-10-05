@@ -8,7 +8,6 @@ using System.Net;
 using System.Net.Cache;
 using System.Reflection;
 using System.Text;
-using Aragas.Core.Data;
 using Newtonsoft.Json;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
@@ -600,66 +599,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         public string RCONPassword { get; set; } = "Password";
         #endregion RCON Server Property
 
-        #region SCON Server Property
-        /// <summary>
-        /// Get/Set SCON Enable?
-        /// </summary>
-        public bool SCONEnable { get; set; } = true;
-
-        private ushort _SCONPort = 15126;
-        /// <summary>
-        /// Get/Set SCON Port
-        /// </summary>
-        public ushort SCONPort
-        {
-            get
-            {
-                return _SCONPort;
-            }
-            set
-            {
-                _SCONPort = value.Clamp(0, 65535);
-            }
-        }
-
-        /// <summary>
-        /// Get/Set SCON Password.
-        /// </summary>
-        public string _SCONPassword = "Password";
-        /// <summary>
-        /// Get/Set SCON Password
-        /// </summary>
-        public PasswordStorage SCONPassword { get; set; }
-        #endregion SCON Server Property
-
-        #region Nancy Property
-        /// <summary>
-        /// Get/Set Nancy Enable?
-        /// </summary>
-        public bool NancyEnable { get; set; } = true;
-
-        private ushort _NancyPort = 8765;
-        /// <summary>
-        /// Get/Set Nancy Port
-        /// </summary>
-        public ushort NancyPort
-        {
-            get
-            {
-                return _NancyPort;
-            }
-            set
-            {
-                _NancyPort = value.Clamp(0, 8765);
-            }
-        }
-
-        /// <summary>
-        /// Get/Set Nancy Host
-        /// </summary>
-        public string NancyHost { get; set; } = "localhost";
-        #endregion SCON Server Property
-
         /// <summary>
         /// Get/Set Token Defination
         /// </summary>
@@ -950,7 +889,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
                                 {
 
-                                    if (string.Equals(PropertyName, "Pokemon 3D", StringComparison.OrdinalIgnoreCase))
+                                    if (string.Equals(PropertyName, "Kolben", StringComparison.OrdinalIgnoreCase))
                                     {
                                         if (Reader.TokenType == JsonToken.Boolean)
                                         {
@@ -958,12 +897,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 
                                             if (GM_Pokemon3D)
                                             {
-                                                GameMode.Add("Pokemon 3D");
+                                                GameMode.Add("Kolben");
                                             }
                                         }
                                         else
                                         {
-                                            Core.Logger.Log("\"Main Server Property.GameMode.Pokemon 3D\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
+                                            Core.Logger.Log("\"Main Server Property.GameMode.Kolben\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
                                         }
                                     }
                                     else if (string.Equals(PropertyName, "1 Year Later 3D", StringComparison.OrdinalIgnoreCase))
@@ -1666,50 +1605,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                             }
 
                             #endregion RCON Server Property
-
-                            #region SCON Server Property
-                            else if (StartObjectDepth == 1 && string.Equals(ObjectPropertyName, "SCON Server Property", StringComparison.OrdinalIgnoreCase))
-                            {
-                                if (Reader.TokenType == JsonToken.Boolean || Reader.TokenType == JsonToken.Bytes || Reader.TokenType == JsonToken.Date || Reader.TokenType == JsonToken.Float || Reader.TokenType == JsonToken.Integer || Reader.TokenType == JsonToken.Null || Reader.TokenType == JsonToken.String)
-                                {
-                                    if (string.Equals(PropertyName, "SCONEnable", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Boolean)
-                                        {
-                                            SCONEnable = (bool)Reader.Value;
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONEnable\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "SCONPort", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.Integer)
-                                        {
-                                            SCONPort = Reader.Value.ToString().ToUshort();
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONPort\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                    else if (string.Equals(PropertyName, "SCONPassword", StringComparison.OrdinalIgnoreCase))
-                                    {
-                                        if (Reader.TokenType == JsonToken.String)
-                                        {
-                                            _SCONPassword = Reader.Value.ToString();
-                                            SCONPassword = new PasswordStorage(_SCONPassword);
-                                        }
-                                        else
-                                        {
-                                            Core.Logger.Log("\"SCON Server Property.SCONPassword\" does not match the require type. Default value will be used.", Logger.LogTypes.Warning);
-                                        }
-                                    }
-                                }
-                            }
-                            #endregion SCON Server Property
-
                         }
                     }
                 }
@@ -2632,7 +2527,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 Default GameMode: To allow or disallow default GameMode to join the server.
                 Required Syntax: Boolean.
             */
-            ""Pokemon 3D"": {11},
+            ""Kolben"": {11},
 
             /*
                 Approved GameMode by staff: To allow or disallow custom GameMode to join the server.
@@ -2952,27 +2847,6 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 		    Required Syntax: String. Please do not insert password that contains your personal infomation.
         */
         ""RCONPassword"": ""{73}""
-    }},
-
-    ""SCON Server Property"":
-    {{
-        /*
-            SCONEnable: Enable SCON
-		    Required Syntax: Boolean.
-        */
-        ""SCONEnable"": {74},
-
-        /*
-            SCONPort: The port for SCON Listener. Please be unique and don't be same as Pokemon Listener Port.
-		    Required Syntax: Integer between 0 to 65535 inclusive.
-        */
-        ""SCONPort"": {75},
-
-        /*
-            SCONPassword: The password for the SCON to connect.
-		    Required Syntax: String. Please do not insert password that contains your personal infomation.
-        */
-        ""SCONPassword"": ""{76}""
     }}
 }}",
 StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK"),
@@ -3048,11 +2922,7 @@ LoggerPvP.ToString().ToLower(),
 LoggerCommand.ToString().ToLower(),
 RCONEnable.ToString().ToLower(),
 RCONPort.ToString(),
-RCONPassword,
-SCONEnable.ToString().ToLower(),
-SCONPort.ToString(),
-_SCONPassword
-), Encoding.UTF8);
+RCONPassword), Encoding.UTF8);
                 #endregion application_settings.json
 
                 #region Data\BlackList.json

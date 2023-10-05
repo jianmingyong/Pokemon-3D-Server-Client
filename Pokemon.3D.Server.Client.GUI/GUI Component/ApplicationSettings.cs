@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Aragas.Core.Data;
 using Pokemon_3D_Server_Core;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Worlds;
@@ -363,27 +362,6 @@ namespace Pokemon_3D_Server_Client_GUI
                     "RCONPassword",
                     Core.Setting.RCONPassword,
                     "The password for the RCON to connect.\nRequired Syntax: String."
-                ),
-
-                new Settings
-                (
-                    "SCONEnable",
-                    Core.Setting.SCONEnable.ToString().ToLower(),
-                    "Enable SCON\nRequired Syntax: Boolean."
-                ),
-
-                new Settings
-                (
-                    "SCONPort",
-                    Core.Setting.SCONPort.ToString(),
-                    "The port for SCON Listener.\nRequired Syntax: Integer between 0 to 65535 inclusive."
-                ),
-
-                new Settings
-                (
-                    "SCONPassword",
-                    Core.Setting._SCONPassword,
-                    "The password for the SCON to connect.\nRequired Syntax: String."
                 ),
             };
 
@@ -944,37 +922,6 @@ namespace Pokemon_3D_Server_Client_GUI
                         try
                         {
                             Core.Setting.RCONPassword = ((Settings)ObjectListView1.GetModelObject(i)).Value;
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
-                    case "SCONEnable":
-                        try
-                        {
-                            Core.Setting.SCONEnable = bool.Parse(((Settings)ObjectListView1.GetModelObject(i)).Value);
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
-                    case "SCONPort":
-                        try
-                        {
-                            Core.Setting.SCONPort = ((Settings)ObjectListView1.GetModelObject(i)).Value.ToUshort();
-                        }
-                        catch (Exception ex)
-                        {
-                            ex.CatchError();
-                        }
-                        break;
-                    case "SCONPassword":
-                        try
-                        {
-                            Core.Setting._SCONPassword = ((Settings)ObjectListView1.GetModelObject(i)).Value;
-                            Core.Setting.SCONPassword = new PasswordStorage(((Settings)ObjectListView1.GetModelObject(i)).Value);
                         }
                         catch (Exception ex)
                         {

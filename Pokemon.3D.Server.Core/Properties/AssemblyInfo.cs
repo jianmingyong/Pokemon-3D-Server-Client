@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("The Dialga Team")]
 [assembly: AssemblyProduct("Pokémon 3D Server Core")]
-[assembly: AssemblyCopyright("Copyright © jianmingyong 2015")]
+[assembly: AssemblyCopyright("Copyright © jianmingyong 2023")]
 [assembly: AssemblyTrademark("The Dialga Team")]
 [assembly: AssemblyCulture("")]
 
@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.54.1.84")]
-[assembly: AssemblyFileVersion("0.54.1.84")]
+[assembly: AssemblyVersion("0.59.3.0")]
+[assembly: AssemblyFileVersion("0.59.3.0")]
 [assembly: NeutralResourcesLanguage("en")]
 

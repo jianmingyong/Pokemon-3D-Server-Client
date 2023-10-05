@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pokemon_3D_Server_Core</RootNamespace>
     <AssemblyName>Pokemon.3D.Server.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -54,26 +54,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Nancy.Hosting.Self, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Nancy.Hosting.Self.1.4.1\lib\net40\Nancy.Hosting.Self.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <HintPath>..\packages\PCLStorage.1.0.2\lib\net45\PCLStorage.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <HintPath>..\packages\PCLStorage.1.0.2\lib\net45\PCLStorage.Abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -83,7 +63,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Nancy\NancyWrapper.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\PvP\League.cs" />
     <Compile Include="RCON_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_Client_Listener\Packages\PackageHandler.cs" />
@@ -98,11 +77,6 @@
     <Compile Include="RCON_GUI_Client_Listener\Packages\Package.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Packages\PackageHandler.cs" />
     <Compile Include="RCON_GUI_Client_Listener\Servers\Listener.cs" />
-    <Compile Include="SCON_Client_Listener\SCON\SCONClient.cs" />
-    <Compile Include="SCON_Client_Listener\SCON\SCONClient.Packets.cs" />
-    <Compile Include="SCON_Client_Listener\Servers\ModuleSCON.cs" />
-    <Compile Include="Shared\Aragas\WrapperInstances\TCPClientWrapperInstance.cs" />
-    <Compile Include="Shared\Aragas\WrapperInstances\TCPServerWrapperInstance.cs" />
     <Compile Include="Server_Client_Listener\Commands\CommandCollection.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Chat_Channels\ChatChannels_Change.cs" />
     <Compile Include="Server_Client_Listener\Commands\Data\Operator\Remove.cs" />
@@ -161,21 +135,15 @@
   <ItemGroup>
     <None Include="Resource\SwearInfractionFilterListData.json" />
     <None Include="Resource\Update.dat" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Aragas.Core\Aragas.Core.csproj">
-      <Project>{468D9D51-DFE7-47A8-B0D6-52D035FC714D}</Project>
-      <Name>Aragas.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PokeD.Core\PokeD.Core.csproj">
-      <Project>{1cf84e56-3bbe-4a3a-9234-5951bf2558c3}</Project>
-      <Name>PokeD.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SmartThreadPool\SmartThreadPool\SmartThreadPool.csproj">
       <Project>{74d4c33f-7cc8-4b2a-a7df-d8b6e63b6ebd}</Project>
       <Name>SmartThreadPool</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

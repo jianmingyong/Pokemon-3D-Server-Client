@@ -91,11 +91,6 @@ namespace Pokemon_3D_Server_Client_GUI
 
             if (ApplicationRestart)
             {
-                while ((DateTime.Now - Core.Setting.StartTime).TotalSeconds < 30)
-                {
-                    Thread.Sleep(1000);
-                }
-
                 Application.Restart();
                 Application.ExitThread();
             }
