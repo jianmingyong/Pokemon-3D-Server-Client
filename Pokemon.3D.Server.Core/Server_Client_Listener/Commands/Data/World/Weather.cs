@@ -38,7 +38,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
             #region /Weather <id>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
+                var Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {

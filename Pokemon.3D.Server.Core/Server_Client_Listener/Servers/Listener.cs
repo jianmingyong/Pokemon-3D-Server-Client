@@ -2,13 +2,13 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using Amib.Threading;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Packages;
-using Pokemon_3D_Server_Core.Shared.jianmingyong;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Threading;
 
@@ -34,7 +34,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             try
             {
                 // Before Running CheckList
-                if (!My.Computer.Network.IsAvailable)
+                if (!NetworkInterface.GetIsNetworkAvailable())
                 {
                     Core.Logger.Log("Network is not available.", Logger.LogTypes.Warning);
                     Dispose();
@@ -87,7 +87,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             }
 
             string GameMode = null;
-            for (int i = 0; i < Core.Setting.GameMode.Count; i++)
+            for (var i = 0; i < Core.Setting.GameMode.Count; i++)
             {
                 GameMode += Core.Setting.GameMode[i] + ", ";
             }
@@ -123,12 +123,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
             {
                 if (Client != null)
                 {
-                    StreamReader Reader = new StreamReader(Client.GetStream());
-                    string ReturnMessage = Reader.ReadLine();
+                    var Reader = new StreamReader(Client.GetStream());
+                    var ReturnMessage = Reader.ReadLine();
 
                     if (!string.IsNullOrWhiteSpace(ReturnMessage))
                     {
-                        Package Package = new Package(ReturnMessage, Client);
+                        var Package = new Package(ReturnMessage, Client);
                         Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
 
                         if (Package.IsValid)
@@ -143,7 +143,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
         private void ThreadPortCheck()
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             Core.Logger.Log("Port check is now enabled.", Logger.LogTypes.Info);
@@ -172,14 +172,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
 
         private void ThreadAutoRestart()
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             do
             {
                 try
                 {
-                    TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
+                    var TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
 
                     if (TimeLeft.TotalSeconds == 300 || TimeLeft.TotalSeconds == 60 || (TimeLeft.TotalSeconds <= 10 && TimeLeft.TotalSeconds > 0))
                     {
@@ -216,7 +216,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
         {
             if (Core.Setting.AutoRestartTime >= 10)
             {
-                TimeSpan TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
+                var TimeLeft = Core.Setting.StartTime.AddSeconds(Core.Setting.AutoRestartTime) - DateTime.Now;
                 string ReturnString = null;
 
                 if (TimeLeft.Days > 1)

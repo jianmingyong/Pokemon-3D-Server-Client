@@ -43,22 +43,22 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             #region /Help <page>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
+                var Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> GetHelpContent = GenerateHelp(Group[0].ToInt());
+                    var GetHelpContent = GenerateHelp(Group[0].ToInt());
 
-                    for (int i = 0; i < GetHelpContent.Count; i++)
+                    for (var i = 0; i < GetHelpContent.Count; i++)
                     {
                         Player.CommandFeedback(GetHelpContent[i], null);
                     }
                 }
                 else if (Player == null)
                 {
-                    List<string> GetHelpContent = GenerateHelp(Group[0].ToInt());
+                    var GetHelpContent = GenerateHelp(Group[0].ToInt());
 
-                    for (int i = 0; i < GetHelpContent.Count; i++)
+                    for (var i = 0; i < GetHelpContent.Count; i++)
                     {
                         Core.Logger.Log(GetHelpContent[i], Logger.LogTypes.Info);
                     }
@@ -69,11 +69,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             #region /Help <name>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+                var Group = this.Groups(p, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    for (int i = 0; i < Core.Command.Count; i++)
+                    for (var i = 0; i < Core.Command.Count; i++)
                     {
                         if (string.Equals(Group[0], Core.Command[i].Name, StringComparison.OrdinalIgnoreCase))
                         {
@@ -83,7 +83,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                 }
                 else if (Player == null)
                 {
-                    for (int i = 0; i < Core.Command.Count; i++)
+                    for (var i = 0; i < Core.Command.Count; i++)
                     {
                         if (string.Equals(Group[0], Core.Command[i].Name, StringComparison.OrdinalIgnoreCase))
                         {
@@ -99,18 +99,18 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    List<string> GetHelpContent = GenerateHelp(0);
+                    var GetHelpContent = GenerateHelp(0);
 
-                    for (int i = 0; i < GetHelpContent.Count; i++)
+                    for (var i = 0; i < GetHelpContent.Count; i++)
                     {
                         Player.CommandFeedback(GetHelpContent[i], null);
                     }
                 }
                 else if (Player == null)
                 {
-                    List<string> GetHelpContent = GenerateHelp(0);
+                    var GetHelpContent = GenerateHelp(0);
 
-                    for (int i = 0; i < GetHelpContent.Count; i++)
+                    for (var i = 0; i < GetHelpContent.Count; i++)
                     {
                         Core.Logger.Log(GetHelpContent[i], Logger.LogTypes.Info);
                     }

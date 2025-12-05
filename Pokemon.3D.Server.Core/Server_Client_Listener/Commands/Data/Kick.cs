@@ -38,7 +38,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             #region /Kick <Name> [Reason]
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Any);
+                var Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -54,8 +54,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
+                        var KickPlayer = Core.Player.GetPlayer(Group[0]);
+                        var KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
@@ -72,8 +72,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
+                        var KickPlayer = Core.Player.GetPlayer(Group[0]);
+                        var KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", Group[1]));
 
@@ -87,7 +87,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             #region /kick <Name>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+                var Group = this.Groups(p, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -101,12 +101,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
+                        var KickPlayer = Core.Player.GetPlayer(Group[0]);
+                        var KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 
-                        Player.CommandFeedback("You have successfully kicked " + KickPlayerName, string.Format("have kick {0} with the following reason: No reason.", KickPlayerName));
+                        Player.CommandFeedback("You have successfully kicked " + KickPlayerName, $"have kick {KickPlayerName} with the following reason: No reason.");
                     }
                 }
                 else if (Player == null)
@@ -117,8 +117,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
                     }
                     else
                     {
-                        Player KickPlayer = Core.Player.GetPlayer(Group[0]);
-                        string KickPlayerName = KickPlayer.isGameJoltPlayer ? string.Format("{0} ({1})", KickPlayer.Name, KickPlayer.GameJoltID.ToString()) : KickPlayer.Name;
+                        var KickPlayer = Core.Player.GetPlayer(Group[0]);
+                        var KickPlayerName = KickPlayer.isGameJoltPlayer ? $"{KickPlayer.Name} ({KickPlayer.GameJoltID.ToString()})" : KickPlayer.Name;
 
                         Core.Player.Remove(KickPlayer.ID, Core.Setting.Token("SERVER_KICKED", "No reason."));
 

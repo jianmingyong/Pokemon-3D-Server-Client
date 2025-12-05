@@ -27,14 +27,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public bool isGameJoltPlayer
         {
-            get
-            {
-                return _isGameJoltPlayer.Tobool();
-            }
-            set
-            {
-                _isGameJoltPlayer = value.Tobool();
-            }
+            get => _isGameJoltPlayer.Tobool();
+            set => _isGameJoltPlayer = value.Tobool();
         }
 
         /// <summary>
@@ -67,14 +61,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double Position_X
         {
-            get
-            {
-                return Position.GetSplit(0).ToDouble();
-            }
-            set
-            {
-                Position = value.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
-            }
+            get => Position.GetSplit(0).ToDouble();
+            set => Position = value.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -82,14 +70,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double Position_Y
         {
-            get
-            {
-                return Position.GetSplit(1).ToDouble();
-            }
-            set
-            {
-                Position = Position_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
-            }
+            get => Position.GetSplit(1).ToDouble();
+            set => Position = Position_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -97,14 +79,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double Position_Z
         {
-            get
-            {
-                return Position.GetSplit(2).ToDouble();
-            }
-            set
-            {
-                Position = Position_X.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
-            }
+            get => Position.GetSplit(2).ToDouble();
+            set => Position = Position_X.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -118,14 +94,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public bool Moving
         {
-            get
-            {
-                return _Moving.Tobool();
-            }
-            set
-            {
-                _Moving = value.Tobool();
-            }
+            get => _Moving.Tobool();
+            set => _Moving = value.Tobool();
         }
 
         /// <summary>
@@ -144,14 +114,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public bool PokemonVisible
         {
-            get
-            {
-                return _PokemonVisible.Tobool();
-            }
-            set
-            {
-                _PokemonVisible = value.Tobool();
-            }
+            get => _PokemonVisible.Tobool();
+            set => _PokemonVisible = value.Tobool();
         }
 
         /// <summary>
@@ -164,14 +128,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double PokemonPosition_X
         {
-            get
-            {
-                return PokemonPosition.GetSplit(0).ToDouble();
-            }
-            set
-            {
-                PokemonPosition = value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
-            }
+            get => PokemonPosition.GetSplit(0).ToDouble();
+            set => PokemonPosition = value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -179,14 +137,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double PokemonPosition_Y
         {
-            get
-            {
-                return PokemonPosition.GetSplit(1).ToDouble();
-            }
-            set
-            {
-                PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
-            }
+            get => PokemonPosition.GetSplit(1).ToDouble();
+            set => PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -194,14 +146,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// </summary>
         public double PokemonPosition_Z
         {
-            get
-            {
-                return PokemonPosition.GetSplit(2).ToDouble();
-            }
-            set
-            {
-                PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
-            }
+            get => PokemonPosition.GetSplit(2).ToDouble();
+            set => PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -509,7 +455,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
             Core.Player.SentToPlayer(new Package(Package.PackageTypes.ID, ID.ToString(), p.Client));
 
-            for (int i = 0; i < Core.Player.Count; i++)
+            for (var i = 0; i < Core.Player.Count; i++)
             {
                 if (Core.Player[i].ID != ID)
                 {
@@ -724,11 +670,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public string DoPvPValidation()
         {
             // Get Opponent Details
-            Player OppPlayer = Core.Player.GetPlayer(PvP_OpponentID);
+            var OppPlayer = Core.Player.GetPlayer(PvP_OpponentID);
 
             #region List of Banned Stuff
             // PvP Default Rules - No unobtainable Pokemon.
-            List<int> InvalidPokemonID = new List<int>
+            var InvalidPokemonID = new List<int>
             {
                 146, // Gerneration 1
                 251, // Gerneration 2
@@ -739,7 +685,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             };
 
             // PvP Legendary Clause Rules - No Legendary Pokemon.
-            List<int> LegendaryListPokemonID = new List<int>
+            var LegendaryListPokemonID = new List<int>
             {
                 144, 145, 146, 150, 151, // Generation 1
                 243, 244, 245, 249, 250, 251, // Generation 2
@@ -750,7 +696,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             };
 
             // PvP Custom Legendary Clause Rules - No Legendary Pokemon Except 3 Birds and 3 Dogs.
-            List<int> CustomLegendaryListPokemonID = new List<int>
+            var CustomLegendaryListPokemonID = new List<int>
             {
                 150, 151, // Generation 1 (Excluded 144, 145, 146)
                 249, 250, 251, // Generation 2 (Excluded 243, 244, 245)
@@ -761,16 +707,16 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             };
 
             // PvP Evasion Clause Rules - A Pokemon may not have the moves Double Team or Minimize in its moveset.
-            List<int> EvasionMoveID = new List<int> { 104, 107 };
+            var EvasionMoveID = new List<int> { 104, 107 };
 
             // PvP OHKO Clause Rules - A Pokemon may not have the moves Fissure, Guillotine, Horn Drill, or Sheer Cold in its moveset.
-            List<int> OHKOMoveID = new List<int> { 90, 12, 32, 329 };
+            var OHKOMoveID = new List<int> { 90, 12, 32, 329 };
 
             // PvP Moody Clause Rules - A team cannot have a Pokemon with the ability Moody.
-            int MoodyAbilityID = 141;
+            var MoodyAbilityID = 141;
 
             // PvP Accuracy Clause Rules - A Pokemon may not have accuracy lowering moves.
-            List<int> AccuracyMoveID = new List<int> { 28, 108, 134 };
+            var AccuracyMoveID = new List<int> { 28, 108, 134 };
 
             // <summary>
             // PvP Rules: Custom League
@@ -782,7 +728,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             // <para>6. Evasion Clause - A Pokemon may not have the moves Double Team or Minimize in its moveset.</para>
             // <para>7. Accuracy Clause - A Pokemon may not have accuracy lowering moves.</para>
             // </summary>
-            List<int> LeaguePokemonBlackList = new List<int>();
+            var LeaguePokemonBlackList = new List<int>();
             LeaguePokemonBlackList.AddRange(InvalidPokemonID);
             LeaguePokemonBlackList.AddRange(CustomLegendaryListPokemonID);
             #endregion List of Banned Stuff
@@ -790,7 +736,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             // Check All the Rules.
             if (Core.Setting.AllowPvPValidation)
             {
-                for (int i = 0; i < PvP_Rules.Count; i++)
+                for (var i = 0; i < PvP_Rules.Count; i++)
                 {
                     #region PvP Default
                     if (PvP_Rules[i] == PvPRules.Default.ToString())
@@ -799,7 +745,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         {
                             if (!(!isGameJoltPlayer && !OppPlayer.isGameJoltPlayer))
                             {
-                                for (int a = 0; a < PvP_Pokemon.Count; a++)
+                                for (var a = 0; a < PvP_Pokemon.Count; a++)
                                 {
                                     if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
                                     {
@@ -813,7 +759,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Legendary Clause
                     else if (PvP_Rules[i] == PvPRules.Legendary_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             if (LegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
                             {
@@ -825,7 +771,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Custom Legendary Clause
                     else if (PvP_Rules[i] == PvPRules.Custom_Legendary_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             if (CustomLegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
                             {
@@ -837,10 +783,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Species Clause
                     else if (PvP_Rules[i] == PvPRules.Species_Clause.ToString())
                     {
-                        List<int> TempList = new List<int>();
+                        var TempList = new List<int>();
                         int CurrentPokemon;
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             CurrentPokemon = Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt();
                             if (TempList.Contains(CurrentPokemon))
@@ -857,10 +803,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Evasion Clause
                     else if (PvP_Rules[i] == PvPRules.Evasion_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -868,7 +814,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (EvasionMoveID.Contains(Moves[b]))
                                 {
@@ -881,10 +827,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region OHKO Clause
                     else if (PvP_Rules[i] == PvPRules.OHKO_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -892,7 +838,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (OHKOMoveID.Contains(Moves[b]))
                                 {
@@ -905,7 +851,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Moody Clause
                     else if (PvP_Rules[i] == PvPRules.Moody_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             if (MoodyAbilityID == Regex.Match(PvP_Pokemon[a], @"{""Ability""\[(\d+)]}.+").Groups[1].Value.ToInt())
                             {
@@ -917,10 +863,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                     #region Accuracy Clause
                     else if (PvP_Rules[i] == PvPRules.Accuracy_Clause.ToString())
                     {
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -928,7 +874,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (AccuracyMoveID.Contains(Moves[b]))
                                 {
@@ -946,7 +892,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             return "Offline account are not allowed to be entered into the league.";
                         }
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             if (InvalidPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
                             {
@@ -954,7 +900,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             }
                         }
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             if (CustomLegendaryListPokemonID.Contains(Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt()))
                             {
@@ -962,10 +908,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             }
                         }
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -973,7 +919,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (EvasionMoveID.Contains(Moves[b]))
                                 {
@@ -982,10 +928,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             }
                         }
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -993,7 +939,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (OHKOMoveID.Contains(Moves[b]))
                                 {
@@ -1002,10 +948,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             }
                         }
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
-                            List<int> Moves = new List<int>();
-                            Match m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
+                            var Moves = new List<int>();
+                            var m = Regex.Match(PvP_Pokemon[a], @"{""Attack\d""\[(\d+),\d+,\d+]}");
 
                             while (m.Success)
                             {
@@ -1013,7 +959,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                                 m = m.NextMatch();
                             }
 
-                            for (int b = 0; b < Moves.Count; b++)
+                            for (var b = 0; b < Moves.Count; b++)
                             {
                                 if (AccuracyMoveID.Contains(Moves[b]))
                                 {
@@ -1022,10 +968,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                             }
                         }
 
-                        List<int> TempList = new List<int>();
+                        var TempList = new List<int>();
                         int CurrentPokemon;
 
-                        for (int a = 0; a < PvP_Pokemon.Count; a++)
+                        for (var a = 0; a < PvP_Pokemon.Count; a++)
                         {
                             CurrentPokemon = Regex.Match(PvP_Pokemon[a], @"{""Pokemon""\[(\d+)]}.+").Groups[1].Value.ToInt();
                             if (TempList.Contains(CurrentPokemon))

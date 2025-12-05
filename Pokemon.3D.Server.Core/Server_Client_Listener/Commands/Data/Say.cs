@@ -37,7 +37,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data
             #region /Say <Message>
             if (this.MatchRequiredParam(p,  Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any);
+                var Group = this.Groups(p, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {

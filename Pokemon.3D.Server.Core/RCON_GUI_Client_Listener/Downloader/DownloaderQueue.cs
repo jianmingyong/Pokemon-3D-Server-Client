@@ -41,7 +41,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
             }
             else if (p.PackageType == (int)Package.PackageTypes.BeginDownloadFile || p.PackageType == (int)Package.PackageTypes.EndDownloadFile || p.PackageType == (int)Package.PackageTypes.EndCreateFile)
             {
-                DownloadFile File = (from DownloadFile u in Core.RCONGUIDownloadQueue where p.DataItems[0].ToInt() == u.ID select u).FirstOrDefault();
+                var File = (from DownloadFile u in Core.RCONGUIDownloadQueue where p.DataItems[0].ToInt() == u.ID select u).FirstOrDefault();
 
                 if (File != null)
                 {
@@ -55,7 +55,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// </summary>
         public void Dispose()
         {
-            for (int i = 0; i < Count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 this[i].Dispose();
             }

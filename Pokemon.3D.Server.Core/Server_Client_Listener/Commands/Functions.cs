@@ -47,9 +47,9 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         /// <param name="ParamType">List of Paramenter.</param>
         public static bool MatchRequiredParam(this ICommand Command, Package p, params CommandParamType[] ParamType)
         {
-            string RegexFilter = "^" + Regex.Escape("/" + Command.Name);
+            var RegexFilter = "^" + Regex.Escape("/" + Command.Name);
 
-            for (int i = 0; i < ParamType.Length; i++)
+            for (var i = 0; i < ParamType.Length; i++)
             {
                 if (ParamType[i] == CommandParamType.Any)
                 {
@@ -106,10 +106,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         /// <param name="ParamType">List of Paramenter.</param>
         public static List<string> Groups(this ICommand Command, Package p, params CommandParamType[] ParamType)
         {
-            List<string> ReturnString = new List<string>();
-            string RegexFilter = "^" + Regex.Escape("/" + Command.Name);
+            var ReturnString = new List<string>();
+            var RegexFilter = "^" + Regex.Escape("/" + Command.Name);
 
-            for (int i = 0; i < ParamType.Length; i++)
+            for (var i = 0; i < ParamType.Length; i++)
             {
                 if (ParamType[i] == CommandParamType.Any)
                 {
@@ -127,7 +127,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
 
             RegexFilter += @"\s*$";
 
-            for (int i = 0; i < ParamType.Length; i++)
+            for (var i = 0; i < ParamType.Length; i++)
             {
                 ReturnString.Add(Regex.Match(p.DataItems[0], RegexFilter, RegexOptions.IgnoreCase).Groups[i + 1].Value);
             }
@@ -171,14 +171,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         {
             if (Player != null)
             {
-                for (int i = 0; i < Message.Length; i++)
+                for (var i = 0; i < Message.Length; i++)
                 {
                     Core.Player.SentToPlayer(new Package(Package.PackageTypes.ChatMessage, Message[i], Player.Network.Client));
                 }
             }
             else
             {
-                for (int i = 0; i < Message.Length; i++)
+                for (var i = 0; i < Message.Length; i++)
                 {
                     Core.Logger.Log(Message[i], Logger.LogTypes.Info);
                 }

@@ -520,8 +520,8 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Modules
         /// <param name="maxValue">The maximum value.</param>
         public static int RollOver(this int Value, int minValue, int maxValue)
         {
-            int Diff = maxValue - minValue + 1;
-            int NewValue = Value;
+            var Diff = maxValue - minValue + 1;
+            var NewValue = Value;
 
             if (Value > maxValue)
             {

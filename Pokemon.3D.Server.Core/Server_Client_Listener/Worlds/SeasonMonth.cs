@@ -59,7 +59,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    foreach (string Season in SeasonData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
+                    foreach (var Season in SeasonData.GetSplit(DateTime.Now.Month - 1).Split(",".ToCharArray()))
                     {
                         ReturnList.Add(Season.ToInt());
                     }

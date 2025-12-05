@@ -21,7 +21,7 @@ namespace Pokemon_3D_Server_Client_Updater
                     {
                         Process.GetProcessById(int.Parse(args[1])).WaitForExit();
                     }
-                    catch (ArgumentException e)
+                    catch (ArgumentException)
                     {
                     }
                 }

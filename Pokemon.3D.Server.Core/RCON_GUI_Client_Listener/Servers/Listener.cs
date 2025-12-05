@@ -55,7 +55,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
             this.Password = Password;
             this.Port = Port;
 
-            Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
+            var Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
             Thread.Start();
             ThreadCollection.Add(Thread);
         }
@@ -79,7 +79,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
 
                 SentToServer(new Package(Package.PackageTypes.Authentication, new List<string> { Password.Md5HashGenerator(), Password.SHA1HashGenerator(), Password.SHA256HashGenerator() }, null));
 
-                string ReturnMessage = Reader.ReadLine();
+                var ReturnMessage = Reader.ReadLine();
 
                 if (string.IsNullOrEmpty(ReturnMessage))
                 {
@@ -88,7 +88,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
                 }
                 else
                 {
-                    Package Package = new Package(ReturnMessage, Client);
+                    var Package = new Package(ReturnMessage, Client);
                     if (Package.IsValid)
                     {
                         Core.Logger.Log($"Receive: {Package.ToString()}", Logger.LogTypes.Debug, Client);
@@ -118,7 +118,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
                 return;
             }
 
-            Thread Thread2 = new Thread(new ThreadStart(ThreadStartPinging)) { IsBackground = true };
+            var Thread2 = new Thread(new ThreadStart(ThreadStartPinging)) { IsBackground = true };
             Thread2.Start();
             ThreadCollection.Add(Thread2);
 
@@ -145,7 +145,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
             }
             else
             {
-                Package Package = new Package((string)p, Client);
+                var Package = new Package((string)p, Client);
                 if (Package.IsValid)
                 {
                     ThreadPool2.QueueWorkItem(new WorkItemCallback(ThreadHandlePackage), Package);
@@ -158,7 +158,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
 
         private object ThreadHandlePackage(object obj)
         {
-            Package Package = (Package)obj;
+            var Package = (Package)obj;
             Package.Handle();
 
             return null;
@@ -166,7 +166,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
 
         private void ThreadStartPinging()
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             do
@@ -227,7 +227,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Servers
             if (Reader != null) Reader.Dispose();
             if (Writer != null) Writer.Dispose();
 
-            for (int i = 0; i < ThreadCollection.Count; i++)
+            for (var i = 0; i < ThreadCollection.Count; i++)
             {
                 if (ThreadCollection[i].IsAlive)
                 {

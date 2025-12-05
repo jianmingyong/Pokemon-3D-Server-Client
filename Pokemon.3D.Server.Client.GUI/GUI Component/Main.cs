@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -97,7 +98,7 @@ namespace Pokemon_3D_Server_Client_GUI
             else if (ApplicationUpdate)
             {
                 ApplicationUpdate = false;
-                Functions.Run(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", Core.Setting.ApplicationDirectory.Replace(" ", "%20"), false);
+                Functions.Run(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", $"\"{Core.Setting.ApplicationDirectory.Replace(" ", "%20")}\" {Process.GetCurrentProcess().Id}");
             }
         }
 

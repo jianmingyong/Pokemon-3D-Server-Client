@@ -39,7 +39,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Chann
             #region /ChatChannel <ID>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
+                var Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -76,7 +76,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Chat_Chann
 
                     if (Core.Setting.AllowChatChannels)
                     {
-                        for (int i = 0; i < Core.Player.Count; i++)
+                        for (var i = 0; i < Core.Player.Count; i++)
                         {
                             if (Core.Player[i].CC_CurrentChatChannel == Player.CC_CurrentChatChannel && Core.Player[i] != Player)
                             {

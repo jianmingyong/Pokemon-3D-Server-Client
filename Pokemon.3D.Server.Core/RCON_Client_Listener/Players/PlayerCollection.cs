@@ -23,8 +23,8 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
         /// <param name="p">Package Data</param>
         public void Add(Package p)
         {
-            int ID = GetNextValidID();
-            Player Player = new Player(p, ID);
+            var ID = GetNextValidID();
+            var Player = new Player(p, ID);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
         /// <param name="Reason">Reason</param>
         public void Remove(int ID, string Reason)
         {
-            Player Player = GetPlayer(ID);
+            var Player = GetPlayer(ID);
             Player.Network.IsActive = false;
 
             if (Reason != Core.Setting.Token("SERVER_PLAYERLEFT"))
@@ -54,7 +54,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
         /// <param name="Reason">Reason</param>
         public void Remove(TcpClient Client, string Reason)
         {
-            Player Player = GetPlayer(Client);
+            var Player = GetPlayer(Client);
             Player.Network.IsActive = false;
 
             Core.RCONPlayer.SentToPlayer(new Package(Package.PackageTypes.Kick, Reason, Player.Network.Client));
@@ -122,10 +122,10 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
             }
             else
             {
-                int ValidID = 0;
-                List<Player> ListOfPlayer = (from Player p in Core.RCONPlayer orderby p.ID ascending select p).ToList();
+                var ValidID = 0;
+                var ListOfPlayer = (from Player p in Core.RCONPlayer orderby p.ID ascending select p).ToList();
 
-                for (int i = 0; i < ListOfPlayer.Count; i++)
+                for (var i = 0; i < ListOfPlayer.Count; i++)
                 {
                     if (ValidID == ListOfPlayer[i].ID)
                     {
@@ -149,7 +149,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
 
             if (Core.RCONPlayer.HasPlayer(p.Client))
             {
-                Player Player = GetPlayer(p.Client);
+                var Player = GetPlayer(p.Client);
                 Player.Network.SentToPlayer(p);
             }
             else
@@ -158,7 +158,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
                 {
                     try
                     {
-                        StreamWriter Writer = new StreamWriter(p.Client.GetStream());
+                        var Writer = new StreamWriter(p.Client.GetStream());
                         Writer.WriteLine(p.ToString());
                         Writer.Flush();
                         Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, p.Client);
@@ -174,7 +174,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Players
         /// <param name="p">Package</param>
         public void SendToAllPlayer(Package p)
         {
-            for (int i = 0; i < Count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 if (p.Client == null || Core.RCONPlayer[i].Network.Client != p.Client)
                 {

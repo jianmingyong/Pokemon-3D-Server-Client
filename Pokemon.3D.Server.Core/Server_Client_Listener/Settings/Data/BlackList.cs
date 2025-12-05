@@ -30,7 +30,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                 {
                     if (StartTime.AddSeconds(Duration) > DateTime.Now)
                     {
-                        TimeSpan RemainingTime = StartTime.AddSeconds(Duration) - DateTime.Now;
+                        var RemainingTime = StartTime.AddSeconds(Duration) - DateTime.Now;
 
                         if (RemainingTime.Days > 1)
                         {

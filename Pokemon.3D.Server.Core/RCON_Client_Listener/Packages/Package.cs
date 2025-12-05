@@ -30,7 +30,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
         /// <summary>
         /// Get DataItems Count.
         /// </summary>
-        public int DataItemsCount { get { return DataItems.Count; } }
+        public int DataItemsCount => DataItems.Count;
 
         /// <summary>
         /// Get/Set DataItems.
@@ -284,7 +284,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                     return;
                 }
 
-                List<string> bits = FullData.Split("|".ToCharArray()).ToList();
+                var bits = FullData.Split("|".ToCharArray()).ToList();
 
                 if (bits.Count >= 5)
                 {
@@ -321,7 +321,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                     }
 
                     // DataItemsCount
-                    int DataItemsCount = 0;
+                    var DataItemsCount = 0;
                     try
                     {
                         DataItemsCount = bits[3].ToInt();
@@ -333,10 +333,10 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                         return;
                     }
 
-                    List<int> OffsetList = new List<int>();
+                    var OffsetList = new List<int>();
 
                     // Count from 4th item to second last item. Those are the offsets.
-                    for (int i = 4; i < DataItemsCount + 4; i++)
+                    for (var i = 4; i < DataItemsCount + 4; i++)
                     {
                         try
                         {
@@ -352,7 +352,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
 
                     // Set the datastring, its the last item in the list. If it contained any separators, they will get readded here:
                     string dataString = null;
-                    for (int i = DataItemsCount + 4; i < bits.Count; i++)
+                    for (var i = DataItemsCount + 4; i < bits.Count; i++)
                     {
                         if (i > DataItemsCount + 4)
                         {
@@ -362,10 +362,10 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
                     }
 
                     // Cutting the data:
-                    for (int i = 0; i < OffsetList.Count; i++)
+                    for (var i = 0; i < OffsetList.Count; i++)
                     {
-                        int cOffset = OffsetList[i];
-                        int length = dataString.Length - cOffset;
+                        var cOffset = OffsetList[i];
+                        var length = dataString.Length - cOffset;
                         if (i < OffsetList.Count - 1)
                         {
                             length = OffsetList[i + 1] - cOffset;
@@ -475,12 +475,12 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
         /// </summary>
         public override string ToString()
         {
-            string outputStr = ProtocolVersion + "|" + PackageType.ToString() + "|" + Origin.ToString() + "|" + DataItemsCount.ToString();
+            var outputStr = ProtocolVersion + "|" + PackageType.ToString() + "|" + Origin.ToString() + "|" + DataItemsCount.ToString();
 
-            int CurrentIndex = 0;
+            var CurrentIndex = 0;
             string data = null;
 
-            foreach (string dataItem in DataItems)
+            foreach (var dataItem in DataItems)
             {
                 outputStr += "|" + CurrentIndex.ToString();
                 data += dataItem;

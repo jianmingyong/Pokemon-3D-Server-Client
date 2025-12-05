@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Media;
 using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
@@ -13,81 +12,62 @@ using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Modules
 {
     /// <summary>
-    /// Class containing commonly used functions.
+    ///     Class containing commonly used functions.
     /// </summary>
     public static class Functions
     {
         /// <summary>
-        /// Catch Ex Exception and create a crash log.
+        ///     Catch Ex Exception and create a crash log.
         /// </summary>
         /// <param name="ex">Ex Exception.</param>
         public static void CatchError(this Exception ex)
         {
             try
             {
-                SystemSounds.Asterisk.Play();
-
-                string ErrorLog = string.Format(@"[CODE]
-Pokémon 3D Server Client Crash Log v {0}
+                var ErrorLog = $@"
+```
+Pokémon 3D Server Client Crash Log v {Core.Setting.ApplicationVersion}
 --------------------------------------------------
 
 System specifications:
 
-Operating system: {1} [{2}]
-Core architecture: {3}
-System time: {4}
-System language: {5}
-Physical memory: {6}
-Logical processors: {7}
-Runtime language: {13}
+Operating system: {Environment.OSVersion}
+Core architecture: {(Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit")}
+System time: {DateTime.Now.ToString(CultureInfo.CurrentCulture)}
+System language: {CultureInfo.CurrentCulture.EnglishName}
+Logical processors: {Environment.ProcessorCount}
 
 --------------------------------------------------
 
 Error information:
 
-Message: {8}
-InnerException: {9}
-HelpLink: {10}
-Source: {11}
+Message: {ex.Message}
+InnerException: {(ex.InnerException == null ? "Nothing" : ex.InnerException.Message)}
+HelpLink: {(string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink)}
+Source: {ex.Source}
 
 --------------------------------------------------
 
 CallStack:
 
-{12}
+{(ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + Environment.NewLine + ex.StackTrace)}
 
 --------------------------------------------------
 
 You should report this error if it is reproduceable or you could not solve it by yourself.
-
-Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.org/pokemon/forums/bug-reports.204/ to report this crash.
-[/CODE]",
-                Core.Setting.ApplicationVersion,
-                My.Computer.Info.OSFullName,
-                My.Computer.Info.OSVersion,
-                Environment.Is64BitOperatingSystem ? "64 Bit" : "32 Bit",
-                DateTime.Now.ToString(),
-                CultureInfo.CurrentCulture.EnglishName.ToString(),
-                string.Format("{0} GB / {1} GB", Math.Round((double)My.Computer.Info.AvailablePhysicalMemory / 1073741824, 2).ToString(), Math.Round((double)My.Computer.Info.TotalPhysicalMemory / 1073741824, 2).ToString()),
-                Environment.ProcessorCount.ToString(),
-                ex.Message,
-                ex.InnerException == null ? "Nothing" : ex.InnerException.Message,
-                string.IsNullOrWhiteSpace(ex.HelpLink) ? "Nothing" : ex.HelpLink,
-                ex.Source,
-                ex.InnerException == null ? ex.StackTrace : ex.InnerException.StackTrace + Environment.NewLine + ex.StackTrace,
-                Type.GetType("Mono.Runtime") != null ? "Mono" : ".Net"
-                );
+```
+";
 
                 if (!Directory.Exists(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
                 {
                     Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\CrashLogs");
                 }
 
-                DateTime ErrorTime = DateTime.Now;
-                int RandomIndetifier = MathHelper.Random(0, int.MaxValue);
+                var ErrorTime = DateTime.Now;
+                var RandomIndetifier = MathHelper.Random(0, int.MaxValue);
 
-                File.WriteAllText(Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier.ToString("0000000000") + ".dat", ErrorLog, Encoding.UTF8);
-                Core.Logger.Log(ex.Message + Environment.NewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day.ToString() + "-" + ErrorTime.Month.ToString() + "-" + ErrorTime.Year.ToString() + "_" + ErrorTime.Hour.ToString() + "." + ErrorTime.Minute.ToString() + "." + ErrorTime.Second.ToString() + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
+                File.WriteAllText($@"{Core.Setting.ApplicationDirectory}\CrashLogs\Crash_{ErrorTime.Day}-{ErrorTime.Month}-{ErrorTime.Year}_{ErrorTime.Hour}.{ErrorTime.Minute}.{ErrorTime.Second}.{RandomIndetifier:0000000000}.dat", ErrorLog, Encoding.UTF8);
+                Core.Logger.Log(ex.Message + Environment.NewLine + "Error Log saved at: " + Core.Setting.ApplicationDirectory + "\\CrashLogs\\Crash_" + ErrorTime.Day + "-" + ErrorTime.Month + "-" + ErrorTime.Year + "_" + ErrorTime.Hour + "." + ErrorTime.Minute + "." + ErrorTime.Second + "." + RandomIndetifier + ".dat", Logger.LogTypes.Warning);
             }
             catch (Exception exc)
             {
@@ -96,7 +76,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Count the number of index after spliting "|" in the full string.
+        ///     Count the number of index after spliting "|" in the full string.
         /// </summary>
         /// <param name="fullString">The full string to count the number of index.</param>
         public static int SplitCount(this string fullString)
@@ -105,17 +85,17 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Count the number of index after spliting the seperator in the full string.
+        ///     Count the number of index after spliting the seperator in the full string.
         /// </summary>
         /// <param name="fullString">The full string to count the number of index.</param>
-        /// <param name="seperator">The seperator to split the string.</param>
-        public static int SplitCount(this string fullString, string seperator)
+        /// <param name="separator">The seperator to split the string.</param>
+        public static int SplitCount(this string fullString, string separator)
         {
-            return fullString.Contains(seperator) ? fullString.Split(seperator.ToCharArray()).Length : 1;
+            return fullString.Contains(separator) ? fullString.Split(separator.ToCharArray()).Length : 1;
         }
 
         /// <summary>
-        /// Get the nth index of the splited string after spliting "|" in the full string.
+        ///     Get the nth index of the splited string after spliting "|" in the full string.
         /// </summary>
         /// <param name="fullString">The full string to be splited.</param>
         /// <param name="valueIndex">The index to return.</param>
@@ -125,44 +105,42 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             {
                 return fullString;
             }
-            else if (valueIndex < fullString.SplitCount())
+
+            if (valueIndex < fullString.SplitCount())
             {
                 return fullString.Split('|')[valueIndex];
             }
-            else
-            {
-                return fullString.Split('|')[fullString.SplitCount() - 1];
-            }
+
+            return fullString.Split('|')[fullString.SplitCount() - 1];
         }
 
         /// <summary>
-        /// Get the nth index of the splited string after spliting the seperator in the full string.
+        ///     Get the nth index of the splited string after spliting the seperator in the full string.
         /// </summary>
         /// <param name="fullString">The full string to be splited.</param>
         /// <param name="valueIndex">The index to return.</param>
-        /// <param name="seperator">The seperator.</param>
-        public static string GetSplit(this string fullString, int valueIndex, string seperator)
+        /// <param name="separator">The seperator.</param>
+        public static string GetSplit(this string fullString, int valueIndex, string separator)
         {
-            if (fullString.SplitCount(seperator) == 1)
+            if (fullString.SplitCount(separator) == 1)
             {
                 return fullString;
             }
-            else if (valueIndex < fullString.SplitCount(seperator))
+
+            if (valueIndex < fullString.SplitCount(separator))
             {
-                return fullString.Split(seperator.ToCharArray())[valueIndex];
+                return fullString.Split(separator.ToCharArray())[valueIndex];
             }
-            else
-            {
-                return fullString.Split(seperator.ToCharArray())[fullString.SplitCount() - 1];
-            }
+
+            return fullString.Split(separator.ToCharArray())[fullString.SplitCount() - 1];
         }
 
         /// <summary>
-        /// Get the public IP of the hosting computer.
+        ///     Get the public IP of the hosting computer.
         /// </summary>
         public static string GetPublicIP()
         {
-            using (WebClient Client = new WebClient())
+            using (var Client = new WebClient())
             {
                 try
                 {
@@ -176,15 +154,15 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Get the private IP of the hosting computer.
+        ///     Get the private IP of the hosting computer.
         /// </summary>
         public static string GetPrivateIP()
         {
             try
             {
-                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                var host = Dns.GetHostEntry(Dns.GetHostName());
 
-                foreach (IPAddress address in host.AddressList)
+                foreach (var address in host.AddressList)
                 {
                     if (address.AddressFamily == AddressFamily.InterNetwork)
                     {
@@ -201,12 +179,12 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Check if the port is open.
+        ///     Check if the port is open.
         /// </summary>
         /// <param name="Port">Port to check.</param>
         public static bool CheckPortOpen(int Port)
         {
-            using (TcpClient Client = new TcpClient())
+            using (var Client = new TcpClient())
             {
                 try
                 {
@@ -214,10 +192,8 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
                     {
                         return true;
                     }
-                    else
-                    {
-                        return false;
-                    }
+
+                    return false;
                 }
                 catch (Exception)
                 {
@@ -227,22 +203,23 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Generate Md5 Checksum from string.
+        ///     Generate Md5 Checksum from string.
         /// </summary>
         /// <param name="Value">String to compute.</param>
         /// <param name="FilePath">Is it a file?</param>
         public static string Md5HashGenerator(this string Value, bool FilePath = false)
         {
-            MD5 md5 = MD5.Create();
+            var md5 = MD5.Create();
 
             if (FilePath)
             {
-                FileStream FileStream = File.OpenRead(Value);
+                var FileStream = File.OpenRead(Value);
                 FileStream.Position = 0;
-                byte[] hash = md5.ComputeHash(FileStream);
+                var hash = md5.ComputeHash(FileStream);
 
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hash.Length; i++)
+                var sb = new StringBuilder();
+
+                for (var i = 0; i < hash.Length; i++)
                 {
                     sb.Append(hash[i].ToString("X2"));
                 }
@@ -251,11 +228,12 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             }
             else
             {
-                byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
-                byte[] hash = md5.ComputeHash(inputBytes);
+                var inputBytes = Encoding.UTF8.GetBytes(Value);
+                var hash = md5.ComputeHash(inputBytes);
 
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hash.Length; i++)
+                var sb = new StringBuilder();
+
+                for (var i = 0; i < hash.Length; i++)
                 {
                     sb.Append(hash[i].ToString("X2"));
                 }
@@ -265,44 +243,48 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
         }
 
         /// <summary>
-        /// Generate SHA1 Checksum from string.
+        ///     Generate SHA1 Checksum from string.
         /// </summary>
         /// <param name="Value">String to compute.</param>
         public static string SHA1HashGenerator(this string Value)
         {
-            SHA1 sha1 = SHA1.Create();
-            byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
-            byte[] hash = sha1.ComputeHash(inputBytes);
+            var sha1 = SHA1.Create();
+            var inputBytes = Encoding.UTF8.GetBytes(Value);
+            var hash = sha1.ComputeHash(inputBytes);
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));
             }
+
             return sb.ToString();
         }
 
         /// <summary>
-        /// Generate SHA256 Checksum from string.
+        ///     Generate SHA256 Checksum from string.
         /// </summary>
         /// <param name="Value">String to compute.</param>
         public static string SHA256HashGenerator(this string Value)
         {
-            SHA256 sha256 = SHA256.Create();
-            byte[] inputBytes = Encoding.UTF8.GetBytes(Value);
-            byte[] hash = sha256.ComputeHash(inputBytes);
+            var sha256 = SHA256.Create();
+            var inputBytes = Encoding.UTF8.GetBytes(Value);
+            var hash = sha256.ComputeHash(inputBytes);
 
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < hash.Length; i++)
+            var sb = new StringBuilder();
+
+            for (var i = 0; i < hash.Length; i++)
             {
                 sb.Append(hash[i].ToString("X2"));
             }
+
             return sb.ToString();
         }
 
         /// <summary>
-        /// Starts a process resource by specifying the name of a document or application
-        /// file and associates the resource with a new <see cref="Process"/> component.
+        ///     Starts a process resource by specifying the name of a document or application
+        ///     file and associates the resource with a new <see cref="Process" /> component.
         /// </summary>
         /// <param name="File">The name of a document or application file to run in the process.</param>
         /// <param name="Argument">Command-line arguments to pass when starting the process.</param>
@@ -327,9 +309,7 @@ Go To: http://pokemon3d.net/forum/threads/8234/ or http://www.aggressivegaming.o
             }
             catch (Exception)
             {
-                return;
             }
         }
     }
 }
- 

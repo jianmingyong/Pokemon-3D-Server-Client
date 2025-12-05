@@ -67,21 +67,21 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
             {
                 try
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string ObjectPropertyName = null;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
+                        var GameJoltID = -1;
                         string Reason = null;
-                        DateTime StartTime = DateTime.Now;
-                        int Duration = 0;
+                        var StartTime = DateTime.Now;
+                        var Duration = 0;
 
                         while (Reader.Read())
                         {
@@ -229,10 +229,10 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings.Data
                     Directory.CreateDirectory(Core.Setting.ApplicationDirectory + "\\Data\\UserSetting");
                 }
 
-                string ReturnString = "";
+                var ReturnString = "";
                 if (MuteListData.Count > 0)
                 {
-                    foreach (MuteList Data in MuteListData)
+                    foreach (var Data in MuteListData)
                     {
                         ReturnString += string.Format(@"        {{
 ""Name"": ""{0}"",
@@ -287,7 +287,7 @@ ReturnString), Encoding.UTF8);
             {
                 if (File.Exists(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json"))
                 {
-                    string FileContent = File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json");
+                    var FileContent = File.ReadAllText(Core.Setting.ApplicationDirectory + "\\Data\\OnlineSetting\\" + GameJoltID.ToString() + ".json");
                     if (string.IsNullOrWhiteSpace(FileContent))
                     {
                         return false;

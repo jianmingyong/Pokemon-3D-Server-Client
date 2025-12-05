@@ -39,7 +39,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
             #region /op <Name> [OperatorLevel] [Reason]
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any);
+                var Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer, Functions.CommandParamType.Any);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -49,8 +49,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
-                        string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
+                        var Players = Core.Player.GetPlayer(Group[0]);
+                        var PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
                         {
@@ -72,8 +72,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
-                        string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
+                        var Players = Core.Player.GetPlayer(Group[0]);
+                        var PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
                         {
@@ -93,7 +93,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
             #region /op <Name> [OperatorLevel]
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer);
+                var Group = this.Groups(p, Functions.CommandParamType.Any, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
@@ -103,8 +103,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
-                        string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
+                        var Players = Core.Player.GetPlayer(Group[0]);
+                        var PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
                         {
@@ -126,8 +126,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Operator
                     }
                     else
                     {
-                        Player Players = Core.Player.GetPlayer(Group[0]);
-                        string PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
+                        var Players = Core.Player.GetPlayer(Group[0]);
+                        var PlayerName = Players.isGameJoltPlayer ? $"{Players.Name} ({ Players.GameJoltID})" : $"{Players.Name}";
 
                         if (Players.GameJoltID == 116016 || Player.GameJoltID == 222452)
                         {

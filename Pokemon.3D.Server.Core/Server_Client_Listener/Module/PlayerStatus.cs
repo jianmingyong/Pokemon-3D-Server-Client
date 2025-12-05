@@ -34,7 +34,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Core.Setting.BlackList)
             {
-                BlackList BlackList = GetBlackList(Player);
+                var BlackList = GetBlackList(Player);
 
                 if (BlackList != null)
                 {
@@ -70,7 +70,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsBlackListed())
             {
-                BlackList BlackList = Player.GetBlackList();
+                var BlackList = Player.GetBlackList();
                 BlackList.Name = Player.Name;
                 BlackList.StartTime = DateTime.Now;
                 BlackList.Duration = Duration;
@@ -125,7 +125,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Core.Setting.IPBlackList)
             {
-                IPBlackList IPBlackList = GetIPBlackList(Player);
+                var IPBlackList = GetIPBlackList(Player);
 
                 if (IPBlackList != null)
                 {
@@ -160,7 +160,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Core.Setting.IPBlackList)
             {
-                IPBlackList IPBlackList = IPAddress.GetIPBlackList();
+                var IPBlackList = IPAddress.GetIPBlackList();
 
                 if (IPBlackList != null)
                 {
@@ -196,7 +196,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsIPBlackListed())
             {
-                IPBlackList IPBlackList = Player.GetIPBlackList();
+                var IPBlackList = Player.GetIPBlackList();
                 IPBlackList.StartTime = DateTime.Now;
                 IPBlackList.Duration = Duration;
                 IPBlackList.Reason = Reason;
@@ -219,7 +219,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (IPAddress.IsIPBlackListed())
             {
-                IPBlackList IPBlackList = IPAddress.GetIPBlackList();
+                var IPBlackList = IPAddress.GetIPBlackList();
                 IPBlackList.StartTime = DateTime.Now;
                 IPBlackList.Duration = Duration;
                 IPBlackList.Reason = Reason;
@@ -311,7 +311,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
                 // Use Global List
                 if (Core.Setting.MuteList)
                 {
-                    MuteList MuteList = Player.GetMuteList();
+                    var MuteList = Player.GetMuteList();
                     if (MuteList == null)
                     {
                         return false;
@@ -340,7 +340,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
                 // Use PlayerList
                 if (Core.Setting.OnlineSettingList)
                 {
-                    MuteList MuteList = Player.GetMuteList(PlayerList);
+                    var MuteList = Player.GetMuteList(PlayerList);
                     if (MuteList == null)
                     {
                         return false;
@@ -353,7 +353,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
                         }
                         else
                         {
-                            OnlineSetting OnlineSetting = PlayerList.GetOnlineSetting();
+                            var OnlineSetting = PlayerList.GetOnlineSetting();
                             OnlineSetting.MuteListData.Remove(MuteList);
                             OnlineSetting.Save();
                             return false;
@@ -380,7 +380,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
             {
                 if (Player.IsMuteListed())
                 {
-                    MuteList MuteList = Player.GetMuteList();
+                    var MuteList = Player.GetMuteList();
                     MuteList.Name = Player.Name;
                     MuteList.StartTime = DateTime.Now;
                     MuteList.Duration = Duration;
@@ -397,7 +397,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
             {
                 if (Player.IsMuteListed(PlayerList))
                 {
-                    MuteList MuteList = Player.GetMuteList(PlayerList);
+                    var MuteList = Player.GetMuteList(PlayerList);
                     MuteList.Name = Player.Name;
                     MuteList.StartTime = DateTime.Now;
                     MuteList.Duration = Duration;
@@ -495,7 +495,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsOperator())
             {
-                OperatorList OperatorList = Player.GetOperatorList();
+                var OperatorList = Player.GetOperatorList();
                 OperatorList.Name = Player.Name;
                 OperatorList.Reason = Reason;
                 OperatorList.OperatorLevel = OperatorLevel;
@@ -531,7 +531,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Core.Setting.SwearInfractionList)
             {
-                for (int i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
+                for (var i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
                 {
                     if (Regex.IsMatch(Message, Core.Setting.SwearInfractionFilterListData[i].Regex))
                     {
@@ -552,7 +552,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         /// <param name="Message">The dirty message.</param>
         public static string SwearWord(this string Message)
         {
-            for (int i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
+            for (var i = 0; i < Core.Setting.SwearInfractionFilterListData.Count; i++)
             {
                 if (Regex.IsMatch(Message, Core.Setting.SwearInfractionFilterListData[i].Regex))
                 {
@@ -607,7 +607,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsSwearInfracted())
             {
-                SwearInfractionList SwearInfractionList = Player.GetSwearInfractionList();
+                var SwearInfractionList = Player.GetSwearInfractionList();
                 SwearInfractionList.Name = Player.Name;
                 if ((DateTime.Now - SwearInfractionList.StartTime).TotalDays >= Core.Setting.SwearInfractionReset)
                 {
@@ -647,7 +647,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsSwearInfracted())
             {
-                SwearInfractionList SwearInfractionList = Player.GetSwearInfractionList();
+                var SwearInfractionList = Player.GetSwearInfractionList();
                 SwearInfractionList.Name = Player.Name;
                 if ((DateTime.Now - SwearInfractionList.StartTime).TotalDays >= Core.Setting.SwearInfractionReset)
                 {
@@ -722,7 +722,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Modules
         {
             if (Player.IsWhiteListed())
             {
-                WhiteList WhiteList = Player.GetWhiteList();
+                var WhiteList = Player.GetWhiteList();
                 WhiteList.Name = Player.Name;
                 WhiteList.Reason = Reason;
                 Core.Setting.Save();

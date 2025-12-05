@@ -34,7 +34,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands
         /// <param name="p">Package</param>
         public void HandleAllCommand(Package p)
         {
-            for (int i = 0; i < Count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 this[i].Handle(p, p.Client == null ? null : Core.Player.GetPlayer(p.Client));
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 using Amib.Threading;
@@ -38,7 +39,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Servers
             try
             {
                 // Before Running CheckList
-                if (!My.Computer.Network.IsAvailable)
+                if (!NetworkInterface.GetIsNetworkAvailable())
                 {
                     Core.Logger.Log("Network is not available.", Logger.LogTypes.Warning);
                     Dispose();
@@ -52,7 +53,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Servers
                     IsActive = true;
 
                     // Threading
-                    Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
+                    var Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
                     Thread.Start();
                     ThreadCollection.Add(Thread);
                 }
@@ -74,7 +75,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Servers
             if (Client != null) Client.Close();
             if (Reader != null) Reader.Dispose();
 
-            for (int i = 0; i < ThreadCollection.Count; i++)
+            for (var i = 0; i < ThreadCollection.Count; i++)
             {
                 if (ThreadCollection[i].IsAlive)
                 {
@@ -118,11 +119,11 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Servers
         {
             try
             {
-                string ReturnMessage = (string)obj;
+                var ReturnMessage = (string)obj;
 
                 if (!string.IsNullOrWhiteSpace(ReturnMessage))
                 {
-                    Package Package = new Package(ReturnMessage, Client);
+                    var Package = new Package(ReturnMessage, Client);
                     Core.Logger.Log($"Receive: {ReturnMessage}", Logger.LogTypes.Debug, Client);
 
                     if (Package.IsValid)

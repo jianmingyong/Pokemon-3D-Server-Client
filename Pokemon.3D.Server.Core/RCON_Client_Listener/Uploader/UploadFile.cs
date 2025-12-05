@@ -153,7 +153,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
 
         private void Upload()
         {
-            List<string> ContentToWrite = new List<string> { FileID.ToString() };
+            var ContentToWrite = new List<string> { FileID.ToString() };
             string TempReader;
             long ContentBuffer = 0;
 

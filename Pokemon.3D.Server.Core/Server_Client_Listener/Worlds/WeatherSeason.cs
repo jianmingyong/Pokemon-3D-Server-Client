@@ -58,7 +58,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Worlds
             {
                 try
                 {
-                    foreach (string Weather in WeatherData.GetSplit(Core.World.Season).Split(",".ToCharArray()))
+                    foreach (var Weather in WeatherData.GetSplit(Core.World.Season).Split(",".ToCharArray()))
                     {
                         ReturnList.Add(Weather.ToInt());
                     }

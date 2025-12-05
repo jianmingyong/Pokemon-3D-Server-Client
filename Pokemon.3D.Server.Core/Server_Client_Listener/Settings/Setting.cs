@@ -86,10 +86,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public string IPAddress
         {
-            get
-            {
-                return _IPAddress == null ? "" : _IPAddress.ToString();
-            }
+            get => _IPAddress == null ? "" : _IPAddress.ToString();
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
@@ -109,14 +106,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int Port
         {
-            get
-            {
-                return _Port;
-            }
-            set
-            {
-                _Port = value.Clamp(0, 65535);
-            }
+            get => _Port;
+            set => _Port = value.Clamp(0, 65535);
         }
 
         /// <summary>
@@ -192,10 +183,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int MaxPlayers
         {
-            get
-            {
-                return _MaxPlayers;
-            }
+            get => _MaxPlayers;
             set
             {
                 if (value <= 0)
@@ -223,14 +211,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int Season
         {
-            get
-            {
-                return _Season;
-            }
-            set
-            {
-                _Season = value.Clamp(-3, 3);
-            }
+            get => _Season;
+            set => _Season = value.Clamp(-3, 3);
         }
 
         private int _Weather = -2;
@@ -239,14 +221,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int Weather
         {
-            get
-            {
-                return _Weather;
-            }
-            set
-            {
-                _Weather = value.Clamp(-4, 9);
-            }
+            get => _Weather;
+            set => _Weather = value.Clamp(-4, 9);
         }
 
         /// <summary>
@@ -282,10 +258,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int NoPingKickTime
         {
-            get
-            {
-                return _NoPingKickTime;
-            }
+            get => _NoPingKickTime;
             set
             {
                 if (value < 10)
@@ -305,10 +278,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int AFKKickTime
         {
-            get
-            {
-                return _AFKKickTime;
-            }
+            get => _AFKKickTime;
             set
             {
                 if (value < 10)
@@ -328,10 +298,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int AutoRestartTime
         {
-            get
-            {
-                return _AutoRestartTime;
-            }
+            get => _AutoRestartTime;
             set
             {
                 if (value < 10)
@@ -422,10 +389,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int SwearInfractionCap
         {
-            get
-            {
-                return _SwearInfractionCap;
-            }
+            get => _SwearInfractionCap;
             set
             {
                 if (value < 1)
@@ -445,10 +409,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int SwearInfractionReset
         {
-            get
-            {
-                return _SwearInfractionReset;
-            }
+            get => _SwearInfractionReset;
             set
             {
                 if (value < 1)
@@ -485,10 +446,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int SpamResetDuration
         {
-            get
-            {
-                return _SpamResetDuration;
-            }
+            get => _SpamResetDuration;
             set
             {
                 if (value < 1)
@@ -583,14 +541,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
         /// </summary>
         public int RCONPort
         {
-            get
-            {
-                return _RCONPort;
-            }
-            set
-            {
-                _RCONPort = value.Clamp(0, 65535);
-            }
+            get => _RCONPort;
+            set => _RCONPort = value.Clamp(0, 65535);
         }
 
         /// <summary>
@@ -689,17 +641,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region application_settings.json
                 if (File.Exists(ApplicationDirectory + "\\application_settings.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\application_settings.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\application_settings.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string ObjectPropertyName = null;
                         string PropertyName = null;
                         string TempPropertyName = null;
-                        List<string> SeasonMonth = new List<string>();
-                        List<string> WeatherSeason = new List<string>();
+                        var SeasonMonth = new List<string>();
+                        var WeatherSeason = new List<string>();
 
                         while (Reader.Read())
                         {
@@ -717,7 +669,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "SeasonMonth", StringComparison.OrdinalIgnoreCase))
                                 {
                                     string TempValue = null;
-                                    foreach (string item in SeasonMonth)
+                                    foreach (var item in SeasonMonth)
                                     {
                                         TempValue += item + "|";
                                     }
@@ -727,7 +679,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                 else if (StartObjectDepth == 3 && string.Equals(ObjectPropertyName, "WeatherSeason", StringComparison.OrdinalIgnoreCase))
                                 {
                                     string TempValue = null;
-                                    foreach (string item in WeatherSeason)
+                                    foreach (var item in WeatherSeason)
                                     {
                                         TempValue += item + "|";
                                     }
@@ -1023,7 +975,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                                         {
                                             GM_Others = Reader.Value.ToString();
 
-                                            for (int i = 0; i < GM_Others.SplitCount(","); i++)
+                                            for (var i = 0; i < GM_Others.SplitCount(","); i++)
                                             {
                                                 GameMode.Add(GM_Others.Split(',')[i].Trim());
                                             }
@@ -1617,20 +1569,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\BlackList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\BlackList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\BlackList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\BlackList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
+                        var GameJoltID = -1;
                         string Reason = null;
-                        DateTime StartTime = DateTime.Now;
-                        int Duration = -1;
+                        var StartTime = DateTime.Now;
+                        var Duration = -1;
 
                         while (Reader.Read())
                         {
@@ -1731,19 +1683,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\IPBlackList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\IPBlackList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\IPBlackList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\IPBlackList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string IPAddress = null;
                         string Reason = null;
-                        DateTime StartTime = DateTime.Now;
-                        int Duration = -1;
+                        var StartTime = DateTime.Now;
+                        var Duration = -1;
 
                         while (Reader.Read())
                         {
@@ -1835,20 +1787,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\MuteList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\MuteList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\MuteList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\MuteList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
+                        var GameJoltID = -1;
                         string Reason = null;
-                        DateTime StartTime = DateTime.Now;
-                        int Duration = -1;
+                        var StartTime = DateTime.Now;
+                        var Duration = -1;
 
                         while (Reader.Read())
                         {
@@ -1949,19 +1901,19 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\OperatorList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\OperatorList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\OperatorList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\OperatorList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
+                        var GameJoltID = -1;
                         string Reason = null;
-                        int OperatorLevel = (int)Player.OperatorTypes.Player;
+                        var OperatorLevel = (int)Player.OperatorTypes.Player;
 
                         while (Reader.Read())
                         {
@@ -2053,7 +2005,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\SwearInfractionFilterList.json
                 if (!File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))
                 {
-                    using (WebClient Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
+                    using (var Client = new WebClient() { CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache) })
                     {
                         Client.DownloadFile("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/SwearInfractionFilterListData.json", ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json");
                     }
@@ -2061,17 +2013,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
 
                 if (File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionFilterList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Word = null;
-                        bool CaseSensitive = false;
+                        var CaseSensitive = false;
 
                         while (Reader.Read())
                         {
@@ -2136,20 +2088,20 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\SwearInfractionList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\SwearInfractionList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\SwearInfractionList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
-                        int Points = 0;
-                        int Muted = 0;
-                        DateTime StartTime = DateTime.Now;
+                        var GameJoltID = -1;
+                        var Points = 0;
+                        var Muted = 0;
+                        var StartTime = DateTime.Now;
 
                         while (Reader.Read())
                         {
@@ -2250,17 +2202,17 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\WhiteList.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\WhiteList.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\WhiteList.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\WhiteList.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
                         string Name = null;
-                        int GameJoltID = -1;
+                        var GameJoltID = -1;
                         string Reason = null;
 
                         while (Reader.Read())
@@ -2338,12 +2290,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Settings
                 #region Data\Token.json
                 if (File.Exists(ApplicationDirectory + "\\Data\\Token.json"))
                 {
-                    using (JsonTextReader Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\Token.json"))))
+                    using (var Reader = new JsonTextReader(new StringReader(File.ReadAllText(ApplicationDirectory + "\\Data\\Token.json"))))
                     {
                         Reader.DateParseHandling = DateParseHandling.DateTime;
                         Reader.FloatParseHandling = FloatParseHandling.Double;
 
-                        int StartObjectDepth = -1;
+                        var StartObjectDepth = -1;
                         string PropertyName = null;
                         string TempPropertyName = null;
 
@@ -2929,7 +2881,7 @@ RCONPassword), Encoding.UTF8);
                 string List = null;
                 if (BlackListData.Count > 0)
                 {
-                    for (int i = 0; i < BlackListData.Count; i++)
+                    for (var i = 0; i < BlackListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -2949,19 +2901,19 @@ BlackListData[i].Duration.ToString());
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\BlackList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\BlackList.json", $@"{{
     ""BlackListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\BlackList.json
 
                 #region Data\IPBlackList.json
                 List = null;
                 if (IPBlackListData.Count > 0)
                 {
-                    for (int i = 0; i < IPBlackListData.Count; i++)
+                    for (var i = 0; i < IPBlackListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""IPAddress"": ""{0}"",
@@ -2979,12 +2931,12 @@ IPBlackListData[i].Duration.ToString());
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\IPBlackList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\IPBlackList.json", $@"{{
     ""IPBlackListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\IPBlackList.json
 
                 #region Data\MapFileList.json
@@ -2994,7 +2946,7 @@ IPBlackListData[i].Duration.ToString());
                 List = null;
                 if (MuteListData.Count > 0)
                 {
-                    for (int i = 0; i < MuteListData.Count; i++)
+                    for (var i = 0; i < MuteListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -3014,19 +2966,19 @@ MuteListData[i].Duration.ToString());
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\MuteList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\MuteList.json", $@"{{
     ""MuteListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\MuteList.json
 
                 #region Data\OperatorList.json
                 List = null;
                 if (OperatorListData.Count > 0)
                 {
-                    for (int i = 0; i < OperatorListData.Count; i++)
+                    for (var i = 0; i < OperatorListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -3044,19 +2996,19 @@ OperatorListData[i].OperatorLevel.ToString());
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\OperatorList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\OperatorList.json", $@"{{
     ""OperatorListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\OperatorList.json
 
                 #region Data\SwearInfractionFilterList.json
                 List = null;
                 if (SwearInfractionFilterListData.Count > 0)
                 {
-                    for (int i = 0; i < SwearInfractionFilterListData.Count; i++)
+                    for (var i = 0; i < SwearInfractionFilterListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Word"": ""{0}"",
@@ -3070,19 +3022,19 @@ SwearInfractionFilterListData[i].CaseSensitive.ToString().ToLower());
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionFilterList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionFilterList.json", $@"{{
     ""SwearInfractionFilterListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\SwearInfractionFilterList.json
 
                 #region Data\SwearInfractionList.json
                 List = null;
                 if (SwearInfractionListData.Count > 0)
                 {
-                    for (int i = 0; i < SwearInfractionListData.Count; i++)
+                    for (var i = 0; i < SwearInfractionListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -3102,19 +3054,19 @@ SwearInfractionListData[i].StartTime.ToString(@"yyyy-MM-ddTHH\:mm\:ss.fffffffK")
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\SwearInfractionList.json", $@"{{
     ""SwearInfractionListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\SwearInfractionList.json
 
                 #region Data\WhiteList.json
                 List = null;
                 if (WhiteListData.Count > 0)
                 {
-                    for (int i = 0; i < WhiteListData.Count; i++)
+                    for (var i = 0; i < WhiteListData.Count; i++)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -3130,19 +3082,19 @@ WhiteListData[i].Reason);
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\WhiteList.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\WhiteList.json", $@"{{
     ""WhiteListData"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\WhiteList.json
 
                 #region Data\Token.json
                 List = null;
                 if (TokenDefination.Count > 0)
                 {
-                    foreach (KeyValuePair<string, string> Data in TokenDefination)
+                    foreach (var Data in TokenDefination)
                     {
                         List += string.Format(@"        {{
             ""Name"": ""{0}"",
@@ -3156,12 +3108,12 @@ Data.Value.Replace(@"\", @"\\").Replace(@"/", @"\/").Replace(@"""", @"\"""));
                     List = List.Remove(List.LastIndexOf(","));
                 }
 
-                File.WriteAllText(ApplicationDirectory + @"\Data\Token.json", string.Format(@"{{
+                File.WriteAllText(ApplicationDirectory + @"\Data\Token.json", $@"{{
     ""Token"":
     [
-{0}
+{List}
     ]
-}}", List), Encoding.UTF8);
+}}", Encoding.UTF8);
                 #endregion Data\Token.json
 
                 Core.Logger.Log("Setting saved.", Logger.LogTypes.Info);
@@ -3207,19 +3159,17 @@ Data.Value.Replace(@"\", @"\\").Replace(@"/", @"\/").Replace(@"""", @"\"""));
         /// <summary>
         /// Get the token string from key.
         /// </summary>
-        /// <param name="Key">The key of the token.</param>
-        /// <param name="Variable">The Variable of the token.</param>
+        /// <param name="key">The key of the token.</param>
+        /// <param name="args">The Variable of the token.</param>
         /// <returns></returns>
-        public string Token(string Key, params string[] Variable)
+        public string Token(string key, params object[] args)
         {
-            string ReturnValue = null;
-
-            if (TokenDefination.ContainsKey(Key))
+            if (TokenDefination.TryGetValue(key, out var value))
             {
-                ReturnValue = string.Format(TokenDefination[Key], Variable);
+                return string.Format(value, args);
             }
 
-            return ReturnValue;
+            return null;
         }
     }
 }

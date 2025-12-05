@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Cache;
-using System.Threading;
+using System.Net.NetworkInformation;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
@@ -26,9 +26,10 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
         /// </summary>
         public void Update()
         {
-            if (My.Computer.Network.IsAvailable)
+            
+            if (NetworkInterface.GetIsNetworkAvailable())
             {
-                ThreadCollection.Add(new ThreadStart(ThreadUpdate));
+                ThreadCollection.Add(ThreadUpdate);
             }
             else
             {
@@ -41,16 +42,16 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
             try
             {
                 Core.Logger.Log("Checking for update.", Logger.LogTypes.Info);
+                
+                var request = WebRequest.Create("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/Update.dat");
+                request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+                request.Timeout = 10000;
 
-                WebRequest Request = WebRequest.Create("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Core/Resource/Update.dat");
-                Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-                Request.Timeout = 10000;
-
-                using (WebResponse Response = Request.GetResponse())
+                using (var response = request.GetResponse())
                 {
-                    using (StreamReader Reader = new StreamReader(Response.GetResponseStream()))
+                    using (var reader = new StreamReader(response.GetResponseStream()))
                     {
-                        string Result = Reader.ReadToEnd();
+                        var Result = reader.ReadToEnd();
 
                         ExpectVersion = Result.GetSplit(0);
                         ExpectMD5Checksum = Result.GetSplit(1);
@@ -64,19 +65,19 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
                     Core.Logger.Log($"Update found: Expect Version: {ExpectVersion}, Current Version: {Core.Setting.ApplicationVersion}.", Logger.LogTypes.Info);
                     Core.Logger.Log($"Downloading update.", Logger.LogTypes.Info);
 
-                    Request = WebRequest.Create("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater/bin/Release/Pokemon.3D.Server.Client.Updater.exe");
-                    Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-                    Request.Timeout = 10000;
+                    request = WebRequest.Create("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater/bin/Release/Pokemon.3D.Server.Client.Updater.exe");
+                    request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+                    request.Timeout = 10000;
 
-                    using (WebResponse Response = Request.GetResponse())
+                    using (var Response = request.GetResponse())
                     {
-                        using (Stream Reader = Response.GetResponseStream())
+                        using (var Reader = Response.GetResponseStream())
                         {
-                            byte[] Buffer = new byte[65536];
+                            var Buffer = new byte[65536];
 
-                            using (FileStream Writer = new FileStream(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            using (var Writer = new FileStream(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.Updater.exe", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                             {
-                                int ReadLength = 0;
+                                var ReadLength = 0;
                                 do
                                 {
                                     ReadLength = Reader.Read(Buffer, 0, Buffer.Length);
@@ -86,41 +87,19 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
                         }
                     }
 
-                    Request = WebRequest.Create("https://github.com/jianmingyong/Pokemon-3D-Server-Client/raw/master/Pokemon.3D.Server.Client.Updater/bin/Release/SharpCompress.dll");
-                    Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-                    Request.Timeout = 10000;
+                    request = WebRequest.Create(ExpectFileURL);
+                    request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+                    request.Timeout = 10000;
 
-                    using (WebResponse Response = Request.GetResponse())
+                    using (var Response = request.GetResponse())
                     {
-                        using (Stream Reader = Response.GetResponseStream())
+                        using (var Reader = Response.GetResponseStream())
                         {
-                            byte[] Buffer = new byte[65536];
+                            var Buffer = new byte[65536];
 
-                            using (FileStream Writer = new FileStream(Core.Setting.ApplicationDirectory + "\\SharpCompress.dll", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+                            using (var Writer = new FileStream(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
                             {
-                                int ReadLength = 0;
-                                do
-                                {
-                                    ReadLength = Reader.Read(Buffer, 0, Buffer.Length);
-                                    Writer.Write(Buffer, 0, ReadLength);
-                                } while (ReadLength > 0);
-                            }
-                        }
-                    }
-
-                    Request = WebRequest.Create(ExpectFileURL);
-                    Request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
-                    Request.Timeout = 10000;
-
-                    using (WebResponse Response = Request.GetResponse())
-                    {
-                        using (Stream Reader = Response.GetResponseStream())
-                        {
-                            byte[] Buffer = new byte[65536];
-
-                            using (FileStream Writer = new FileStream(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip", FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
-                            {
-                                int ReadLength = 0;
+                                var ReadLength = 0;
                                 do
                                 {
                                     ReadLength = Reader.Read(Buffer, 0, Buffer.Length);
@@ -133,7 +112,7 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong
                     Core.Logger.Log($"Download completed.", Logger.LogTypes.Info);
                     Core.Logger.Log($"Checking Md5 checksum.", Logger.LogTypes.Info);
 
-                    string CurrentMD5Checksum = Functions.Md5HashGenerator(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip", true);
+                    var CurrentMD5Checksum = Functions.Md5HashGenerator(Core.Setting.ApplicationDirectory + "\\Pokemon.3D.Server.Client.GUI.zip", true);
 
                     if (string.Equals(CurrentMD5Checksum, ExpectMD5Checksum, StringComparison.OrdinalIgnoreCase))
                     {

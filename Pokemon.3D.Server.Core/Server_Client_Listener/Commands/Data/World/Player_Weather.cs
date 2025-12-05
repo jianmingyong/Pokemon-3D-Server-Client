@@ -40,11 +40,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.World
             #region /Player.Weather <id>
             if (this.MatchRequiredParam(p, Functions.CommandParamType.Integer))
             {
-                List<string> Group = this.Groups(p, Functions.CommandParamType.Integer);
+                var Group = this.Groups(p, Functions.CommandParamType.Integer);
 
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    OnlineSetting Settings = Player.GetOnlineSetting();
+                    var Settings = Player.GetOnlineSetting();
                     Settings.Weather = Group[0].ToInt().RollOver(-5, 9);
                     Settings.CurrentWorldWeather = Core.World.GenerateWeather(Settings.Weather, Settings.Season);
                     Settings.LastWorldUpdate = DateTime.Now;

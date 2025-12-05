@@ -38,14 +38,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Commands.Data.Client
             {
                 if (Player != null && this.MatchRequiredPermission(Player))
                 {
-                    using (Updater Updater = new Updater())
+                    using (var Updater = new Updater())
                     {
                         Updater.Update();
                     }
                 }
                 else if (Player == null)
                 {
-                    using (Updater Updater = new Updater())
+                    using (var Updater = new Updater())
                     {
                         Updater.Update();
                     }

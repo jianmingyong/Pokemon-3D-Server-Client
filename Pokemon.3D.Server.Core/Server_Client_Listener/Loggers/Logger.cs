@@ -153,7 +153,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
         /// </summary>
         public override string ToString()
         {
-            return string.Format("{0} [{1}] {2}", IPAddress == "" ? Time.ToString() : Time.ToString() + " " + IPAddress, LogType, Message);
+            return $"{(IPAddress == "" ? Time.ToString() : Time.ToString() + " " + IPAddress)} [{LogType}] {Message}";
         }
     }
 }

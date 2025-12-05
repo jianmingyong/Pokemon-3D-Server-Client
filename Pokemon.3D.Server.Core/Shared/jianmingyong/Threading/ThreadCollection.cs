@@ -15,7 +15,7 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Threading
         /// <param name="ThreadStart">Thread to add.</param>
         public void Add(ThreadStart ThreadStart)
         {
-            Thread Thread = new Thread(ThreadStart) { IsBackground = true };
+            var Thread = new Thread(ThreadStart) { IsBackground = true };
             Thread.Start();
             Add(Thread);
         }
@@ -25,7 +25,7 @@ namespace Pokemon_3D_Server_Core.Shared.jianmingyong.Threading
         /// </summary>
         public void Dispose()
         {
-            for (int i = 0; i < Count; i++)
+            for (var i = 0; i < Count; i++)
             {
                 if (this[i].IsAlive)
                 {

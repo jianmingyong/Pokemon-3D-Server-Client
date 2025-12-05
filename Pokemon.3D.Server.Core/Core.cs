@@ -82,13 +82,13 @@ namespace Pokemon_3D_Server_Core
         /// Server Main Entry Point - Initialize as many things as possible here.
         /// Order is important here, any additional initialization should be place at the bottom.
         /// </summary>
-        /// <param name="Directory">Start Directory.</param>
-        public static void Start(string Directory)
+        /// <param name="directory">Start Directory.</param>
+        public static void Start(string directory)
         {
             try
             {
                 // Initialize Setting
-                Setting = new Setting(Directory);
+                Setting = new Setting(directory);
 
                 // Initialize Logger.
                 Logger = new LoggerCollection();
@@ -141,9 +141,9 @@ namespace Pokemon_3D_Server_Core
         /// </summary>
         public static void Dispose()
         {
-            if (Listener != null) Listener.Dispose();
-            if (RCONListener != null) RCONListener.Dispose();
-            if (Logger != null) Logger.Dispose();
+            Listener?.Dispose();
+            RCONListener?.Dispose();
+            Logger?.Dispose();
         }
     }
 }

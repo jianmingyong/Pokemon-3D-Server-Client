@@ -52,7 +52,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Loggers
             {
                 try
                 {
-                    Logger Logger = new Logger(Message, LogType, Client);
+                    var Logger = new Logger(Message, LogType, Client);
 
                     if (Logger.CanDisplay())
                     {

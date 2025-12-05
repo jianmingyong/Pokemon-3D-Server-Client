@@ -20,9 +20,9 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
         {
             if (p.PackageType == (int)Package.PackageTypes.GetAllCrashLogs)
             {
-                int NumberofFiles = 0;
+                var NumberofFiles = 0;
 
-                foreach (string File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
+                foreach (var File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\CrashLogs"))
                 {
                     Add(new UploadFile(GetNextValidID(), NumberofFiles, Path.GetFileName(File), UploadFile.FileType.CrashLog, p.Client));
                     NumberofFiles += 1;
@@ -39,9 +39,9 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
             }
             else if (p.PackageType == (int)Package.PackageTypes.GetAllLogs)
             {
-                int NumberofFiles = 0;
+                var NumberofFiles = 0;
 
-                foreach (string File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\Logger"))
+                foreach (var File in Directory.EnumerateFiles(Core.Setting.ApplicationDirectory + "\\Logger"))
                 {
                     Add(new UploadFile(GetNextValidID(), NumberofFiles, Path.GetFileName(File), UploadFile.FileType.Logger, p.Client));
                     NumberofFiles += 1;
@@ -58,7 +58,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
             }
             else if (p.PackageType == (int)Package.PackageTypes.BeginCreateFile || p.PackageType == (int)Package.PackageTypes.BeginDownloadFile || p.PackageType == (int)Package.PackageTypes.EndDownloadFile || p.PackageType == (int)Package.PackageTypes.EndCreateFile)
             {
-                UploadFile File = (from UploadFile u in Core.RCONUploadQueue where p.Client == u.Client && p.DataItems[0].ToInt() == u.FileID select u).FirstOrDefault();
+                var File = (from UploadFile u in Core.RCONUploadQueue where p.Client == u.Client && p.DataItems[0].ToInt() == u.FileID select u).FirstOrDefault();
                 if (File != null)
                 {
                     File.HandlePackage(p);
@@ -74,10 +74,10 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Uploader
             }
             else
             {
-                int ValidID = 0;
-                List<UploadFile> ListOfFiles = (from UploadFile p in Core.RCONUploadQueue orderby p.ID ascending select p).ToList();
+                var ValidID = 0;
+                var ListOfFiles = (from UploadFile p in Core.RCONUploadQueue orderby p.ID ascending select p).ToList();
 
-                for (int i = 0; i < ListOfFiles.Count; i++)
+                for (var i = 0; i < ListOfFiles.Count; i++)
                 {
                     if (ValidID == ListOfFiles[i].ID)
                     {

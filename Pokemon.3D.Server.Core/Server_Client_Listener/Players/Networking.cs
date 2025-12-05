@@ -72,11 +72,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
             LastValidPing = DateTime.Now;
             LastValidMovement = DateTime.Now;
 
-            Thread Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
+            var Thread = new Thread(new ThreadStart(ThreadStartListening)) { IsBackground = true };
             Thread.Start();
             ThreadCollection.Add(Thread);
 
-            Thread Thread2 = new Thread(new ThreadStart(ThreadStartPinging)) { IsBackground = true };
+            var Thread2 = new Thread(new ThreadStart(ThreadStartPinging)) { IsBackground = true };
             Thread2.Start();
             ThreadCollection.Add(Thread2);
         }
@@ -105,7 +105,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
         private void ThreadPreHandlePackage(string p)
         {
-            Package Package = new Package(p, Client);
+            var Package = new Package(p, Client);
             if (Package.IsValid)
             {
                 LastValidPing = DateTime.Now;
@@ -121,7 +121,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
 
         private void ThreadStartPinging()
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             do

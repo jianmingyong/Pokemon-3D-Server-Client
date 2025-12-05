@@ -81,7 +81,7 @@ namespace Pokemon_3D_Server_Core.RCON_Client_Listener.Packages
 
         private void HandlePing(Package p)
         {
-            Player Player = Core.RCONPlayer.GetPlayer(p.Client);
+            var Player = Core.RCONPlayer.GetPlayer(p.Client);
             Player.Network.LastValidPing = DateTime.Now;
         }
 

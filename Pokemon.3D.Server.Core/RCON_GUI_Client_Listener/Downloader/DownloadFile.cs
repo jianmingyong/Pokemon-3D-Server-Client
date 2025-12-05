@@ -226,7 +226,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 {
                     Writer = new StreamWriter(Stream);
 
-                    Thread Thread = new Thread(new ThreadStart(GetDownloadSpeed)) { IsBackground = true };
+                    var Thread = new Thread(new ThreadStart(GetDownloadSpeed)) { IsBackground = true };
                     Thread.Start();
                     ThreadCollection.Add(Thread);
                 }
@@ -269,7 +269,7 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
                 Status = DownloadStatus.Downloading.ToString();
             }
 
-            for (int i = 1; i < p.DataItemsCount; i += 2)
+            for (var i = 1; i < p.DataItemsCount; i += 2)
             {
                 CurrentLineID += 1;
 
@@ -319,14 +319,14 @@ namespace Pokemon_3D_Server_Core.RCON_GUI_Client_Listener.Downloader
         /// </summary>
         private void GetDownloadSpeed()
         {
-            Stopwatch sw = new Stopwatch();
+            var sw = new Stopwatch();
             sw.Start();
 
             do
             {
                 try
                 {
-                    double CurrentDownloadSize = CurrentBytes_L;
+                    var CurrentDownloadSize = CurrentBytes_L;
 
                     Speed_L = CurrentDownloadSize - LastDownloadSize;
                     LastDownloadSize = CurrentDownloadSize;
