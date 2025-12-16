@@ -140,11 +140,11 @@ You should report this error if it is reproduceable or you could not solve it by
         /// </summary>
         public static string GetPublicIP()
         {
-            using (var Client = new WebClient())
+            using (var client = new WebClient())
             {
                 try
                 {
-                    return Client.DownloadString("https://api.ipify.org");
+                    return client.DownloadString("https://api.ipify.org");
                 }
                 catch (Exception)
                 {

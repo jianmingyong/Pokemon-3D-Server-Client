@@ -47,14 +47,14 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Servers
                     IsActive = true;
 
                     // Threading
-                    ThreadCollection.Add(new ThreadStart(ThreadStartListening));
-                    ThreadCollection.Add(new ThreadStart(Core.World.Update));
+                    ThreadCollection.Add(ThreadStartListening);
+                    ThreadCollection.Add(Core.World.Update);
 
                     if (Core.Setting.AutoRestartTime >= 10)
                     {
                         Core.Logger.Log($"The server will restart every {Core.Setting.AutoRestartTime.ToString()} seconds.", Logger.LogTypes.Info);
 
-                        ThreadCollection.Add(new ThreadStart(ThreadAutoRestart));
+                        ThreadCollection.Add(ThreadAutoRestart);
                     }
                 }
             }

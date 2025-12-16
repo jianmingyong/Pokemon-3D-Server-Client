@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Events;
 using Pokemon_3D_Server_Core.Server_Client_Listener.Loggers;
 using Pokemon_3D_Server_Core.Shared.jianmingyong.Modules;
@@ -62,7 +63,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double Position_X
         {
             get => Position.GetSplit(0).ToDouble();
-            set => Position = value.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
+            set => Position = value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + Position_Y.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + Position_Z.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double Position_Y
         {
             get => Position.GetSplit(1).ToDouble();
-            set => Position = Position_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + Position_Z.ToString().ConvertStringCulture(this);
+            set => Position = Position_X.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + Position_Z.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double Position_Z
         {
             get => Position.GetSplit(2).ToDouble();
-            set => Position = Position_X.ToString().ConvertStringCulture(this) + "|" + Position_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
+            set => Position = Position_X.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + Position_Y.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -129,7 +130,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double PokemonPosition_X
         {
             get => PokemonPosition.GetSplit(0).ToDouble();
-            set => PokemonPosition = value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
+            set => PokemonPosition = value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -138,7 +139,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double PokemonPosition_Y
         {
             get => PokemonPosition.GetSplit(1).ToDouble();
-            set => PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString().ConvertStringCulture(this);
+            set => PokemonPosition = PokemonPosition_X.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + PokemonPosition_Z.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>
@@ -147,7 +148,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         public double PokemonPosition_Z
         {
             get => PokemonPosition.GetSplit(2).ToDouble();
-            set => PokemonPosition = PokemonPosition_X.ToString().ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString().ConvertStringCulture(this) + "|" + value.ToString().ConvertStringCulture(this);
+            set => PokemonPosition = PokemonPosition_X.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + PokemonPosition_Y.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this) + "|" + value.ToString(CultureInfo.InvariantCulture).ConvertStringCulture(this);
         }
 
         /// <summary>

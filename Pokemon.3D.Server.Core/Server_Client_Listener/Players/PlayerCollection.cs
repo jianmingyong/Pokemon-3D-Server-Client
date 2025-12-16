@@ -29,8 +29,8 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 var ID = GetNextValidID();
                 var Player = new Player(p, ID);
 
-                Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.AddPlayer, $"{ID},{Player.ToString()}", null));
-                PlayerEvent.Invoke(PlayerEvent.Types.Add, $"{ID},{Player.ToString()}");
+                Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.AddPlayer, $"{ID},{Player}", null));
+                PlayerEvent.Invoke(PlayerEvent.Types.Add, $"{ID},{Player}");
             }
         }
 
@@ -50,7 +50,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 var OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                OnlineSetting.Save();
+                OnlineSetting?.Save();
                 Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
@@ -66,11 +66,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player}", null));
 
             Player.Network.ThreadPool3.WaitForIdle();
 
-            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player}");
             Core.Player.Remove(Player);
         }
 
@@ -90,7 +90,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 var OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                OnlineSetting.Save();
+                OnlineSetting?.Save();
                 Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
@@ -106,11 +106,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player}", null));
 
             Player.Network.ThreadPool3.WaitForIdle();
 
-            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player}");
             Core.Player.Remove(Player);
         }
 
@@ -130,7 +130,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Logger.Log(Core.Setting.Token("SERVER_GAMEJOLT", Player.Name, Player.GameJoltID.ToString(), "left the server with the following reason: " + Reason), Logger.LogTypes.Info);
 
                 var OnlineSetting = (from OnlineSetting p in Core.Setting.OnlineSettingListData where p.GameJoltID == Player.GameJoltID select p).FirstOrDefault();
-                OnlineSetting.Save();
+                OnlineSetting?.Save();
                 Core.Setting.OnlineSettingListData.Remove(OnlineSetting);
             }
             else
@@ -146,11 +146,11 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                 Core.Player.SentToPlayer(new Package(Package.PackageTypes.Kicked, Reason, Player.Network.Client));
             }
 
-            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player.ToString()}", null));
+            Core.RCONPlayer.SendToAllPlayer(new RCON_Client_Listener.Packages.Package(RCON_Client_Listener.Packages.Package.PackageTypes.RemovePlayer, $"{Player.ID},{Player}", null));
 
             Player.Network.ThreadPool3.WaitForIdle();
 
-            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player.ToString()}");
+            PlayerEvent.Invoke(PlayerEvent.Types.Remove, $"{Player.ID},{Player}");
             Core.Player.Remove(Player);
         }
 
@@ -160,14 +160,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="ID">ID of the player.</param>
         public bool HasPlayer(int ID)
         {
-            if ((from Player p in Core.Player where p.ID == ID select p).Count() > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Core.Player.Any(player => player.ID == ID);
         }
 
         /// <summary>
@@ -176,14 +169,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Name">Name of the player.</param>
         public bool HasPlayer(string Name)
         {
-            if ((from Player p in Core.Player where p.Name == Name select p).Count() > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Core.Player.Any(player => player.Name == Name);
         }
 
         /// <summary>
@@ -192,14 +178,7 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
         /// <param name="Client">TcpClient of the player.</param>
         public bool HasPlayer(TcpClient Client)
         {
-            if ((from Player p in Core.Player where p.Network.Client == Client select p).Count() > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return Core.Player.Any(player => player.Network.Client == Client);
         }
 
         /// <summary>
@@ -276,9 +255,12 @@ namespace Pokemon_3D_Server_Core.Server_Client_Listener.Players
                         var Writer = new StreamWriter(p.Client.GetStream());
                         Writer.WriteLine(p.ToString());
                         Writer.Flush();
-                        Core.Logger.Log($"Sent: {p.ToString()}", Logger.LogTypes.Debug, p.Client);
+                        Core.Logger.Log($"Sent: {p}", Logger.LogTypes.Debug, p.Client);
                     }
-                    catch (Exception) { }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
                 }
             }
         }
